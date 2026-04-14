@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MagazaPro | Modern E-Ticaret</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body data-page="home">
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="logo" href="index.html">Magaza<span>Pro</span></a>
+      <nav class="main-nav">
+        <a href="index.html" class="active">Ana Sayfa</a>
+        <a href="pages/products.html">Ürünler</a>
+        <a href="pages/about.html">Hakkımızda</a>
+        <a href="pages/contact.html">İletişim</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="pages/login.html" class="btn btn-outline">Giriş</a>
+        <a href="pages/cart.html" class="cart-link">Sepet <span id="cart-count">0</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow">Yeni Sezon Koleksiyonu</p>
+          <h1>Premium tarzı modern alışveriş deneyimiyle buluştur.</h1>
+          <p class="hero-text">Kaliteli materyaller, zamansız tasarımlar ve hızlı teslimat avantajı ile mağaza deneyimini bir üst seviyeye taşıyoruz.</p>
+          <div class="hero-cta">
+            <a href="pages/products.html" class="btn btn-primary">Ürünleri Keşfet</a>
+            <a href="pages/about.html" class="btn btn-ghost">Markayı Tanı</a>
+          </div>
+        </div>
+        <div class="hero-card">
+          <h3>Özel İndirim</h3>
+          <p>İlk alışverişine özel <strong>%20</strong> indirim fırsatı.</p>
+          <a href="pages/login.html" class="btn btn-outline">Kampanyayı Al</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2>Öne Çıkan Ürünler</h2>
+          <a href="pages/products.html">Tümünü Gör</a>
+        </div>
+        <div class="product-grid" id="featured-products"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <p>© 2026 MagazaPro. Tüm hakları saklıdır.</p>
+      <div>
+        <a href="pages/about.html">Hakkımızda</a>
+        <a href="pages/contact.html">İletişim</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/products.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Giriş Yap | MagazaPro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body data-page="login">
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="logo" href="../index.html">Magaza<span>Pro</span></a>
+      <nav class="main-nav">
+        <a href="../index.html">Ana Sayfa</a>
+        <a href="products.html">Ürünler</a>
+        <a href="about.html">Hakkımızda</a>
+        <a href="contact.html">İletişim</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-outline active">Giriş</a>
+        <a href="cart.html" class="cart-link">Sepet <span id="cart-count">0</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container">
+      <form class="auth-card" id="login-form">
+        <h1>Hesabına Giriş Yap</h1>
+        <p>Alışverişine kaldığın yerden devam etmek için giriş yap.</p>
+        <label>E-posta</label>
+        <input type="email" placeholder="ornek@mail.com" required />
+        <label>Şifre</label>
+        <input type="password" placeholder="••••••••" minlength="6" required />
+        <button class="btn btn-primary" type="submit">Giriş Yap</button>
+        <small id="login-message"></small>
+      </form>
+    </div>
+  </main>
+
+  <script src="../assets/js/products.js"></script>
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>
