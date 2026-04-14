@@ -1,0 +1,11 @@
+<%- include('partials/header') %>
+<h1>Checkout</h1>
+<form action="/checkout" method="post" class="form">
+  <input name="customerName" placeholder="Ad Soyad" required>
+  <input name="customerEmail" type="email" placeholder="E-posta" required>
+  <input name="customerPhone" placeholder="Telefon">
+  <textarea name="shippingAddress" placeholder="Teslimat adresi" required></textarea>
+  <p>Ödeme yöntemi: Sandbox ödeme (test)</p>
+  <button type="submit">Siparişi Tamamla - ₺<%= total.toFixed(2) %></button>
+</form>
+<%- include('partials/footer') %>

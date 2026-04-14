@@ -1,0 +1,29 @@
+<%- include('partials/header') %>
+<article class="detail">
+  <img src="<%= product.image_url %>" alt="<%= product.name %>">
+  <div>
+    <h1><%= product.name %></h1>
+    <p><%= product.description %></p>
+    <strong>₺<%= product.price %></strong>
+    <p>Stok: <%= product.stock %></p>
+    <form action="/cart/add" method="post">
+      <input type="hidden" name="productId" value="<%= product.id %>">
+      <input type="number" name="quantity" min="1" value="1">
+      <button type="submit">Sepete Ekle</button>
+    </form>
+  </div>
+</article>
+
+<h2>Yorum Yaz</h2>
+<form action="/products/<%= product.id %>/reviews" method="post" class="form">
+  <input name="name" placeholder="Ad Soyad" required>
+  <input name="rating" type="number" min="1" max="5" value="5" required>
+  <textarea name="comment" required></textarea>
+  <button type="submit">Gönder (onay sonrası yayınlanır)</button>
+</form>
+
+<h2>Yorumlar</h2>
+<% reviews.forEach(r => { %>
+  <div class="card"><strong><%= r.name %></strong> - <%= '★'.repeat(r.rating) %><p><%= r.comment %></p></div>
+<% }) %>
+<%- include('partials/footer') %>

@@ -1,0 +1,20 @@
+<%- include('partials/header') %>
+<h1><%= mode === 'register' ? 'Kayıt Ol' : 'Giriş Yap' %></h1>
+<% if (mode === 'register') { %>
+  <form action="/register" method="post" class="form">
+    <input name="fullName" placeholder="Ad Soyad" required>
+    <input name="email" type="email" placeholder="E-posta" required>
+    <input name="phone" placeholder="Telefon">
+    <input name="password" type="password" placeholder="Şifre" required>
+    <button type="submit">Kayıt Ol</button>
+  </form>
+  <p>Zaten hesabın var mı? <a href="/login">Giriş yap</a></p>
+<% } else { %>
+  <form action="/login" method="post" class="form">
+    <input name="email" type="email" placeholder="E-posta" required>
+    <input name="password" type="password" placeholder="Şifre" required>
+    <button type="submit">Giriş</button>
+  </form>
+  <p>Hesabın yok mu? <a href="/register">Kayıt ol</a></p>
+<% } %>
+<%- include('partials/footer') %>

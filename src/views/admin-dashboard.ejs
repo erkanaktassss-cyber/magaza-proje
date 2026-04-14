@@ -1,0 +1,10 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/static/css/style.css"><title>Admin</title></head><body><main class="container">
+<h1>Admin Dashboard</h1>
+<%- include('partials/admin-nav') %>
+<div class="grid four">
+  <div class="card"><h3>Ürün</h3><p><%= stats.products %></p></div>
+  <div class="card"><h3>Sipariş</h3><p><%= stats.orders %></p></div>
+  <div class="card"><h3>Müşteri</h3><p><%= stats.customers %></p></div>
+  <div class="card"><h3>Mesaj</h3><p><%= stats.messages %></p></div>
+</div>
+</main></body></html>

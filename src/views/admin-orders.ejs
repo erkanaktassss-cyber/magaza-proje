@@ -1,0 +1,15 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/static/css/style.css"><title>Siparişler</title></head><body><main class="container"><h1>Siparişler</h1><%- include('partials/admin-nav') %>
+<% orders.forEach(o => { %>
+  <form class="card row" method="post" action="/admin/orders/<%= o.id %>/status">
+    <div><strong><%= o.order_number %></strong> - <%= o.customer_name %> - ₺<%= o.total_amount %> - <%= o.payment_status %></div>
+    <select name="status">
+      <option value="pending" <%= o.status==='pending'?'selected':'' %>>Pending</option>
+      <option value="processing" <%= o.status==='processing'?'selected':'' %>>Processing</option>
+      <option value="shipped" <%= o.status==='shipped'?'selected':'' %>>Shipped</option>
+      <option value="completed" <%= o.status==='completed'?'selected':'' %>>Completed</option>
+      <option value="cancelled" <%= o.status==='cancelled'?'selected':'' %>>Cancelled</option>
+    </select>
+    <button>Güncelle</button>
+  </form>
+<% }) %>
+</main></body></html>

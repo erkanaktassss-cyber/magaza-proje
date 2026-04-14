@@ -1,0 +1,12 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/static/css/style.css"><title>Yorum Yönetimi</title></head><body><main class="container"><h1>Yorum Yönetimi</h1><%- include('partials/admin-nav') %>
+<% reviews.forEach(r => { %>
+  <div class="card">
+    <strong><%= r.name %></strong> - <%= r.product_name %> - <%= r.rating %>/5 - <%= r.status %>
+    <p><%= r.comment %></p>
+    <div class="row">
+      <% if (r.status !== 'approved') { %><form method="post" action="/admin/reviews/<%= r.id %>/approve"><button>Onayla</button></form><% } %>
+      <form method="post" action="/admin/reviews/<%= r.id %>/delete"><button>Sil</button></form>
+    </div>
+  </div>
+<% }) %>
+</main></body></html>

@@ -1,0 +1,24 @@
+<%- include('partials/header') %>
+<h1>Ürünler</h1>
+<div class="filters">
+  <a href="/products" class="chip">Tümü</a>
+  <% categories.forEach(c => { %>
+    <a class="chip" href="/products?category=<%= c.slug %>"><%= c.name %></a>
+  <% }) %>
+</div>
+<div class="grid">
+  <% products.forEach(p => { %>
+    <article class="card">
+      <img src="<%= p.image_url %>" alt="<%= p.name %>">
+      <h3><a href="/products/<%= p.slug %>"><%= p.name %></a></h3>
+      <p><%= p.category_name || 'Kategorisiz' %></p>
+      <strong>₺<%= p.price %></strong>
+      <form action="/cart/add" method="post">
+        <input type="hidden" name="productId" value="<%= p.id %>">
+        <input type="number" name="quantity" min="1" value="1">
+        <button type="submit">Sepete Ekle</button>
+      </form>
+    </article>
+  <% }) %>
+</div>
+<%- include('partials/footer') %>

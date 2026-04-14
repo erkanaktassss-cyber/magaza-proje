@@ -1,0 +1,11 @@
+<%- include('partials/header') %>
+<h1>İletişim</h1>
+<% if (success) { %><p class="ok">Mesajınız alındı.</p><% } %>
+<form action="/contact" method="post" class="form">
+  <input name="fullName" placeholder="Ad Soyad" required>
+  <input name="email" type="email" placeholder="E-posta" required>
+  <input name="phone" placeholder="Telefon">
+  <textarea name="message" required placeholder="Mesaj"></textarea>
+  <button type="submit">Gönder</button>
+</form>
+<%- include('partials/footer') %>

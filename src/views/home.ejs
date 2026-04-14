@@ -1,0 +1,30 @@
+<%- include('partials/header') %>
+<section class="hero">
+  <h1>BIOLIFE Premium Doğal Temizlik</h1>
+  <p>Kurumsal kalite, sürdürülebilir hijyen ve güvenli formüller.</p>
+  <a class="btn" href="/products">Ürünleri İncele</a>
+</section>
+
+<h2>Öne Çıkan Ürünler</h2>
+<div class="grid">
+  <% products.forEach(p => { %>
+    <article class="card">
+      <img src="<%= p.image_url %>" alt="<%= p.name %>">
+      <h3><a href="/products/<%= p.slug %>"><%= p.name %></a></h3>
+      <p><%= p.description %></p>
+      <strong>₺<%= p.price %></strong>
+    </article>
+  <% }) %>
+</div>
+
+<h2>Müşteri Değerlendirmeleri</h2>
+<div class="grid">
+  <% reviews.forEach(r => { %>
+    <article class="card">
+      <h4><%= r.name %> - <%= '★'.repeat(r.rating) %></h4>
+      <small><%= r.product_name %></small>
+      <p><%= r.comment %></p>
+    </article>
+  <% }) %>
+</div>
+<%- include('partials/footer') %>
