@@ -1,7 +1,8 @@
 function money(value) {
+  const { currency } = window.Shop.getSettings();
   return new Intl.NumberFormat('tr-TR', {
     style: 'currency',
-    currency: 'TRY',
+    currency: currency || 'TRY',
     maximumFractionDigits: 0
   }).format(value);
 }
@@ -15,16 +16,23 @@ function updateCartBadge() {
   if (badge) badge.textContent = cartCount();
 }
 
+function mediaHTML(image, name) {
+  if (/^https?:\/\//.test(image)) {
+    return `<img src="${image}" alt="${name}" loading="lazy" />`;
+  }
+  return image || '🧪';
+}
+
 function productCard(product, base = '') {
   return `
     <article class="product-card">
-      <div class="product-media">${product.image}</div>
+      <div class="product-media">${mediaHTML(product.image, product.name)}</div>
       <div class="product-body">
         <span class="chip">${product.category}</span>
         <h3 class="product-title">${product.name}</h3>
         <p class="product-desc">${product.desc}</p>
         <div class="product-meta">
-          <span>${product.volume}</span>
+          <span>${product.volume || '-'}</span>
           <strong>${money(product.price)}</strong>
         </div>
         <div class="product-actions">
@@ -36,10 +44,38 @@ function productCard(product, base = '') {
   `;
 }
 
+function applySiteContent() {
+  const content = window.Shop.getContent();
+  const bindings = {
+    homeSlogan: content.homeSlogan,
+    bannerTitle: content.bannerTitle,
+    aboutShort: content.aboutShort,
+    contactEmail: content.contactEmail,
+    contactPhone: content.contactPhone,
+    contactAddress: content.contactAddress
+  };
+
+  Object.entries(bindings).forEach(([key, value]) => {
+    document.querySelectorAll(`[data-site-content="${key}"]`).forEach((el) => {
+      el.textContent = value;
+    });
+  });
+}
+
+function renderCategoryFilters() {
+  const container = document.getElementById('product-filters');
+  if (!container) return;
+
+  const categories = window.Shop.getCategories();
+  container.innerHTML = `<button class="filter-btn active" data-category="Tümü">Tümü</button>${categories
+    .map((category) => `<button class="filter-btn" data-category="${category}">${category}</button>`)
+    .join('')}`;
+}
+
 function renderHomeFeatured() {
   const container = document.getElementById('featured-products');
   if (!container) return;
-  container.innerHTML = window.Shop.PRODUCTS.slice(0, 6).map((p) => productCard(p, 'pages/')).join('');
+  container.innerHTML = window.Shop.getProducts().slice(0, 6).map((p) => productCard(p, 'pages/')).join('');
 }
 
 function renderProductsPage() {
@@ -47,11 +83,12 @@ function renderProductsPage() {
   if (!container) return;
 
   const activeCategory = document.querySelector('.filter-btn.active')?.dataset.category || 'Tümü';
-  const data = activeCategory === 'Tümü'
-    ? window.Shop.PRODUCTS
-    : window.Shop.PRODUCTS.filter((p) => p.category === activeCategory);
+  const products = window.Shop.getProducts();
+  const data = activeCategory === 'Tümü' ? products : products.filter((p) => p.category === activeCategory);
 
-  container.innerHTML = data.map((p) => productCard(p)).join('');
+  container.innerHTML = data.length
+    ? data.map((p) => productCard(p)).join('')
+    : '<p class="empty-state">Bu kategori için aktif ürün bulunamadı.</p>';
 }
 
 function renderProductDetail() {
@@ -62,19 +99,19 @@ function renderProductDetail() {
   const product = window.Shop.getProduct(id);
 
   if (!product) {
-    container.innerHTML = '<p>Ürün bulunamadı.</p>';
+    container.innerHTML = '<p class="empty-state">Ürün bulunamadı veya yayından kaldırıldı.</p>';
     return;
   }
 
   container.innerHTML = `
     <div class="detail-wrap">
-      <div class="detail-media">${product.image}</div>
+      <div class="detail-media">${mediaHTML(product.image, product.name)}</div>
       <div class="detail-content">
         <span class="chip">${product.category}</span>
         <h1>${product.name}</h1>
         <p class="hero-text">${product.desc}</p>
         <ul class="feature-list">
-          ${product.features.map((feature) => `<li>${feature}</li>`).join('')}
+          ${(product.features || []).map((feature) => `<li>${feature}</li>`).join('')}
         </ul>
         <div class="detail-bottom">
           <strong class="detail-price">${money(product.price)}</strong>
@@ -96,13 +133,13 @@ function renderCartPage() {
   }
 
   const rows = cart.map((item) => {
-    const p = window.Shop.getProduct(item.id);
+    const p = window.Shop.getProduct(item.id, true);
     if (!p) return '';
     return `
       <div class="cart-item">
         <div>
           <strong>${p.name}</strong>
-          <small>${p.volume} • ${money(p.price)} x ${item.qty}</small>
+          <small>${p.volume || '-'} • ${money(p.price)} x ${item.qty}</small>
         </div>
         <strong>${money(p.price * item.qty)}</strong>
         <button class="btn btn-soft remove-btn" data-id="${p.id}">Sil</button>
@@ -111,7 +148,7 @@ function renderCartPage() {
   }).join('');
 
   const total = cart.reduce((sum, item) => {
-    const p = window.Shop.getProduct(item.id);
+    const p = window.Shop.getProduct(item.id, true);
     return p ? sum + p.price * item.qty : sum;
   }, 0);
 
@@ -184,6 +221,8 @@ function bindEvents() {
   }
 }
 
+applySiteContent();
+renderCategoryFilters();
 renderHomeFeatured();
 renderProductsPage();
 renderProductDetail();

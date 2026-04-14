@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yönetim Paneli | BIOLIFE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <a class="logo" href="../index.html">BIO<span>LIFE</span></a>
+      <nav id="admin-nav" class="admin-nav">
+        <button class="admin-nav-btn active" data-section="dashboard">Dashboard</button>
+        <button class="admin-nav-btn" data-section="products">Ürün Yönetimi</button>
+        <button class="admin-nav-btn" data-section="categories">Kategori Yönetimi</button>
+        <button class="admin-nav-btn" data-section="content">Site İçerikleri</button>
+        <button class="admin-nav-btn" data-section="settings">Ayarlar</button>
+      </nav>
+      <button id="admin-logout" class="btn btn-soft">Çıkış Yap</button>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div>
+          <h1>BIOLIFE Yönetim Paneli</h1>
+          <p class="section-sub">Tüm içerikleri kod değiştirmeden yönetin.</p>
+        </div>
+        <a href="../index.html" class="btn btn-outline">Siteyi Gör</a>
+      </header>
+
+      <section class="admin-section active" data-section="dashboard">
+        <div class="admin-stats" id="admin-stats"></div>
+      </section>
+
+      <section class="admin-section" data-section="products">
+        <div class="admin-panel-grid">
+          <form id="product-form" class="admin-card admin-form-grid">
+            <h2>Ürün Ekle / Düzenle</h2>
+            <input type="hidden" id="product-id" />
+            <label>Ürün Adı</label>
+            <input id="product-name" required />
+            <label>Fiyat (₺)</label>
+            <input id="product-price" type="number" min="1" required />
+            <label>Açıklama</label>
+            <textarea id="product-desc" required></textarea>
+            <label>Kategori</label>
+            <select id="product-category" required></select>
+            <label>Görsel (emoji veya URL)</label>
+            <input id="product-image" placeholder="🧴 veya https://..." required />
+            <label>Hacim / Birim</label>
+            <input id="product-volume" placeholder="1000 ml" />
+            <label>Özellikler (virgülle)</label>
+            <input id="product-features" placeholder="Doğal, Etkili, Güvenli" />
+            <label>Durum</label>
+            <select id="product-active">
+              <option value="true">Aktif</option>
+              <option value="false">Pasif</option>
+            </select>
+            <div class="hero-cta">
+              <button class="btn btn-primary" type="submit">Kaydet</button>
+              <button class="btn btn-soft" type="button" id="product-reset">Temizle</button>
+            </div>
+          </form>
+          <div class="admin-card">
+            <h2>Ürün Listesi</h2>
+            <div id="admin-products-list" class="admin-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-section" data-section="categories">
+        <div class="admin-panel-grid">
+          <form id="category-form" class="admin-card admin-form-grid">
+            <h2>Kategori Ekle / Düzenle</h2>
+            <input type="hidden" id="category-old" />
+            <label>Kategori Adı</label>
+            <input id="category-name" required />
+            <div class="hero-cta">
+              <button class="btn btn-primary" type="submit">Kaydet</button>
+              <button class="btn btn-soft" type="button" id="category-reset">Temizle</button>
+            </div>
+          </form>
+          <div class="admin-card">
+            <h2>Kategori Listesi</h2>
+            <div id="admin-categories-list" class="admin-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="admin-section" data-section="content">
+        <form id="content-form" class="admin-card admin-form-grid">
+          <h2>Site İçerik Ayarları</h2>
+          <label>Ana Sayfa Slogan</label>
+          <input id="content-homeSlogan" required />
+          <label>Banner Başlığı</label>
+          <input id="content-bannerTitle" required />
+          <label>Hakkımızda Kısa Metni</label>
+          <textarea id="content-aboutShort" required></textarea>
+          <label>İletişim E-posta</label>
+          <input id="content-contactEmail" type="email" required />
+          <label>İletişim Telefon</label>
+          <input id="content-contactPhone" required />
+          <label>İletişim Adres</label>
+          <input id="content-contactAddress" required />
+          <button class="btn btn-primary" type="submit">İçerikleri Kaydet</button>
+        </form>
+      </section>
+
+      <section class="admin-section" data-section="settings">
+        <form id="settings-form" class="admin-card admin-form-grid">
+          <h2>Genel Ayarlar</h2>
+          <label>Site Adı</label>
+          <input id="settings-siteName" required />
+          <label>Para Birimi</label>
+          <input id="settings-currency" value="TRY" required />
+          <label>Admin E-posta</label>
+          <input id="settings-adminEmail" type="email" required />
+          <label>Admin Şifre</label>
+          <input id="settings-adminPassword" required />
+          <button class="btn btn-primary" type="submit">Ayarları Kaydet</button>
+        </form>
+      </section>
+
+      <small id="admin-feedback"></small>
+    </main>
+  </div>
+
+  <script src="../assets/js/products.js"></script>
+  <script src="../assets/js/admin.js"></script>
+</body>
+</html>

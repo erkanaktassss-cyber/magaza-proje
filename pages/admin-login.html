@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Giriş | BIOLIFE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body>
+  <main class="admin-login-page">
+    <div class="auth-card admin-login-card">
+      <a class="logo" href="../index.html">BIO<span>LIFE</span></a>
+      <h1>Yönetim Paneli Girişi</h1>
+      <p class="section-sub">Demo yönetici hesabıyla giriş yaparak ürün, kategori ve içerikleri yönetin.</p>
+      <form id="admin-login-form" class="admin-form-grid">
+        <label>E-posta</label>
+        <input type="email" id="admin-email" required placeholder="admin@biolife.com" />
+        <label>Şifre</label>
+        <input type="password" id="admin-password" required placeholder="••••••••" />
+        <button class="btn btn-primary" type="submit">Giriş Yap</button>
+      </form>
+      <small id="admin-login-message"></small>
+      <div class="admin-demo-box">
+        <strong>Demo Giriş:</strong>
+        <span>E-posta: admin@biolife.com</span>
+        <span>Şifre: Biolife123!</span>
+      </div>
+    </div>
+  </main>
+
+  <script src="../assets/js/products.js"></script>
+  <script src="../assets/js/admin.js"></script>
+</body>
+</html>
