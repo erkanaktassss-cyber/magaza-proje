@@ -1,0 +1,4 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/static/css/style.css"><title>Kategori Yönetimi</title></head><body><main class="container"><h1>Kategori Yönetimi</h1><%- include('partials/admin-nav') %>
+<form action="/admin/categories" method="post" class="form"><input name="name" placeholder="Kategori adı" required><input name="slug" placeholder="slug" required><textarea name="description" placeholder="Açıklama"></textarea><button>Ekle</button></form>
+<% categories.forEach(c => { %><div class="card row"><div><strong><%= c.name %></strong> (<%= c.slug %>)</div><form action="/admin/categories/<%= c.id %>/delete" method="post"><button>Sil</button></form></div><% }) %>
+</main></body></html>

@@ -1,0 +1,3 @@
+<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/static/css/style.css"><title>Mesajlar</title></head><body><main class="container"><h1>İletişim Mesajları</h1><%- include('partials/admin-nav') %>
+<% messages.forEach(m => { %><div class="card"><strong><%= m.full_name %></strong> - <%= m.email %><p><%= m.message %></p></div><% }) %>
+</main></body></html>

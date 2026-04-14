@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: biolife-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: biolife
+      POSTGRES_PASSWORD: biolife
+      POSTGRES_DB: biolife
+    ports:
+      - "5432:5432"
+    volumes:
+      - biolife_pg_data:/var/lib/postgresql/data
+volumes:
+  biolife_pg_data:
