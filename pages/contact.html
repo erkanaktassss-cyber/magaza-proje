@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>İletişim | MagazaPro</title>
+  <title>İletişim | BIOLIFE</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../assets/css/style.css" />
 </head>
-<body data-page="contact">
+<body>
   <header class="site-header">
     <div class="container nav-wrap">
-      <a class="logo" href="../index.html">Magaza<span>Pro</span></a>
+      <a class="logo" href="../index.html">BIO<span>LIFE</span></a>
+      <button id="nav-toggle">Menü</button>
       <nav class="main-nav">
         <a href="../index.html">Ana Sayfa</a>
         <a href="products.html">Ürünler</a>
@@ -20,21 +21,32 @@
         <a href="contact.html" class="active">İletişim</a>
       </nav>
       <div class="nav-actions">
-        <a href="login.html" class="btn btn-outline">Giriş</a>
+        <a href="login.html" class="btn btn-outline">Giriş / Kayıt</a>
         <a href="cart.html" class="cart-link">Sepet <span id="cart-count">0</span></a>
       </div>
     </div>
   </header>
 
   <main class="section">
-    <div class="container prose">
-      <h1>İletişim</h1>
-      <p>Destek talepleriniz için bize ulaşın:</p>
-      <ul>
-        <li>E-posta: destek@magazapro.com</li>
-        <li>Telefon: +90 (212) 555 01 01</li>
-        <li>Adres: Levent, İstanbul</li>
-      </ul>
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h1>Bizimle İletişime Geçin</h1>
+          <p class="section-sub">Ürün danışmanlığı, toplu sipariş ve iş birlikleri için uzman ekibimizle bağlantı kurabilirsiniz.</p>
+        </div>
+      </div>
+      <div class="contact-card">
+        <form id="contact-form" class="auth-card" style="max-width:100%;margin:0;">
+          <label>Ad Soyad</label>
+          <input type="text" required />
+          <label>E-posta</label>
+          <input type="email" required />
+          <label>Mesajınız</label>
+          <textarea required></textarea>
+          <button class="btn btn-primary" type="submit">Mesaj Gönder</button>
+          <small id="contact-message"></small>
+        </form>
+      </div>
     </div>
   </main>
 
