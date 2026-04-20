@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NAZAR KİMYA - AI Destekli Üretim Takip</title>
+  <style>
+    :root {
+      --primary: #12263a;
+      --primary-2: #274c77;
+      --light: #f4f7fb;
+      --success: #2e7d32;
+      --warn: #ed6c02;
+      --text: #1f2937;
+      --card: #ffffff;
+      --border: #dbe3ee;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      color: var(--text);
+      background: linear-gradient(160deg, #eef3fa, #f9fbff 40%, #eef2f8);
+    }
+
+    .page {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    .brand-card,
+    .cube-card,
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 8px 22px rgba(18, 38, 58, 0.08);
+    }
+
+    .brand-card { padding: 20px; }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 24px;
+      color: var(--primary);
+      letter-spacing: 0.4px;
+    }
+
+    .muted { color: #59687a; margin: 0; }
+
+    .metrics {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(100px, 1fr));
+      gap: 10px;
+    }
+
+    .metric {
+      padding: 10px;
+      border-radius: 10px;
+      background: #f8fbff;
+      border: 1px solid #e6eef8;
+    }
+
+    .metric-label { font-size: 12px; color: #5d6f85; }
+    .metric-value { font-size: 22px; font-weight: 700; color: var(--primary); }
+
+    .cube-card {
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .cube-wrap {
+      perspective: 1000px;
+      width: 120px;
+      height: 120px;
+      margin: 10px auto 12px;
+    }
+
+    .cube {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      animation: spin 10s linear infinite;
+    }
+
+    .face {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      display: grid;
+      place-items: center;
+      border: 2px solid #ffffff99;
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      background: linear-gradient(145deg, #1b4d7e, #123a62);
+      box-shadow: inset 0 0 20px #ffffff20;
+    }
+
+    .front { transform: translateZ(60px); }
+    .back { transform: rotateY(180deg) translateZ(60px); }
+    .right { transform: rotateY(90deg) translateZ(60px); }
+    .left { transform: rotateY(-90deg) translateZ(60px); }
+    .top { transform: rotateX(90deg) translateZ(60px); }
+    .bottom { transform: rotateX(-90deg) translateZ(60px); }
+
+    @keyframes spin {
+      0% { transform: rotateX(-20deg) rotateY(0); }
+      100% { transform: rotateX(-20deg) rotateY(360deg); }
+    }
+
+    .card { padding: 16px; margin-bottom: 18px; }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(120px, 1fr));
+      gap: 12px;
+      align-items: end;
+    }
+
+    label {
+      font-size: 12px;
+      color: #5d6f85;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+      font: inherit;
+      border-radius: 9px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid #ccd9e9;
+      padding: 9px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      overflow: hidden;
+    }
+
+    th,
+    td {
+      border: 1px solid #d5e2ef;
+      padding: 7px;
+      font-size: 13px;
+      vertical-align: middle;
+      background: #fff;
+    }
+
+    th {
+      background: var(--primary);
+      color: #fff;
+      text-align: left;
+      letter-spacing: 0.3px;
+    }
+
+    .table-input {
+      border: 1px solid transparent;
+      padding: 6px;
+      border-radius: 6px;
+      width: 100%;
+      background: #fdfefe;
+    }
+
+    .table-input:focus {
+      outline: none;
+      border-color: #90caf9;
+      background: #fffde7;
+    }
+
+    .btn-row {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    button.secondary { background: #5e738a; }
+    button.success { background: var(--success); }
+    button.warn { background: var(--warn); }
+
+    #ai-panel {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      width: 360px;
+      max-width: calc(100vw - 30px);
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid #d4deea;
+      box-shadow: 0 10px 26px rgba(19, 37, 58, 0.24);
+      display: none;
+      flex-direction: column;
+      z-index: 30;
+    }
+
+    .ai-header {
+      background: var(--primary);
+      color: #fff;
+      padding: 12px;
+      font-weight: 700;
+      border-radius: 14px 14px 0 0;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+    }
+
+    #ai-content {
+      height: 260px;
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: #f8fbff;
+    }
+
+    .bubble {
+      padding: 9px 10px;
+      border-radius: 10px;
+      max-width: 95%;
+      line-height: 1.45;
+      font-size: 13px;
+    }
+
+    .user { align-self: flex-end; background: #dbe9ff; }
+    .assistant { align-self: flex-start; background: #fff; border: 1px solid #dce6f4; }
+
+    .ai-input-wrap { display: flex; gap: 8px; padding: 10px; }
+
+    .ai-toggle-btn {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 20;
+      border-radius: 999px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 12px 18px;
+      box-shadow: 0 8px 22px rgba(18, 38, 58, 0.3);
+    }
+
+    .right { text-align: right; }
+
+    @media (max-width: 1000px) {
+      .header { grid-template-columns: 1fr; }
+      .controls { grid-template-columns: repeat(2, minmax(140px, 1fr)); }
+      th, td { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="header">
+      <div class="brand-card">
+        <h1>NAZAR KİMYA AI DESTEKLİ ÜRETİM TAKİP</h1>
+        <p class="muted">Sadece Nazar Kimya üretim operasyonlarına odaklı, günlük vardiya planlama + canlı üretim analizi paneli.</p>
+        <div class="metrics">
+          <div class="metric"><div class="metric-label">Toplam Şişe</div><div id="m-bottle" class="metric-value">0</div></div>
+          <div class="metric"><div class="metric-label">Toplam Koli</div><div id="m-case" class="metric-value">0</div></div>
+          <div class="metric"><div class="metric-label">Toplam Palet</div><div id="m-pallet" class="metric-value">0</div></div>
+          <div class="metric"><div class="metric-label">Duruş Sayısı</div><div id="m-stop" class="metric-value">0</div></div>
+        </div>
+      </div>
+      <div class="cube-card">
+        <div class="cube-wrap" aria-label="3 boyutlu dönen AI obje">
+          <div class="cube">
+            <div class="face front">AI</div>
+            <div class="face back">NKR</div>
+            <div class="face right">ÜRT</div>
+            <div class="face left">KAL</div>
+            <div class="face top">OEE</div>
+            <div class="face bottom">VERİ</div>
+          </div>
+        </div>
+        <strong>YAPAY ZEKA KONTROL ÇEKİRDEĞİ</strong>
+        <p class="muted">Üretim, kalite, duruş ve hız kaybı sinyallerini yorumlayan görsel AI göstergesi.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Vardiya Parametreleri</h3>
+      <div class="controls">
+        <div>
+          <label for="unitPerCase">Koli başına şişe</label>
+          <input id="unitPerCase" type="number" value="24" min="1" />
+        </div>
+        <div>
+          <label for="casePerPallet">Palet başına koli</label>
+          <input id="casePerPallet" type="number" value="56" min="1" />
+        </div>
+        <div>
+          <label for="line">Hat</label>
+          <select id="line">
+            <option>Dolum Hattı 1</option>
+            <option>Dolum Hattı 2</option>
+            <option>Ambalaj Hattı</option>
+          </select>
+        </div>
+        <div>
+          <label for="operator">Operatör</label>
+          <input id="operator" type="text" placeholder="Ad Soyad" />
+        </div>
+        <div>
+          <label for="date">Tarih</label>
+          <input id="date" type="date" />
+        </div>
+      </div>
+      <div class="btn-row">
+        <button onclick="addRow()">Saat Satırı Ekle</button>
+        <button class="secondary" onclick="saveData()">Kaydet (Local)</button>
+        <button class="success" onclick="downloadCSV()">CSV İndir</button>
+        <button class="warn" onclick="clearForm()">Formu Temizle</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Canlı Üretim Tablosu</h3>
+      <table>
+        <thead>
+          <tr>
+            <th width="130">Saat</th>
+            <th>Üretilen Ürün</th>
+            <th width="110">Adet (Şişe)</th>
+            <th width="90">Koli</th>
+            <th width="90">Palet</th>
+            <th>Duruş / Teknik Not</th>
+            <th width="80">Durum</th>
+          </tr>
+        </thead>
+        <tbody id="productionBody"></tbody>
+      </table>
+    </section>
+  </div>
+
+  <button class="ai-toggle-btn" onclick="openAI()">NAZAR AI ANALİZ</button>
+
+  <aside id="ai-panel">
+    <div class="ai-header">NAZAR AI ASİSTAN <button onclick="closeAI()">Kapat</button></div>
+    <div id="ai-content"></div>
+    <div class="ai-input-wrap">
+      <input id="aiQuestion" type="text" placeholder="Üretim, kalite veya teknik soru yazın..." />
+      <button onclick="sendAI()">Gönder</button>
+    </div>
+  </aside>
+
+  <script>
+    const productionBody = document.getElementById("productionBody");
+    const aiContent = document.getElementById("ai-content");
+    const defaultHours = [
+      "07:30 - 08:30",
+      "08:30 - 09:30",
+      "09:30 - 10:30",
+      "10:30 - 11:30",
+      "11:30 - 12:30"
+    ];
+
+    function getFactors() {
+      const unitPerCase = Number(document.getElementById("unitPerCase").value) || 1;
+      const casePerPallet = Number(document.getElementById("casePerPallet").value) || 1;
+      return { unitPerCase, casePerPallet };
+    }
+
+    function createRow(hour = "") {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><input class="table-input hour" type="text" value="${hour}" placeholder="07:30 - 08:30"></td>
+        <td><input class="table-input product" type="text" placeholder="Ürün adı"></td>
+        <td><input class="table-input bottle" type="number" min="0" value="0"></td>
+        <td><input class="table-input case" type="text" readonly></td>
+        <td><input class="table-input pallet" type="text" readonly></td>
+        <td><textarea class="table-input note" rows="1" placeholder="Duruş / bakım / kalite notu"></textarea></td>
+        <td class="right"><button onclick="this.closest('tr').remove(); recalcAll();">Sil</button></td>
+      `;
+
+      tr.querySelector(".bottle").addEventListener("input", () => {
+        calculateRow(tr);
+        recalcAll();
+      });
+
+      tr.querySelector(".note").addEventListener("input", recalcAll);
+
+      calculateRow(tr);
+      return tr;
+    }
+
+    function calculateRow(tr) {
+      const bottles = Number(tr.querySelector(".bottle").value) || 0;
+      const { unitPerCase, casePerPallet } = getFactors();
+      const cases = bottles / unitPerCase;
+      const pallets = cases / casePerPallet;
+
+      tr.querySelector(".case").value = cases.toFixed(2);
+      tr.querySelector(".pallet").value = pallets.toFixed(2);
+    }
+
+    function recalcAll() {
+      const rows = [...productionBody.querySelectorAll("tr")];
+      let totalBottle = 0;
+      let totalCase = 0;
+      let totalPallet = 0;
+      let totalStop = 0;
+
+      rows.forEach((row) => {
+        calculateRow(row);
+        const bottle = Number(row.querySelector(".bottle").value) || 0;
+        const c = Number(row.querySelector(".case").value) || 0;
+        const p = Number(row.querySelector(".pallet").value) || 0;
+        const note = row.querySelector(".note").value.toLowerCase();
+
+        totalBottle += bottle;
+        totalCase += c;
+        totalPallet += p;
+
+        if (note.includes("duruş") || note.includes("arıza") || note.includes("bakım")) {
+          totalStop += 1;
+        }
+      });
+
+      document.getElementById("m-bottle").textContent = totalBottle.toLocaleString("tr-TR");
+      document.getElementById("m-case").textContent = totalCase.toFixed(2);
+      document.getElementById("m-pallet").textContent = totalPallet.toFixed(2);
+      document.getElementById("m-stop").textContent = totalStop;
+    }
+
+    function addRow() {
+      productionBody.appendChild(createRow(""));
+      recalcAll();
+    }
+
+    function serialize() {
+      const rows = [...productionBody.querySelectorAll("tr")].map((row) => ({
+        hour: row.querySelector(".hour").value,
+        product: row.querySelector(".product").value,
+        bottle: row.querySelector(".bottle").value,
+        note: row.querySelector(".note").value
+      }));
+
+      return {
+        date: document.getElementById("date").value,
+        line: document.getElementById("line").value,
+        operator: document.getElementById("operator").value,
+        unitPerCase: document.getElementById("unitPerCase").value,
+        casePerPallet: document.getElementById("casePerPallet").value,
+        rows
+      };
+    }
+
+    function hydrate(data) {
+      if (!data) return;
+      document.getElementById("date").value = data.date || "";
+      document.getElementById("line").value = data.line || "Dolum Hattı 1";
+      document.getElementById("operator").value = data.operator || "";
+      document.getElementById("unitPerCase").value = data.unitPerCase || 24;
+      document.getElementById("casePerPallet").value = data.casePerPallet || 56;
+
+      productionBody.innerHTML = "";
+      (data.rows || []).forEach((r) => {
+        const row = createRow(r.hour || "");
+        row.querySelector(".product").value = r.product || "";
+        row.querySelector(".bottle").value = r.bottle || 0;
+        row.querySelector(".note").value = r.note || "";
+        productionBody.appendChild(row);
+      });
+      recalcAll();
+    }
+
+    function saveData() {
+      localStorage.setItem("nazar-production-data", JSON.stringify(serialize()));
+      toast("Veriler tarayıcıya kaydedildi.");
+    }
+
+    function loadData() {
+      const raw = localStorage.getItem("nazar-production-data");
+      if (raw) {
+        hydrate(JSON.parse(raw));
+      } else {
+        defaultHours.forEach((hour) => productionBody.appendChild(createRow(hour)));
+        recalcAll();
+      }
+    }
+
+    function clearForm() {
+      if (!confirm("Tüm satırlar temizlensin mi?")) return;
+      localStorage.removeItem("nazar-production-data");
+      productionBody.innerHTML = "";
+      defaultHours.forEach((hour) => productionBody.appendChild(createRow(hour)));
+      recalcAll();
+      toast("Form sıfırlandı.");
+    }
+
+    function downloadCSV() {
+      const s = serialize();
+      const header = ["Tarih", "Hat", "Operatör", "Saat", "Ürün", "Şişe", "Not"];
+      const lines = [header.join(";")];
+      s.rows.forEach((r) => {
+        lines.push([
+          s.date,
+          s.line,
+          s.operator,
+          r.hour,
+          r.product,
+          r.bottle,
+          (r.note || "").replaceAll(";", ",")
+        ].join(";"));
+      });
+
+      const blob = new Blob(["\uFEFF" + lines.join("\n")], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `nazar-uretim-${s.date || "kayitsiz"}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function toast(text) {
+      const msg = document.createElement("div");
+      msg.textContent = text;
+      msg.style.cssText = "position:fixed;left:50%;bottom:24px;transform:translateX(-50%);padding:10px 14px;background:#10273c;color:#fff;border-radius:9px;z-index:99";
+      document.body.appendChild(msg);
+      setTimeout(() => msg.remove(), 1800);
+    }
+
+    function openAI() {
+      document.getElementById("ai-panel").style.display = "flex";
+      document.querySelector(".ai-toggle-btn").style.display = "none";
+    }
+
+    function closeAI() {
+      document.getElementById("ai-panel").style.display = "none";
+      document.querySelector(".ai-toggle-btn").style.display = "block";
+    }
+
+    function bubble(text, role = "assistant") {
+      const el = document.createElement("div");
+      el.className = `bubble ${role}`;
+      el.textContent = text;
+      aiContent.appendChild(el);
+      aiContent.scrollTop = aiContent.scrollHeight;
+    }
+
+    function answerNazarProduction(question) {
+      const q = question.toLowerCase();
+      const allowed = ["nazar", "üretim", "duruş", "kalite", "dolum", "hat", "palet", "koli", "şişe", "operatör", "arıza", "bakım", "oee"];
+      const isAllowed = allowed.some((k) => q.includes(k));
+
+      if (!isAllowed) {
+        return "Bu asistan yalnızca Nazar Kimya üretim, kalite, bakım ve teknik operasyon konularında cevap verir.";
+      }
+
+      const bottle = document.getElementById("m-bottle").textContent;
+      const caseVal = document.getElementById("m-case").textContent;
+      const pallet = document.getElementById("m-pallet").textContent;
+      const stop = Number(document.getElementById("m-stop").textContent);
+
+      if (q.includes("özet") || q.includes("durum") || q.includes("rapor")) {
+        return `Anlık özet: ${bottle} şişe, ${caseVal} koli, ${pallet} palet üretim görünüyor. Duruş sinyali ${stop} satırda tespit edildi.`;
+      }
+
+      if (q.includes("duruş") || q.includes("arıza") || q.includes("bakım")) {
+        if (stop === 0) return "Notlara göre kritik duruş sinyali yok. Önleyici bakım takvimini yine de kontrol edin.";
+        return `${stop} satırda duruş/arıza/bakım notu var. Kök neden için notları filtreleyip ekip lideri ile aksiyon açın.`;
+      }
+
+      if (q.includes("verim") || q.includes("oee") || q.includes("hız")) {
+        return "Verim değerlendirmesi için saatlik hedef alanı ekleyip gerçekleşen adet ile kıyaslayın. Böylece hat bazlı OEE yorumları daha net olur.";
+      }
+
+      return "Soru alındı. Nazar Kimya üretim paneli için tabloyu güncelledikçe daha net analiz verebilirim.";
+    }
+
+    function sendAI() {
+      const input = document.getElementById("aiQuestion");
+      const text = input.value.trim();
+      if (!text) return;
+
+      bubble(text, "user");
+      const answer = answerNazarProduction(text);
+      setTimeout(() => bubble(answer, "assistant"), 250);
+      input.value = "";
+    }
+
+    document.getElementById("aiQuestion").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") sendAI();
+    });
+
+    ["unitPerCase", "casePerPallet"].forEach((id) => {
+      document.getElementById(id).addEventListener("input", recalcAll);
+    });
+
+    document.getElementById("date").valueAsDate = new Date();
+    loadData();
+    bubble("Nazar AI hazır. Sadece üretim, kalite ve teknik operasyon sorularını yanıtlar.");
+
+    window.addEventListener("click", () => {
+      if (window.hasGreeted) return;
+      const s = new SpeechSynthesisUtterance("Nazar Kimya sistemine hoş geldiniz.");
+      s.lang = "tr-TR";
+      window.speechSynthesis.speak(s);
+      window.hasGreeted = true;
+    }, { once: true });
+  </script>
+</body>
+</html>
