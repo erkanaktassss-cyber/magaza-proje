@@ -1,106 +1,68 @@
-# FabrikaOS — Profesyonel Üretim Yönetim Sistemi
+# FabrikaOS Pro — Profesyonel Üretim Yönetim Sistemi
 
-Bu proje; dolum ve paketleme hatları olan fabrikalar için, **gerçek kullanım odaklı**, modüler ve modern bir üretim yönetim panelidir.
+FabrikaOS Pro; dolum ve paketleme hatları olan tesislerde **gerçek kullanım odaklı üretim yönetimi** için tasarlanmış, modüler ve koyu tema kurumsal web panelidir.
 
-## Kapsam
+## Ana Modüller
 
-Sistemde aşağıdaki modüller çalışır halde gelir:
+- Ana Dashboard (hat kartları, üst KPI özetleri, kritik listeler)
+- Hat Yönetimi (ekle, sil, sırala, grupla)
+- Üretim Girişi (hedef, gerçekleşen, fire, kalite, vardiya, operatör, barkod)
+- Duruş Yönetimi (başlat/bitir, planlı/plansız, sebep yönetimi, geçmiş + Pareto benzeri listeler)
+- OEE Modülü (Availability, Performance, Quality, OEE + trend)
+- Kaizen Modülü (öneri, durum, kazanım alanları, liste)
+- 5S Modülü (bölüm bazlı puanlama + not)
+- FMEA Modülü (RPN otomatik hesaplama, kritik risk vurgusu)
+- Üretim Analiz Motoru (AI-ready analiz paneli, mock analiz yanıtları)
+- Entegrasyon/Ayarlar (Manuel, Barkod, Delta HMI/PLC Modbus TCP hazırlığı)
+- Raporlama (günlük özet, CSV export, Excel export, yazdırma)
 
-1. **Yönetim Paneli**
-   - Hat ekleme / düzenleme / silme
-   - Dolum / paketleme gruplama
-   - Hat başına hedef, gerçekleşen, duruş süresi, son duruş sebebi, verim, OEE, operatör, vardiya
-   - TV uyumlu canlı kartlar
-
-2. **OEE Modülü**
-   - Availability / Performance / Quality hesaplaması
-   - Otomatik OEE yüzdesi
-   - Hat bazlı renkli OEE kartları
-   - Günlük ve haftalık özet alanı
-
-3. **Duruş Yönetimi**
-   - Duruş başlat / bitir
-   - Planlı / plansız ayrımı
-   - Duruş sebeplerini ekleme / silme
-   - En çok duran hatlar ve tekrar eden sebepler
-
-4. **Kaizen Modülü**
-   - Çalışan öneri girişi
-   - Durum takibi (yeni, değerlendirmede, kabul edildi, reddedildi, uygulandı)
-   - Zaman / maliyet / kalite kazanımı alanları
-   - Kaizen takip tablosu
-
-5. **5S Modülü**
-   - Bölüm bazlı Seiri, Seiton, Seiso, Seiketsu, Shitsuke puan girişi
-   - Grafiksel skor görünümü
-   - Eksik alan listesi (80 altı)
-
-6. **FMEA Modülü**
-   - Proses bazlı hata türü / etkisi / sebebi
-   - Şiddet, oluşma, tespit ve otomatik RPN
-   - Aksiyon sorumlusu, hedef tarih, durum
-   - Risk sıralaması
-
-7. **AI Asistan Modülü**
-   - Sistem içi sohbet
-   - En zayıf hat, duruş nedenleri, kaizen önceliği, kritik FMEA, düşük 5S gibi sorulara yanıt
-   - Demo analiz motoru ile çalışır
-   - Kod yapısı gelecekte OpenAI API entegrasyonuna uygundur
-
-8. **Raporlama**
-   - Günlük, haftalık, vardiya, OEE, duruş, kaizen, FMEA raporları
-   - CSV dışa aktarma
-
-## Teknik Mimari
-
-- Web tabanlı (HTML/CSS/Vanilla JS)
-- Veri katmanı: `localStorage` (ilk sürüm için hızlı kurulum)
-- Sonradan API/veritabanı bağlantısı için modüler JS fonksiyon yapısı
-- Kurulum gerektirmeden çalıştırılabilir
-
-## Klasör Yapısı
+## Mimarî
 
 ```text
 uretim-takip/
-├── index.html      # Tüm modüllerin bulunduğu ana arayüz
-├── styles.css      # Premium koyu tema ve responsive tasarım
-├── app.js          # Durum yönetimi, hesaplamalar, raporlar, AI demo motoru
-└── README.md       # Kurulum ve kullanım dokümantasyonu
+├── index.html
+├── styles.css
+├── README.md
+└── src/
+    ├── app.js
+    ├── components/
+    │   └── renderers.js
+    ├── data/
+    │   └── sampleData.js
+    ├── services/
+    │   ├── aiService.js
+    │   ├── integrationService.js
+    │   ├── reportService.js
+    │   └── storageService.js
+    ├── store/
+    │   └── state.js
+    └── utils/
+        ├── format.js
+        └── oee.js
 ```
 
-## Çalıştırma (Adım Adım)
+- Veri katmanı: localStorage (ilk sürüm)
+- Geleceğe hazırlık: servis katmanı sayesinde DB/API entegrasyonuna uygun
+- AI-ready: mock motor + gerçek API takılabilecek yapı
 
-### Yöntem 1 — Dosyayı doğrudan aç
-1. `uretim-takip` klasörüne girin.
-2. `index.html` dosyasını çift tıklayarak tarayıcıda açın.
+## Kurulum
 
-### Yöntem 2 — Lokal sunucu (önerilir)
-1. Terminal açın.
-2. Klasöre geçin:
-   ```bash
-   cd uretim-takip
-   ```
-3. Basit sunucu başlatın:
-   ```bash
-   python3 -m http.server 8080
-   ```
-4. Tarayıcıdan açın:
-   ```
-   http://localhost:8080
-   ```
+### 1) Basit kullanım
+`uretim-takip/index.html` dosyasını tarayıcıda açın.
 
-## Kullanım Başlangıcı
+### 2) Lokal sunucu (önerilen)
 
-1. **Yönetim Paneli** sekmesinden hatlarınızı ekleyin.
-2. Hat kartlarında hedef, gerçekleşen, operatör, vardiya ve sağlam ürün alanlarını doldurun.
-3. **Duruş Yönetimi** ekranından duruş başlatıp bitirin.
-4. **OEE Modülü**nden performansı takip edin.
-5. **Kaizen**, **5S** ve **FMEA** ekranları ile iyileştirme kültürünü yönetin.
-6. **AI Asistan** ekranında yönetim soruları sorun.
-7. **Raporlama** ekranından rapor oluşturun ve CSV dışa aktarın.
+```bash
+cd uretim-takip
+python3 -m http.server 8080
+```
+
+Tarayıcı:
+- http://localhost:8080
 
 ## Notlar
 
-- Bu sürüm tek istasyon/tek tarayıcı kullanımına uygundur.
-- Veriler tarayıcı localStorage içinde tutulur.
-- Kurumsal yayında bir sonraki adım, merkezi DB + kullanıcı yetkilendirme entegrasyonudur.
+- Uygulama açıldığında örnek verilerle dolu gelir.
+- "Verileri Sıfırla" ile örnek veri başlangıcına dönülür.
+- Delta PLC alanı mock test verir; gerçek sürücü entegrasyonu için `services/integrationService.js` genişletilir.
+- AI motoru mock cevap üretir; gerçek OpenAI API bağlantısı için `services/aiService.js` içerisine HTTP katmanı eklenebilir.
