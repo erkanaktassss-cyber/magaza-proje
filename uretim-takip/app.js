@@ -49,12 +49,71 @@
 
   const STORAGE_KEY = 'fabrika_pro_suite_v1';
   const el = (id) => document.getElementById(id);
+  const on = (id, eventName, handler) => {
+    const node = el(id);
+    if (!node) {
+      console.warn(`Eksik DOM elemanı: #${id}`);
+      return;
+    }
+    node.addEventListener(eventName, handler);
+  };
+
+  function normalizeLine(line, index) {
+    const base = deepClone(SAMPLE_STATE.lines[0]);
+    return {
+      ...base,
+      ...line,
+      id: line && line.id ? line.id : uid('line'),
+      name: line && line.name ? line.name : `Hat ${index + 1}`,
+      order: Number.isFinite(line?.order) ? line.order : index + 1,
+      downtime: {
+        ...base.downtime,
+        ...(line?.downtime || {}),
+        logs: Array.isArray(line?.downtime?.logs) ? line.downtime.logs : []
+      },
+      oeeHistory: Array.isArray(line?.oeeHistory) && line.oeeHistory.length ? line.oeeHistory : base.oeeHistory
+    };
+  }
+
+  function normalizeState(parsed) {
+    const defaults = deepClone(SAMPLE_STATE);
+    const safe = parsed && typeof parsed === 'object' ? parsed : {};
+
+    const normalized = {
+      ...defaults,
+      ...safe,
+      meta: { ...defaults.meta, ...(safe.meta || {}) },
+      settings: {
+        ...defaults.settings,
+        ...(safe.settings || {}),
+        delta: {
+          ...defaults.settings.delta,
+          ...((safe.settings && safe.settings.delta) || {})
+        },
+        ai: {
+          ...defaults.settings.ai,
+          ...((safe.settings && safe.settings.ai) || {})
+        }
+      },
+      downtimeReasons: Array.isArray(safe.downtimeReasons) ? safe.downtimeReasons : defaults.downtimeReasons,
+      lines: Array.isArray(safe.lines) && safe.lines.length ? safe.lines.map(normalizeLine) : defaults.lines.map(normalizeLine),
+      kaizens: Array.isArray(safe.kaizens) ? safe.kaizens : defaults.kaizens,
+      fiveS: Array.isArray(safe.fiveS) ? safe.fiveS : defaults.fiveS,
+      fmea: Array.isArray(safe.fmea) ? safe.fmea : defaults.fmea
+    };
+
+    normalized.lines.forEach((line, index) => {
+      line.order = index + 1;
+    });
+
+    return normalized;
+  }
 
   function loadState() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return deepClone(SAMPLE_STATE);
-      return { ...deepClone(SAMPLE_STATE), ...JSON.parse(raw) };
+      return normalizeState(JSON.parse(raw));
     } catch {
       return deepClone(SAMPLE_STATE);
     }
@@ -144,13 +203,13 @@
       el(`tab-${btn.dataset.tab}`).classList.add('active');
     }));
 
-    el('addLine').addEventListener('click', () => {
+    on('addLine', 'click', () => {
       const name = el('lineName').value.trim(); if (!name) return;
       state.lines.push({ id: uid('line'), name, type: el('lineType').value, group: el('lineGroup').value || 'Genel', order: state.lines.length + 1, shift: '1. Vardiya', operator: '', status: 'idle', dailyTarget: 0, actual: 0, defect: 0, barcode: '', idealCycleSec: 1, plannedProductionMin: 480, downtime: { totalMin: 0, active: null, logs: [] }, oeeHistory: [65,68,70,69,72,71,73] });
       save(); renderAll(); el('lineName').value = '';
     });
 
-    el('lineList').addEventListener('click', (e) => {
+    on('lineList', 'click', (e) => {
       const id = e.target.dataset.id; const action = e.target.dataset.action; if (!id || !action) return;
       const idx = state.lines.findIndex((l) => l.id === id); if (idx < 0) return;
       if (action === 'delete') state.lines.splice(idx, 1);
@@ -160,7 +219,7 @@
       state.lines.forEach((l, i) => l.order = i + 1); save(); renderAll();
     });
 
-    el('saveProduction').addEventListener('click', () => {
+    on('saveProduction', 'click', () => {
       const line = state.lines.find((l) => l.id === el('productionLine').value); if (!line) return;
       line.dailyTarget = Math.max(0, Number(el('targetInput').value) || 0);
       line.actual = Math.max(0, Number(el('actualInput').value) || 0);
@@ -169,44 +228,44 @@
       save(); renderAll();
     });
 
-    el('startDowntime').addEventListener('click', () => {
+    on('startDowntime', 'click', () => {
       const line = state.lines.find((l) => l.id === el('stopLine').value); if (!line || line.downtime.active) return;
       line.status = 'stopped'; line.downtime.active = { id: uid('stop'), reason: el('stopReason').value, type: el('stopType').value, startAt: new Date().toISOString() };
       save(); renderAll();
     });
-    el('endDowntime').addEventListener('click', () => {
+    on('endDowntime', 'click', () => {
       const line = state.lines.find((l) => l.id === el('stopLine').value); if (!line || !line.downtime.active) return;
       const endAt = new Date().toISOString(); const durationMin = minsBetween(line.downtime.active.startAt, endAt);
       line.downtime.logs.push({ ...line.downtime.active, endAt, durationMin }); line.downtime.totalMin += durationMin; line.downtime.active = null; line.status = 'running';
       save(); renderAll();
     });
-    el('addReason').addEventListener('click', () => { const reason = el('newReason').value.trim(); if (!reason) return; if (!state.downtimeReasons.includes(reason)) state.downtimeReasons.push(reason); save(); renderAll(); el('newReason').value=''; });
-    el('reasonChips').addEventListener('click', (e) => { const reason = e.target.dataset.reason; if (!reason) return; state.downtimeReasons = state.downtimeReasons.filter((r) => r !== reason); save(); renderAll(); });
+    on('addReason', 'click', () => { const reason = el('newReason').value.trim(); if (!reason) return; if (!state.downtimeReasons.includes(reason)) state.downtimeReasons.push(reason); save(); renderAll(); el('newReason').value=''; });
+    on('reasonChips', 'click', (e) => { const reason = e.target.dataset.reason; if (!reason) return; state.downtimeReasons = state.downtimeReasons.filter((r) => r !== reason); save(); renderAll(); });
 
-    el('addKaizen').addEventListener('click', () => {
+    on('addKaizen', 'click', () => {
       const title = el('kaizenTitle').value.trim(); if (!title) return;
       state.kaizens.push({ id: uid('kz'), title, description: el('kaizenDesc').value.trim(), department: el('kaizenDept').selectedOptions[0]?.textContent || '-', status: el('kaizenStatus').value, gains: { time: Number(el('gainTime').value)||0, cost: Number(el('gainCost').value)||0, quality: Number(el('gainQuality').value)||0, safety: Number(el('gainSafety').value)||0 }, createdAt: new Date().toISOString() });
       save(); renderAll();
     });
 
-    el('addFiveS').addEventListener('click', () => {
+    on('addFiveS', 'click', () => {
       const dept = el('fiveSDept').value.trim(); if (!dept) return;
       state.fiveS.push({ id: uid('5s'), department: dept, seiri: clamp(el('seiri').value,0,100), seiton: clamp(el('seiton').value,0,100), seiso: clamp(el('seiso').value,0,100), seiketsu: clamp(el('seiketsu').value,0,100), shitsuke: clamp(el('shitsuke').value,0,100), note: el('fiveSNote').value.trim() });
       save(); renderAll();
     });
 
-    el('addFmea').addEventListener('click', () => {
+    on('addFmea', 'click', () => {
       const process = el('fProcess').value.trim(); if (!process) return;
       state.fmea.push({ id: uid('fm'), process, failureMode: el('fMode').value.trim(), effect: el('fEffect').value.trim(), cause: el('fCause').value.trim(), severity: clamp(el('fS').value,1,10), occurrence: clamp(el('fO').value,1,10), detection: clamp(el('fD').value,1,10), action: el('fAction').value.trim(), owner: el('fOwner').value.trim(), targetDate: el('fDate').value, status: el('fStatus').value });
       save(); renderAll();
     });
 
-    el('runAnalysis').addEventListener('click', () => {
+    on('runAnalysis', 'click', () => {
       const q = el('analysisQuestion').value.trim(); if (!q) return;
       el('analysisOutput').innerHTML = `<p><b>Soru:</b> ${q}</p><p><b>Analiz:</b> ${aiAnswer(q)}</p>`;
     });
 
-    el('saveSettings').addEventListener('click', () => {
+    on('saveSettings', 'click', () => {
       state.settings.dataSource = el('dataSource').value;
       state.settings.barcodePrefix = el('barcodePrefix').value.trim();
       state.settings.delta.ip = el('deltaIp').value.trim();
@@ -218,32 +277,41 @@
       state.settings.ai.model = el('aiModel').value.trim();
       save(); renderAll(); alert('Ayarlar kaydedildi.');
     });
-    el('testIntegration').addEventListener('click', () => {
+    on('testIntegration', 'click', () => {
       if (state.settings.dataSource !== 'delta') { el('integrationResult').textContent = 'Manuel/Barkod modunda test bağlantısı gerekmiyor.'; return; }
       if (!state.settings.delta.ip || !state.settings.delta.port) { el('integrationResult').textContent = 'Delta bağlantısı için IP/Port eksik.'; return; }
       el('integrationResult').textContent = `Mock bağlantı başarılı (${state.settings.delta.protocol} - ${state.settings.delta.ip}:${state.settings.delta.port}).`;
     });
 
-    el('generateReport').addEventListener('click', renderAll);
-    el('exportCsv').addEventListener('click', () => {
+    on('generateReport', 'click', renderAll);
+    on('exportCsv', 'click', () => {
       const rows = state.lines.map((line) => { const m = getLineMetrics(line); return [line.name, line.type, line.dailyTarget, line.actual, line.defect, `${m.oeePct}%`, line.downtime.totalMin]; });
       const esc = (v) => `"${String(v ?? '').replaceAll('"','""')}"`;
       const csv = [['Hat','Tip','Hedef','Gerçekleşen','Fire','OEE','Duruş dk'].map(esc).join(','), ...rows.map((r) => r.map(esc).join(','))].join('\n');
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'uretim-ozet-raporu.csv'; a.click();
     });
-    el('exportExcel').addEventListener('click', () => {
+    on('exportExcel', 'click', () => {
       const rows = state.fmea.map((item) => ({ ...item, rpn: calculateRpn(item) })).sort((a, b) => b.rpn - a.rpn).map((item) => `<tr><td>${item.process}</td><td>${item.failureMode}</td><td>${item.rpn}</td><td>${item.owner}</td><td>${item.status}</td></tr>`).join('');
       const html = `<table><tr><th>Proses</th><th>Hata Türü</th><th>RPN</th><th>Sorumlu</th><th>Durum</th></tr>${rows}</table>`;
       const blob = new Blob([html], { type: 'application/vnd.ms-excel' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'fmea-risk-raporu.xls'; a.click();
     });
-    el('printReport').addEventListener('click', () => window.print());
+    on('printReport', 'click', () => window.print());
 
-    el('tvMode').addEventListener('click', () => document.body.classList.toggle('tv-mode'));
-    el('resetData').addEventListener('click', () => { if (!confirm('Tüm veriler sıfırlansın mı?')) return; localStorage.removeItem(STORAGE_KEY); state = deepClone(SAMPLE_STATE); save(); renderAll(); });
+    on('tvMode', 'click', () => document.body.classList.toggle('tv-mode'));
+    on('resetData', 'click', () => { if (!confirm('Tüm veriler sıfırlansın mı?')) return; localStorage.removeItem(STORAGE_KEY); state = deepClone(SAMPLE_STATE); save(); renderAll(); });
 
     renderAll();
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-  else boot();
+  const safeBoot = () => {
+    try {
+      boot();
+    } catch (error) {
+      console.error('Uygulama başlatma hatası:', error);
+      alert('Sistem başlatılırken hata oluştu. Lütfen sayfayı yenileyin.');
+    }
+  };
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', safeBoot);
+  else safeBoot();
 })();

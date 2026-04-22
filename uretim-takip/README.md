@@ -64,5 +64,6 @@ Tarayıcı:
 
 - Uygulama açıldığında örnek verilerle dolu gelir.
 - "Verileri Sıfırla" ile örnek veri başlangıcına dönülür.
+- Eski localStorage verisi farklı şemadaysa uygulama otomatik normalizasyon yapar; yine de sorun yaşarsanız "Verileri Sıfırla" kullanın.
 - Delta PLC alanı mock test verir; gerçek sürücü entegrasyonu için `services/integrationService.js` genişletilir.
 - AI motoru mock cevap üretir; gerçek OpenAI API bağlantısı için `services/aiService.js` içerisine HTTP katmanı eklenebilir.
