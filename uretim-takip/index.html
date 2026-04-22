@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Üretim Takip Sistemi</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <h1>Üretim Takip Sistemi</h1>
+        <p class="sub">Canlı izleme • Duruş takibi • Hedef / gerçekleşen</p>
+      </div>
+      <div class="topbar-actions">
+        <button id="tamEkranBtn" class="btn secondary">TV Tam Ekran</button>
+        <button id="veriTemizleBtn" class="btn danger">Tüm Verileri Sıfırla</button>
+      </div>
+    </header>
+
+    <nav class="tabs" aria-label="Ana modüller">
+      <button class="tab-btn active" data-tab="ozet">Şef Özeti</button>
+      <button class="tab-btn" data-tab="hat">Hat Ekranı</button>
+      <button class="tab-btn" data-tab="dashboard">Dashboard</button>
+      <button class="tab-btn" data-tab="rapor">Rapor</button>
+    </nav>
+
+    <main>
+      <section id="tab-ozet" class="tab-panel active">
+        <div class="grid cards-4" id="ozetKartlari"></div>
+        <div class="panel">
+          <h2>Hızlı Durum</h2>
+          <p>Bu alan, en kritik hatları hızlıca görmeniz için otomatik güncellenir.</p>
+          <div id="kritikHatlar" class="chip-row"></div>
+        </div>
+      </section>
+
+      <section id="tab-hat" class="tab-panel">
+        <div class="panel">
+          <h2>Hat Seçimi ve Güncelleme</h2>
+          <div class="form-grid">
+            <label>
+              Hat
+              <select id="hatSecimi"></select>
+            </label>
+            <label>
+              Vardiya
+              <select id="vardiyaInput">
+                <option>1. Vardiya</option>
+                <option>2. Vardiya</option>
+                <option>3. Vardiya</option>
+              </select>
+            </label>
+            <label>
+              Operatör
+              <input id="operatorInput" type="text" placeholder="Ad Soyad" />
+            </label>
+            <label>
+              Günlük Hedef
+              <input id="hedefInput" type="number" min="0" step="1" />
+            </label>
+          </div>
+
+          <div class="line-metrics">
+            <div class="metric-card">
+              <span>Anlık Gerçekleşen</span>
+              <strong id="gerceklesenGostergesi">0</strong>
+            </div>
+            <div class="metric-card">
+              <span>Duruş Durumu</span>
+              <strong id="durusDurumuGostergesi">Çalışıyor</strong>
+            </div>
+            <div class="metric-card">
+              <span>Toplam Duruş</span>
+              <strong id="toplamDurusGostergesi">0 dk</strong>
+            </div>
+            <div class="metric-card">
+              <span>Başarı Yüzdesi</span>
+              <strong id="basariYuzdesiGostergesi">0%</strong>
+            </div>
+          </div>
+
+          <div class="action-row">
+            <button class="btn success" id="adetArttirBtn">+1 Adet</button>
+            <button class="btn" id="manuelAdetBtn">Manuel Adet Ekle</button>
+            <input id="manuelAdetInput" type="number" min="1" step="1" placeholder="Adet" />
+            <button class="btn warning" id="barkodArttirBtn">Barkod Simülasyonu (+1)</button>
+          </div>
+
+          <h3>Duruş Takibi</h3>
+          <div class="action-row">
+            <select id="durusSebebiSecim">
+              <option value="arıza">Arıza</option>
+              <option value="malzeme bekleme">Malzeme Bekleme</option>
+              <option value="operatör yok">Operatör Yok</option>
+              <option value="ayar">Ayar</option>
+              <option value="kalite kontrol">Kalite Kontrol</option>
+              <option value="elektrik">Elektrik</option>
+              <option value="diğer">Diğer</option>
+            </select>
+            <button class="btn danger" id="durusBaslatBtn">Duruş Başlat</button>
+            <button class="btn success" id="durusBitirBtn">Duruş Bitir</button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Başlangıç</th>
+                  <th>Bitiş</th>
+                  <th>Süre (dk)</th>
+                  <th>Sebep</th>
+                </tr>
+              </thead>
+              <tbody id="durusTablosuBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-dashboard" class="tab-panel">
+        <div class="panel">
+          <h2>Canlı Hat Dashboard (TV Uyumlu)</h2>
+          <p>Renkler: <span class="legend yesil"></span> Çalışıyor, <span class="legend kirmizi"></span> Durmuş, <span class="legend sari"></span> Hedefin gerisinde</p>
+          <div id="dashboardGrid" class="grid cards-5"></div>
+        </div>
+      </section>
+
+      <section id="tab-rapor" class="tab-panel">
+        <div class="panel">
+          <h2>Raporlar</h2>
+          <div class="action-row">
+            <button class="btn" id="gunlukRaporBtn">Günlük Rapor</button>
+            <button class="btn" id="vardiyaRaporBtn">Vardiya Raporu</button>
+            <button class="btn" id="hatRaporBtn">Hat Bazlı Rapor</button>
+            <button class="btn" id="durusRaporBtn">Duruş Sebebi Raporu</button>
+            <button class="btn success" id="csvDisaAktarBtn">CSV Dışa Aktar</button>
+          </div>
+          <pre id="raporCikti" class="report-box">Rapor seçin...</pre>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
