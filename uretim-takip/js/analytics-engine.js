@@ -30,6 +30,46 @@
     return [...state.fiveS].sort((a, b) => fiveSAvg(a) - fiveSAvg(b))[0];
   }
 
+  function productionAlerts(state) {
+    const alerts = [];
+    state.lines.forEach((line) => {
+      const efficiency = pct(line.actual, line.target || 1);
+      if (line.downtime.active) {
+        alerts.push({
+          level: "bad",
+          title: `${line.name} aktif duruşta`,
+          detail: `${line.downtime.active.reason} nedeniyle ${line.downtime.active.type} duruş sürüyor.`
+        });
+      }
+      if (efficiency < 75) {
+        alerts.push({
+          level: "warn",
+          title: `${line.name} düşük verim`,
+          detail: `Hedefe göre verim ${efficiency}% seviyesinde. Kaizen aksiyonu önerilir.`
+        });
+      }
+    });
+
+    const risk = highestFmeaRisk(state);
+    if (risk && risk.rpn >= 150) {
+      alerts.push({
+        level: "bad",
+        title: "Kritik FMEA riski",
+        detail: `${risk.process} / ${risk.type} için RPN ${risk.rpn}. Sorumlu: ${risk.owner || "-"}.`
+      });
+    }
+
+    const low5s = lowestFiveS(state);
+    if (low5s && fiveSAvg(low5s) < 75) {
+      alerts.push({
+        level: "warn",
+        title: "5S disiplin alarmı",
+        detail: `${low5s.department} bölümünde ortalama 5S puanı ${fiveSAvg(low5s)}.`
+      });
+    }
+    return alerts.slice(0, 6);
+  }
+
   function aiRespond(state, question) {
     const q = question.toLowerCase();
     if (q.includes("zayıf") || q.includes("en zayıf")) {
@@ -62,6 +102,7 @@
     highestFmeaRisk,
     fiveSAvg,
     lowestFiveS,
+    productionAlerts,
     aiRespond
   };
 })();

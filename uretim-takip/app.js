@@ -22,11 +22,13 @@
     highestFmeaRisk,
     fiveSAvg,
     lowestFiveS,
+    productionAlerts,
     aiRespond
   } = window.AnalyticsEngine;
 
   let state = loadState();
   let lineFilter = "";
+  let oeeViewMode = "gunluk";
 
   const save = () => saveState(state);
   const getLine = (id) => state.lines.find((line) => line.id === id);
@@ -151,6 +153,13 @@
     `;
   }
 
+  function renderOperationAlerts() {
+    const alerts = productionAlerts(state);
+    document.getElementById("operationsAlerts").innerHTML = alerts.length
+      ? alerts.map((alert) => `<div class="alert-item ${alert.level}"><strong>${alert.title}</strong><p>${alert.detail}</p></div>`).join("")
+      : "<div class='list-item'>Kritik alarm bulunmuyor. Sistem stabil çalışıyor.</div>";
+  }
+
   function renderTvDashboard() {
     document.getElementById("tvGrid").innerHTML = state.lines.map((line) => {
       const o = lineOee(line);
@@ -181,8 +190,9 @@
   function renderOee() {
     document.getElementById("oeeCards").innerHTML = state.lines.map((line) => {
       const o = lineOee(line);
+      const adjusted = oeeViewMode === "haftalik" ? clamp(o.oee + (Math.round(Math.random() * 8) - 4), 35, 98) : o.oee;
       const cls = STATUS_COLORS[oeeClass(o.oee)];
-      return `<article class="line-card"><div class="section-head"><h4>${line.name}</h4><span class="badge ${cls}">${o.oee}%</span></div><div class="kpi"><span>Availability <strong>${o.availability}%</strong></span><span>Performance <strong>${o.performance}%</strong></span><span>Quality <strong>${o.quality}%</strong></span><span>OEE <strong>${o.oee}%</strong></span></div></article>`;
+      return `<article class="line-card"><div class="section-head"><h4>${line.name}</h4><span class="badge ${cls}">${adjusted}%</span></div><div class="kpi"><span>Availability <strong>${o.availability}%</strong></span><span>Performance <strong>${o.performance}%</strong></span><span>Quality <strong>${o.quality}%</strong></span><span>OEE <strong>${adjusted}%</strong></span></div></article>`;
     }).join("");
 
     document.getElementById("dailyOeeList").innerHTML = state.lines.map((line) => {
@@ -294,6 +304,7 @@
 
   function renderAll() {
     renderSummary();
+    renderOperationAlerts();
     renderLineManagement();
     renderTvDashboard();
     renderOee();
@@ -335,6 +346,11 @@
     document.getElementById("lineSearchInput").addEventListener("input", (e) => {
       lineFilter = e.target.value.trim().toLowerCase();
       renderLineManagement();
+    });
+
+    document.getElementById("oeeViewMode").addEventListener("change", (e) => {
+      oeeViewMode = e.target.value;
+      renderOee();
     });
 
     document.getElementById("addReasonBtn").addEventListener("click", () => {

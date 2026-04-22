@@ -107,6 +107,14 @@ body {
   gap: 10px;
   flex-wrap: wrap;
 }
+
+.inline-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
 .wrap { flex-wrap: wrap; }
 .top-gap { margin-top: 12px; }
 
@@ -354,6 +362,26 @@ th, td { padding: 8px; text-align: left; border-bottom: 1px solid var(--line); }
 }
 .kpi-tile span { color: var(--muted); font-size: 0.82rem; display: block; }
 .kpi-tile strong { font-size: 1.2rem; }
+
+.alert-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px;
+}
+.alert-item {
+  border: 1px solid var(--line);
+  border-left-width: 4px;
+  border-radius: 12px;
+  padding: 10px;
+  background: #0d1834;
+}
+.alert-item p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+.alert-item.warn { border-left-color: var(--warn); }
+.alert-item.bad { border-left-color: var(--danger); }
 
 .ai-metric {
   margin: 10px 0;

@@ -13,11 +13,13 @@ Bu proje, mevcut çalışan üretim paneli korunarak geliştirilmiş; sahada kul
   - Tüm hatlar tek ekranda
   - Premium kart yapısı ve koyu tema
   - TV ekranı için tam ekran kullanım
+  - Canlı operasyon alarm merkezi (düşük verim, aktif duruş, kritik FMEA, düşük 5S)
   - Kritik FMEA riski ve kaizen öncelikli hat alanları
 
 - **OEE Modülü**
   - Availability / Performance / Quality hesaplama
   - Otomatik OEE
+  - Günlük / haftalık görünüm anahtarı
   - Günlük OEE listesi + haftalık trend grafik görünümü
 
 - **Duruş Yönetimi**

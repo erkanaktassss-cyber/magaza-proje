@@ -1,5 +1,5 @@
 (function () {
-  const STORAGE_KEY = "fabrika_os_v4";
+  const STORAGE_KEY = "fabrika_os_v5";
 
   const STATUS_COLORS = { iyi: "good", orta: "warn", dusuk: "bad" };
 

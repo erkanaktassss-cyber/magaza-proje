@@ -55,6 +55,14 @@
 
         <div class="card">
           <div class="section-head">
+            <h3>Canlı Operasyon Alarm Merkezi</h3>
+            <span class="tag">Anlık kritik durumlar</span>
+          </div>
+          <div id="operationsAlerts" class="alert-list"></div>
+        </div>
+
+        <div class="card">
+          <div class="section-head">
             <h3>Hat Yönetimi</h3>
             <div class="inline-actions">
               <input id="lineSearchInput" type="text" placeholder="Hat ara" />
@@ -85,7 +93,15 @@
 
       <section id="tab-oee" class="tab">
         <div class="card">
-          <h3>Hat Bazlı OEE Kartları</h3>
+          <div class="section-head">
+            <h3>Hat Bazlı OEE Kartları</h3>
+            <label class="inline-field">Görünüm
+              <select id="oeeViewMode">
+                <option value="gunluk">Günlük</option>
+                <option value="haftalik">Haftalık Simülasyon</option>
+              </select>
+            </label>
+          </div>
           <div id="oeeCards" class="line-grid"></div>
         </div>
         <div class="card two-col">
