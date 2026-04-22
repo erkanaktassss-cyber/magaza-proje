@@ -74,7 +74,7 @@ Bu sayede sistem ilk açılışta gerçek panel hissi verir.
 
 - Web tabanlı (HTML + CSS + Vanilla JS)
 - Veri katmanı: `localStorage`
-- Kod okunaklı ve modüler fonksiyonlarla düzenlenmiştir
+- Kod modüler servis yapısına ayrılmıştır (data/analytics/report servisleri + ana app).
 - Sonradan API/veritabanı entegrasyonuna uygun mimari
 
 ## Klasör Yapısı
@@ -84,6 +84,10 @@ uretim-takip/
 ├── index.html
 ├── styles.css
 ├── app.js
+├── js/
+│   ├── data-service.js
+│   ├── analytics-engine.js
+│   └── report-service.js
 └── README.md
 ```
 
