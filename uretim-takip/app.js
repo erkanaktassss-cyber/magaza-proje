@@ -1,640 +1,249 @@
-const STORAGE_KEY = "fabrika_os_v2";
+(() => {
+  const deepClone = (obj) => JSON.parse(JSON.stringify(obj));
+  const uid = (prefix = 'id') => `${prefix}_${Math.random().toString(36).slice(2, 8)}_${Date.now().toString(36)}`;
+  const toTrDate = (iso) => new Date(iso).toLocaleString('tr-TR');
+  const todayLabel = () => new Date().toLocaleString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+  const minsBetween = (start, end) => Math.max(1, Math.round((new Date(end) - new Date(start)) / 60000));
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, Number(value) || 0));
+  const safePercent = (num, den) => (!den ? 0 : Math.max(0, Math.round((num / den) * 100)));
+  const calculateRpn = (item) => clamp(item.severity, 1, 10) * clamp(item.occurrence, 1, 10) * clamp(item.detection, 1, 10);
+  const fiveSScore = (item) => Math.round((item.seiri + item.seiton + item.seiso + item.seiketsu + item.shitsuke) / 5);
 
-const STATUS_COLORS = {
-  iyi: "good",
-  orta: "warn",
-  dusuk: "bad"
-};
-
-function nowIso() {
-  return new Date().toISOString();
-}
-
-function todayStr() {
-  return new Date().toLocaleDateString("tr-TR", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-    weekday: "long"
-  });
-}
-
-function uid(prefix = "id") {
-  return `${prefix}_${Math.random().toString(36).slice(2, 8)}_${Date.now().toString(36)}`;
-}
-
-function pct(a, b) {
-  if (!b) return 0;
-  return Math.max(0, Math.round((a / b) * 100));
-}
-
-function minutesDiff(start, end) {
-  return Math.max(1, Math.round((new Date(end) - new Date(start)) / 60000));
-}
-
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, Number(value) || min));
-}
-
-function defaultState() {
-  return {
-    meta: { createdAt: nowIso(), lastUpdated: nowIso() },
-    downtimeReasons: ["arıza", "malzeme bekleme", "kalite kontrol", "ayar", "temizlik"],
-    lines: [
-      createLine("Dolum Hattı 1", "dolum"),
-      createLine("Dolum Hattı 2", "dolum"),
-      createLine("Paketleme Hattı 1", "paketleme"),
-      createLine("Paketleme Hattı 2", "paketleme")
-    ],
-    kaizens: [],
-    fiveS: [],
-    fmea: [],
-    weeklyOeeHistory: []
-  };
-}
-
-function createLine(name, group) {
-  return {
-    id: uid("line"),
-    name,
-    group,
-    operator: "",
-    shift: "1. Vardiya",
-    target: 1000,
-    actual: 0,
-    goodCount: 0,
-    idealCycleSec: 3,
-    plannedProductionMin: 480,
-    downtime: {
-      totalMin: 0,
-      active: null,
-      logs: []
-    }
-  };
-}
-
-function loadState() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return defaultState();
-  try {
-    const parsed = JSON.parse(raw);
+  function getLineMetrics(line) {
+    const planned = Math.max(1, Number(line.plannedProductionMin) || 480);
+    const actual = Math.max(0, Number(line.actual) || 0);
+    const defect = clamp(line.defect, 0, actual);
+    const good = Math.max(0, actual - defect);
+    const availability = Math.max(0, (planned - (line.downtime?.totalMin || 0)) / planned);
+    const performance = Math.max(0, Math.min(1, (actual * (line.idealCycleSec || 1)) / (planned * 60)));
+    const quality = actual > 0 ? Math.max(0, Math.min(1, good / actual)) : 1;
+    const oee = availability * performance * quality;
     return {
-      ...defaultState(),
-      ...parsed,
-      lines: Array.isArray(parsed.lines) ? parsed.lines : defaultState().lines
+      qualityPct: Math.round(quality * 100),
+      availabilityPct: Math.round(availability * 100),
+      performancePct: Math.round(performance * 100),
+      oeePct: Math.round(oee * 100),
+      efficiencyPct: safePercent(actual, line.dailyTarget),
+      statusBand: oee >= 0.75 ? 'good' : oee >= 0.6 ? 'warn' : 'bad'
     };
-  } catch {
-    return defaultState();
   }
-}
 
-let state = loadState();
-
-function saveState() {
-  state.meta.lastUpdated = nowIso();
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-}
-
-function getLine(id) {
-  return state.lines.find((line) => line.id === id);
-}
-
-function lineOee(line) {
-  const planned = Math.max(1, line.plannedProductionMin);
-  const availability = Math.max(0, (planned - line.downtime.totalMin) / planned);
-  const performance = Math.max(0, Math.min(1, (line.actual * line.idealCycleSec) / (planned * 60)));
-  const quality = line.actual > 0 ? Math.max(0, Math.min(1, line.goodCount / line.actual)) : 1;
-  const oee = availability * performance * quality;
-  return {
-    availability: Math.round(availability * 100),
-    performance: Math.round(performance * 100),
-    quality: Math.round(quality * 100),
-    oee: Math.round(oee * 100)
+  const SAMPLE_STATE = {
+    meta: { plantName: 'Marmara İçecek Üretim Tesisi', createdAt: new Date().toISOString(), lastUpdated: new Date().toISOString() },
+    settings: {
+      dataSource: 'manual', barcodePrefix: '869',
+      delta: { ip: '192.168.1.35', port: 502, protocol: 'Modbus TCP', counterAddress: '40001', runAddress: '00001', alarmAddress: '10001' },
+      ai: { provider: 'mock', openAiBaseUrl: 'https://api.openai.com/v1', model: 'gpt-4.1-mini' }
+    },
+    downtimeReasons: ['Mekanik arıza', 'Malzeme bekleme', 'Kalite kontrol bekleme', 'Operatör değişimi', 'Planlı bakım', 'Temizlik / CIP'],
+    lines: [
+      { id: 'line_dolum_a', name: 'Dolum Hattı A', type: 'dolum', group: 'Gazlı İçecek', order: 1, shift: '1. Vardiya', operator: 'Hakan Yılmaz', status: 'running', dailyTarget: 24000, actual: 19850, defect: 420, barcode: '8691234567001', idealCycleSec: 0.95, plannedProductionMin: 480, downtime: { totalMin: 38, active: null, logs: [] }, oeeHistory: [73, 75, 78, 76, 80, 81, 79] },
+      { id: 'line_dolum_b', name: 'Dolum Hattı B', type: 'dolum', group: 'Meyve Suyu', order: 2, shift: '2. Vardiya', operator: 'Elif Demir', status: 'stopped', dailyTarget: 18000, actual: 11620, defect: 390, barcode: '8691234567002', idealCycleSec: 1.1, plannedProductionMin: 480, downtime: { totalMin: 92, active: { id: 'stop_active_1', reason: 'Mekanik arıza', type: 'plansiz', startAt: new Date(Date.now() - 1000 * 60 * 14).toISOString() }, logs: [] }, oeeHistory: [68, 66, 64, 62, 63, 60, 57] },
+      { id: 'line_pack_a', name: 'Paketleme Hattı A', type: 'paketleme', group: 'Shrink', order: 3, shift: '1. Vardiya', operator: 'Sena Kılıç', status: 'running', dailyTarget: 22000, actual: 17610, defect: 180, barcode: '8691234567003', idealCycleSec: 1.02, plannedProductionMin: 480, downtime: { totalMin: 45, active: null, logs: [] }, oeeHistory: [72, 74, 76, 74, 77, 78, 79] },
+      { id: 'line_pack_b', name: 'Paketleme Hattı B', type: 'paketleme', group: 'Koli', order: 4, shift: '3. Vardiya', operator: 'Mert Akın', status: 'idle', dailyTarget: 20000, actual: 15240, defect: 350, barcode: '8691234567004', idealCycleSec: 1.15, plannedProductionMin: 480, downtime: { totalMin: 61, active: null, logs: [] }, oeeHistory: [70, 69, 67, 66, 67, 68, 69] }
+    ],
+    kaizens: [{ id: 'kz_1', title: 'Dolum nozulu değişim süresi standardizasyonu', description: 'SMED standardı.', department: 'Dolum Hattı B', status: 'uygulandı', gains: { time: 35, cost: 15000, quality: 4, safety: 2 }, createdAt: new Date(Date.now() - 86400000 * 8).toISOString() }],
+    fiveS: [{ id: '5s_1', department: 'Dolum Alanı', seiri: 88, seiton: 80, seiso: 83, seiketsu: 79, shitsuke: 76, note: 'Etiketleme yenileme gerekli.' }],
+    fmea: [{ id: 'fm_1', process: 'Dolum', failureMode: 'Kapak tork düşüklüğü', effect: 'Sızıntı ve iade', cause: 'Tork başlığı aşınması', severity: 8, occurrence: 6, detection: 5, action: 'Aylık tork başlığı değişim planı', owner: 'Bakım Mühendisi', targetDate: '2026-05-03', status: 'açık' }]
   };
-}
 
-function oeeClass(score) {
-  if (score >= 75) return "iyi";
-  if (score >= 55) return "orta";
-  return "dusuk";
-}
+  const STORAGE_KEY = 'fabrika_pro_suite_v1';
+  const el = (id) => document.getElementById(id);
 
-function totalDowntimeByLine() {
-  return state.lines
-    .map((line) => ({ name: line.name, total: line.downtime.totalMin }))
-    .sort((a, b) => b.total - a.total);
-}
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return deepClone(SAMPLE_STATE);
+      return { ...deepClone(SAMPLE_STATE), ...JSON.parse(raw) };
+    } catch {
+      return deepClone(SAMPLE_STATE);
+    }
+  }
 
-function topDowntimeReasons() {
-  const map = new Map();
-  state.lines.forEach((line) => {
-    line.downtime.logs.forEach((log) => {
-      map.set(log.reason, (map.get(log.reason) || 0) + 1);
-    });
-  });
-  return [...map.entries()].map(([reason, count]) => ({ reason, count })).sort((a, b) => b.count - a.count);
-}
+  let state = loadState();
+  const save = () => { state.meta.lastUpdated = new Date().toISOString(); localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); };
 
-function lowestFiveS() {
-  if (!state.fiveS.length) return null;
-  const withAvg = state.fiveS.map((item) => ({
-    ...item,
-    score: Math.round((item.seiri + item.seiton + item.seiso + item.seiketsu + item.shitsuke) / 5)
-  }));
-  return withAvg.sort((a, b) => a.score - b.score)[0];
-}
+  const aiAnswer = (question) => {
+    const q = question.toLocaleLowerCase('tr-TR');
+    const weak = [...state.lines].sort((a, b) => getLineMetrics(a).oeePct - getLineMetrics(b).oeePct)[0];
+    if (q.includes('zayıf')) return `En zayıf hat: ${weak.name}. OEE %${getLineMetrics(weak).oeePct}.`;
+    if (q.includes('duruş')) return `En yüksek duruş kaybı olan hat: ${[...state.lines].sort((a, b) => b.downtime.totalMin - a.downtime.totalMin)[0].name}.`;
+    if (q.includes('fmea')) return `En kritik FMEA: ${state.fmea.map((x) => ({ ...x, rpn: calculateRpn(x) })).sort((a, b) => b.rpn - a.rpn)[0].failureMode}.`;
+    if (q.includes('5s')) return `En düşük 5S bölümü: ${state.fiveS.map((x) => ({ ...x, score: fiveSScore(x) })).sort((a, b) => a.score - b.score)[0].department}.`;
+    return 'Analiz tamamlandı. Daha spesifik bir soru sorabilirsiniz.';
+  };
 
-function highestFmeaRisk() {
-  if (!state.fmea.length) return null;
-  return [...state.fmea].sort((a, b) => b.rpn - a.rpn)[0];
-}
+  function renderAll() {
+    el('today').textContent = todayLabel();
+    el('plantName').textContent = state.meta.plantName;
+    el('lastUpdated').textContent = `Son güncelleme: ${toTrDate(state.meta.lastUpdated)}`;
 
-function weakestLine() {
-  if (!state.lines.length) return null;
-  return [...state.lines]
-    .map((line) => ({ ...line, efficiency: pct(line.actual, line.target || 1) }))
-    .sort((a, b) => a.efficiency - b.efficiency)[0];
-}
+    const totalTarget = state.lines.reduce((s, l) => s + l.dailyTarget, 0);
+    const totalActual = state.lines.reduce((s, l) => s + l.actual, 0);
+    const avgOee = Math.round(state.lines.reduce((s, l) => s + getLineMetrics(l).oeePct, 0) / Math.max(1, state.lines.length));
+    const totalDown = state.lines.reduce((s, l) => s + l.downtime.totalMin, 0);
+    const weakest = [...state.lines].sort((a, b) => safePercent(a.actual, a.dailyTarget) - safePercent(b.actual, b.dailyTarget))[0];
+    const critical = state.lines.filter((l) => getLineMetrics(l).oeePct < 60).length;
 
-function bindTabs() {
-  document.querySelectorAll(".menu-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".menu-btn").forEach((item) => item.classList.remove("active"));
-      document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
-      btn.classList.add("active");
-      document.getElementById(`tab-${btn.dataset.tab}`).classList.add("active");
-    });
-  });
-}
+    el('summaryCards').innerHTML = [
+      ['Toplam Hedef', totalTarget], ['Toplam Gerçekleşen', totalActual], ['Ortalama OEE', `%${avgOee}`], ['Toplam Duruş', `${totalDown} dk`], ['En Zayıf Hat', weakest?.name || '-'], ['Kritik Alarm', `${critical} adet`]
+    ].map(([t, v]) => `<div class="summary-item"><small>${t}</small><strong>${v}</strong></div>`).join('');
 
-function lineCard(line) {
-  const efficiency = pct(line.actual, line.target);
-  const oeeData = lineOee(line);
-  const scoreClass = STATUS_COLORS[oeeClass(oeeData.oee)];
-  return `
-    <article class="line-card">
-      <div class="section-head">
-        <h4>${line.name}</h4>
-        <span class="badge ${scoreClass}">OEE ${oeeData.oee}%</span>
-      </div>
-      <div class="kpi">
-        <span>Grup <strong>${line.group}</strong></span>
-        <span>Vardiya <strong>${line.shift}</strong></span>
-        <span>Operatör <strong>${line.operator || "-"}</strong></span>
-        <span>Hedef <strong>${line.target}</strong></span>
-        <span>Gerçekleşen <strong>${line.actual}</strong></span>
-        <span>Verim <strong>${efficiency}%</strong></span>
-        <span>Duruş <strong>${line.downtime.totalMin} dk</strong></span>
-        <span>Son Sebep <strong>${line.downtime.logs.at(-1)?.reason || "-"}</strong></span>
-      </div>
-      <div class="inline-actions top-gap">
-        <input data-action="rename" data-id="${line.id}" value="${line.name}" />
-        <button class="btn" data-action="update" data-id="${line.id}">Güncelle</button>
-        <button class="btn btn-danger" data-action="delete" data-id="${line.id}">Sil</button>
-      </div>
-      <div class="form-grid top-gap">
-        <label>Operatör<input data-action="operator" data-id="${line.id}" value="${line.operator}" /></label>
-        <label>Vardiya
-          <select data-action="shift" data-id="${line.id}">
-            <option ${line.shift === "1. Vardiya" ? "selected" : ""}>1. Vardiya</option>
-            <option ${line.shift === "2. Vardiya" ? "selected" : ""}>2. Vardiya</option>
-            <option ${line.shift === "3. Vardiya" ? "selected" : ""}>3. Vardiya</option>
-          </select>
-        </label>
-        <label>Günlük Hedef<input type="number" min="0" data-action="target" data-id="${line.id}" value="${line.target}" /></label>
-        <label>Gerçekleşen<input type="number" min="0" data-action="actual" data-id="${line.id}" value="${line.actual}" /></label>
-        <label>Sağlam Ürün<input type="number" min="0" data-action="good" data-id="${line.id}" value="${line.goodCount}" /></label>
-      </div>
-    </article>
-  `;
-}
+    el('lineCards').innerHTML = state.lines.sort((a,b)=>a.order-b.order).map((line) => {
+      const m = getLineMetrics(line);
+      const statusText = line.status === 'running' ? 'Çalışıyor' : line.status === 'stopped' ? 'Duruşta' : 'Beklemede';
+      const lastReason = line.downtime.active?.reason || line.downtime.logs.slice(-1)[0]?.reason || '-';
+      return `<article class="line-card ${m.statusBand}"><div class="card-head"><h4>${line.name}</h4><span class="pill">${line.type}</span></div><div class="kpi-grid"><span>Hedef<b>${line.dailyTarget}</b></span><span>Gerçekleşen<b>${line.actual}</b></span><span>Verim<b>%${m.efficiencyPct}</b></span><span>Durum<b>${statusText}</b></span><span>Duruş<b>${line.downtime.totalMin} dk</b></span><span>Son Sebep<b>${lastReason}</b></span><span>OEE<b>%${m.oeePct}</b></span><span>Vardiya<b>${line.shift}</b></span><span>Operatör<b>${line.operator || '-'}</b></span><span>Kalite<b>%${m.qualityPct}</b></span></div></article>`;
+    }).join('');
 
-function renderLineManagement() {
-  document.getElementById("lineCards").innerHTML = state.lines.map(lineCard).join("");
-  document.querySelectorAll("[data-action='update']").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const id = btn.dataset.id;
-      const line = getLine(id);
-      const value = document.querySelector(`[data-action='rename'][data-id='${id}']`).value.trim();
-      if (!line || !value) return;
-      line.name = value;
-      saveState();
-      renderAll();
-    });
-  });
-  document.querySelectorAll("[data-action='delete']").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      if (state.lines.length <= 1) return alert("En az bir hat kalmalıdır.");
-      state.lines = state.lines.filter((line) => line.id !== btn.dataset.id);
-      saveState();
-      renderAll();
-    });
-  });
-  ["operator", "shift", "target", "actual", "good"].forEach((action) => {
-    document.querySelectorAll(`[data-action='${action}']`).forEach((input) => {
-      input.addEventListener("change", () => {
-        const line = getLine(input.dataset.id);
-        if (!line) return;
-        if (action === "operator") line.operator = input.value.trim();
-        if (action === "shift") line.shift = input.value;
-        if (action === "target") line.target = Math.max(0, Number(input.value) || 0);
-        if (action === "actual") line.actual = Math.max(0, Number(input.value) || 0);
-        if (action === "good") line.goodCount = clamp(input.value, 0, line.actual || 999999);
-        saveState();
-        renderAll();
-      });
-    });
-  });
-}
+    el('lineList').innerHTML = state.lines.sort((a,b)=>a.order-b.order).map((line) => `<tr><td>${line.order}</td><td>${line.name}</td><td>${line.type}</td><td>${line.group}</td><td><button data-action="up" data-id="${line.id}">↑</button><button data-action="down" data-id="${line.id}">↓</button><button data-action="edit" data-id="${line.id}">Düzenle</button><button data-action="delete" data-id="${line.id}">Sil</button></td></tr>`).join('');
 
-function renderTvDashboard() {
-  const html = state.lines
-    .map((line) => {
-      const oeeData = lineOee(line);
-      const eff = pct(line.actual, line.target);
-      const status = line.downtime.active ? "bad" : eff >= 100 ? "good" : "warn";
-      const stopReason = line.downtime.active?.reason || line.downtime.logs.at(-1)?.reason || "-";
-      return `
-        <article class="tv-card ${status}">
-          <h4>${line.name}</h4>
-          <p>Hedef / Gerçekleşen: <strong>${line.target} / ${line.actual}</strong></p>
-          <p>Duruş: <strong>${line.downtime.totalMin} dk</strong></p>
-          <p>Sebep: <strong>${stopReason}</strong></p>
-          <p>Verim: <strong>${eff}%</strong> • OEE: <strong>${oeeData.oee}%</strong></p>
-        </article>
-      `;
-    })
-    .join("");
-  document.getElementById("tvGrid").innerHTML = html;
-}
+    const options = state.lines.sort((a,b)=>a.order-b.order).map((l)=>`<option value="${l.id}">${l.name}</option>`).join('');
+    ['productionLine', 'stopLine', 'kaizenDept'].forEach((id) => { if (el(id)) el(id).innerHTML = options; });
 
-function renderOee() {
-  document.getElementById("oeeCards").innerHTML = state.lines
-    .map((line) => {
-      const o = lineOee(line);
-      const cls = STATUS_COLORS[oeeClass(o.oee)];
-      return `
-        <article class="line-card">
-          <div class="section-head">
-            <h4>${line.name}</h4>
-            <span class="badge ${cls}">${o.oee}%</span>
-          </div>
-          <div class="kpi">
-            <span>Availability <strong>${o.availability}%</strong></span>
-            <span>Performance <strong>${o.performance}%</strong></span>
-            <span>Quality <strong>${o.quality}%</strong></span>
-            <span>OEE <strong>${o.oee}%</strong></span>
-          </div>
-        </article>
-      `;
-    })
-    .join("");
+    const allStops = state.lines.flatMap((line) => (line.downtime.logs || []).map((log) => ({ ...log, lineName: line.name })));
+    el('downtimeTable').innerHTML = allStops.sort((a,b)=>new Date(b.startAt)-new Date(a.startAt)).map((log)=>`<tr><td>${log.lineName}</td><td>${log.type}</td><td>${log.reason}</td><td>${toTrDate(log.startAt)}</td><td>${toTrDate(log.endAt)}</td><td>${log.durationMin} dk</td></tr>`).join('');
+    el('downLineRanking').innerHTML = state.lines.map((l)=>({name:l.name,down:l.downtime.totalMin})).sort((a,b)=>b.down-a.down).map((x)=>`<li>${x.name}<span>${x.down} dk</span></li>`).join('');
+    const reasonMap = new Map(); allStops.forEach((x)=>reasonMap.set(x.reason,(reasonMap.get(x.reason)||0)+x.durationMin));
+    el('downReasonRanking').innerHTML = [...reasonMap.entries()].sort((a,b)=>b[1]-a[1]).map(([r,m])=>`<li>${r}<span>${m} dk</span></li>`).join('');
+    el('stopReason').innerHTML = state.downtimeReasons.map((r)=>`<option>${r}</option>`).join('');
+    el('reasonChips').innerHTML = state.downtimeReasons.map((r)=>`<button class="chip" data-reason="${r}">${r} ✕</button>`).join('');
 
-  document.getElementById("dailyOeeList").innerHTML = state.lines
-    .map((line) => {
-      const o = lineOee(line);
-      return `<div class="list-item"><strong>${line.name}</strong> • Günlük OEE: ${o.oee}%</div>`;
-    })
-    .join("");
+    el('oeeCards').innerHTML = state.lines.map((line) => { const m = getLineMetrics(line); return `<article class="metric-card ${m.statusBand}"><h4>${line.name}</h4><p>Availability: %${m.availabilityPct}</p><p>Performance: %${m.performancePct}</p><p>Quality: %${m.qualityPct}</p><strong>OEE: %${m.oeePct}</strong></article>`; }).join('');
+    const avg = Math.round(state.lines.reduce((sum, l) => sum + getLineMetrics(l).oeePct, 0) / Math.max(1, state.lines.length));
+    el('oeePeriod').innerHTML = ['Günlük','Haftalık','Aylık'].map((p,i)=>`<li>${p}<span>%${Math.max(0, avg - (i*3-2))}</span></li>`).join('');
+    el('oeeTrend').innerHTML = state.lines.map((line)=>`<div class="trend-row"><span>${line.name}</span><div class="spark">${(line.oeeHistory||[]).map((v)=>`<i style="height:${v}%"></i>`).join('')}</div></div>`).join('');
 
-  if (!state.weeklyOeeHistory.length) {
-    const snapshot = state.lines.map((line) => ({ name: line.name, oee: lineOee(line).oee }));
-    state.weeklyOeeHistory = Array.from({ length: 7 }, (_, idx) => ({
-      day: `Gün-${idx + 1}`,
-      values: snapshot.map((x) => ({ ...x, oee: clamp(x.oee - (idx * 2 - 5), 30, 95) }))
+    el('kaizenRows').innerHTML = state.kaizens.slice().reverse().map((k)=>`<tr><td>${k.title}</td><td>${k.department}</td><td>${k.status}</td><td>${k.gains.time} dk</td><td>${k.gains.cost} ₺</td><td>${k.gains.quality}%</td><td>${k.gains.safety}</td></tr>`).join('');
+    el('fiveSRows').innerHTML = state.fiveS.map((s)=>`<tr><td>${s.department}</td><td>${s.seiri}</td><td>${s.seiton}</td><td>${s.seiso}</td><td>${s.seiketsu}</td><td>${s.shitsuke}</td><td>${fiveSScore(s)}</td><td>${s.note||'-'}</td></tr>`).join('');
+    el('fmeaRows').innerHTML = state.fmea.map((f)=>({ ...f, rpn: calculateRpn(f) })).sort((a,b)=>b.rpn-a.rpn).map((f)=>`<tr class="${f.rpn>=200?'critical':''}"><td>${f.process}</td><td>${f.failureMode}</td><td>${f.effect}</td><td>${f.cause}</td><td>${f.severity}</td><td>${f.occurrence}</td><td>${f.detection}</td><td>${f.rpn}</td><td>${f.action}</td><td>${f.owner}</td><td>${f.targetDate}</td><td>${f.status}</td></tr>`).join('');
+
+    el('dataSource').value = state.settings.dataSource;
+    el('deltaIp').value = state.settings.delta.ip;
+    el('deltaPort').value = state.settings.delta.port;
+    el('deltaCounter').value = state.settings.delta.counterAddress;
+    el('deltaRun').value = state.settings.delta.runAddress;
+    el('deltaAlarm').value = state.settings.delta.alarmAddress;
+    el('barcodePrefix').value = state.settings.barcodePrefix;
+    el('aiProvider').value = state.settings.ai.provider;
+    el('aiModel').value = state.settings.ai.model;
+
+    el('latestKaizens').innerHTML = state.kaizens.slice(-4).reverse().map((k)=>`<li>${k.title} <span>${k.status}</span></li>`).join('');
+    el('criticalFmea').innerHTML = state.fmea.map((f)=>({ ...f, rpn: calculateRpn(f) })).sort((a,b)=>b.rpn-a.rpn).slice(0,4).map((f)=>`<li>${f.process} / ${f.failureMode}<span>RPN ${f.rpn}</span></li>`).join('');
+    el('low5s').innerHTML = state.fiveS.map((s)=>({ ...s, score: fiveSScore(s) })).sort((a,b)=>a.score-b.score).slice(0,4).map((s)=>`<li>${s.department}<span>${s.score}/100</span></li>`).join('');
+
+    const report = `GÜNLÜK ÜRETİM RAPORU\n\nToplam Hedef: ${totalTarget}\nToplam Gerçekleşen: ${totalActual}\nOrtalama OEE: %${avgOee}\nToplam Duruş: ${totalDown} dk`;
+    el('reportPreview').textContent = report;
+  }
+
+  function boot() {
+    document.querySelectorAll('[data-tab]').forEach((btn) => btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-tab]').forEach((b) => b.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach((tab) => tab.classList.remove('active'));
+      btn.classList.add('active');
+      el(`tab-${btn.dataset.tab}`).classList.add('active');
     }));
+
+    el('addLine').addEventListener('click', () => {
+      const name = el('lineName').value.trim(); if (!name) return;
+      state.lines.push({ id: uid('line'), name, type: el('lineType').value, group: el('lineGroup').value || 'Genel', order: state.lines.length + 1, shift: '1. Vardiya', operator: '', status: 'idle', dailyTarget: 0, actual: 0, defect: 0, barcode: '', idealCycleSec: 1, plannedProductionMin: 480, downtime: { totalMin: 0, active: null, logs: [] }, oeeHistory: [65,68,70,69,72,71,73] });
+      save(); renderAll(); el('lineName').value = '';
+    });
+
+    el('lineList').addEventListener('click', (e) => {
+      const id = e.target.dataset.id; const action = e.target.dataset.action; if (!id || !action) return;
+      const idx = state.lines.findIndex((l) => l.id === id); if (idx < 0) return;
+      if (action === 'delete') state.lines.splice(idx, 1);
+      if (action === 'up' && idx > 0) [state.lines[idx - 1], state.lines[idx]] = [state.lines[idx], state.lines[idx - 1]];
+      if (action === 'down' && idx < state.lines.length - 1) [state.lines[idx + 1], state.lines[idx]] = [state.lines[idx], state.lines[idx + 1]];
+      if (action === 'edit') { const n = prompt('Hat adı', state.lines[idx].name); if (n) state.lines[idx].name = n.trim(); }
+      state.lines.forEach((l, i) => l.order = i + 1); save(); renderAll();
+    });
+
+    el('saveProduction').addEventListener('click', () => {
+      const line = state.lines.find((l) => l.id === el('productionLine').value); if (!line) return;
+      line.dailyTarget = Math.max(0, Number(el('targetInput').value) || 0);
+      line.actual = Math.max(0, Number(el('actualInput').value) || 0);
+      line.defect = clamp(el('defectInput').value, 0, line.actual);
+      line.shift = el('shiftInput').value; line.operator = el('operatorInput').value.trim(); line.barcode = el('barcodeInput').value.trim(); line.status = line.actual > 0 ? 'running' : 'idle';
+      save(); renderAll();
+    });
+
+    el('startDowntime').addEventListener('click', () => {
+      const line = state.lines.find((l) => l.id === el('stopLine').value); if (!line || line.downtime.active) return;
+      line.status = 'stopped'; line.downtime.active = { id: uid('stop'), reason: el('stopReason').value, type: el('stopType').value, startAt: new Date().toISOString() };
+      save(); renderAll();
+    });
+    el('endDowntime').addEventListener('click', () => {
+      const line = state.lines.find((l) => l.id === el('stopLine').value); if (!line || !line.downtime.active) return;
+      const endAt = new Date().toISOString(); const durationMin = minsBetween(line.downtime.active.startAt, endAt);
+      line.downtime.logs.push({ ...line.downtime.active, endAt, durationMin }); line.downtime.totalMin += durationMin; line.downtime.active = null; line.status = 'running';
+      save(); renderAll();
+    });
+    el('addReason').addEventListener('click', () => { const reason = el('newReason').value.trim(); if (!reason) return; if (!state.downtimeReasons.includes(reason)) state.downtimeReasons.push(reason); save(); renderAll(); el('newReason').value=''; });
+    el('reasonChips').addEventListener('click', (e) => { const reason = e.target.dataset.reason; if (!reason) return; state.downtimeReasons = state.downtimeReasons.filter((r) => r !== reason); save(); renderAll(); });
+
+    el('addKaizen').addEventListener('click', () => {
+      const title = el('kaizenTitle').value.trim(); if (!title) return;
+      state.kaizens.push({ id: uid('kz'), title, description: el('kaizenDesc').value.trim(), department: el('kaizenDept').selectedOptions[0]?.textContent || '-', status: el('kaizenStatus').value, gains: { time: Number(el('gainTime').value)||0, cost: Number(el('gainCost').value)||0, quality: Number(el('gainQuality').value)||0, safety: Number(el('gainSafety').value)||0 }, createdAt: new Date().toISOString() });
+      save(); renderAll();
+    });
+
+    el('addFiveS').addEventListener('click', () => {
+      const dept = el('fiveSDept').value.trim(); if (!dept) return;
+      state.fiveS.push({ id: uid('5s'), department: dept, seiri: clamp(el('seiri').value,0,100), seiton: clamp(el('seiton').value,0,100), seiso: clamp(el('seiso').value,0,100), seiketsu: clamp(el('seiketsu').value,0,100), shitsuke: clamp(el('shitsuke').value,0,100), note: el('fiveSNote').value.trim() });
+      save(); renderAll();
+    });
+
+    el('addFmea').addEventListener('click', () => {
+      const process = el('fProcess').value.trim(); if (!process) return;
+      state.fmea.push({ id: uid('fm'), process, failureMode: el('fMode').value.trim(), effect: el('fEffect').value.trim(), cause: el('fCause').value.trim(), severity: clamp(el('fS').value,1,10), occurrence: clamp(el('fO').value,1,10), detection: clamp(el('fD').value,1,10), action: el('fAction').value.trim(), owner: el('fOwner').value.trim(), targetDate: el('fDate').value, status: el('fStatus').value });
+      save(); renderAll();
+    });
+
+    el('runAnalysis').addEventListener('click', () => {
+      const q = el('analysisQuestion').value.trim(); if (!q) return;
+      el('analysisOutput').innerHTML = `<p><b>Soru:</b> ${q}</p><p><b>Analiz:</b> ${aiAnswer(q)}</p>`;
+    });
+
+    el('saveSettings').addEventListener('click', () => {
+      state.settings.dataSource = el('dataSource').value;
+      state.settings.barcodePrefix = el('barcodePrefix').value.trim();
+      state.settings.delta.ip = el('deltaIp').value.trim();
+      state.settings.delta.port = Number(el('deltaPort').value) || 502;
+      state.settings.delta.counterAddress = el('deltaCounter').value.trim();
+      state.settings.delta.runAddress = el('deltaRun').value.trim();
+      state.settings.delta.alarmAddress = el('deltaAlarm').value.trim();
+      state.settings.ai.provider = el('aiProvider').value;
+      state.settings.ai.model = el('aiModel').value.trim();
+      save(); renderAll(); alert('Ayarlar kaydedildi.');
+    });
+    el('testIntegration').addEventListener('click', () => {
+      if (state.settings.dataSource !== 'delta') { el('integrationResult').textContent = 'Manuel/Barkod modunda test bağlantısı gerekmiyor.'; return; }
+      if (!state.settings.delta.ip || !state.settings.delta.port) { el('integrationResult').textContent = 'Delta bağlantısı için IP/Port eksik.'; return; }
+      el('integrationResult').textContent = `Mock bağlantı başarılı (${state.settings.delta.protocol} - ${state.settings.delta.ip}:${state.settings.delta.port}).`;
+    });
+
+    el('generateReport').addEventListener('click', renderAll);
+    el('exportCsv').addEventListener('click', () => {
+      const rows = state.lines.map((line) => { const m = getLineMetrics(line); return [line.name, line.type, line.dailyTarget, line.actual, line.defect, `${m.oeePct}%`, line.downtime.totalMin]; });
+      const esc = (v) => `"${String(v ?? '').replaceAll('"','""')}"`;
+      const csv = [['Hat','Tip','Hedef','Gerçekleşen','Fire','OEE','Duruş dk'].map(esc).join(','), ...rows.map((r) => r.map(esc).join(','))].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'uretim-ozet-raporu.csv'; a.click();
+    });
+    el('exportExcel').addEventListener('click', () => {
+      const rows = state.fmea.map((item) => ({ ...item, rpn: calculateRpn(item) })).sort((a, b) => b.rpn - a.rpn).map((item) => `<tr><td>${item.process}</td><td>${item.failureMode}</td><td>${item.rpn}</td><td>${item.owner}</td><td>${item.status}</td></tr>`).join('');
+      const html = `<table><tr><th>Proses</th><th>Hata Türü</th><th>RPN</th><th>Sorumlu</th><th>Durum</th></tr>${rows}</table>`;
+      const blob = new Blob([html], { type: 'application/vnd.ms-excel' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'fmea-risk-raporu.xls'; a.click();
+    });
+    el('printReport').addEventListener('click', () => window.print());
+
+    el('tvMode').addEventListener('click', () => document.body.classList.toggle('tv-mode'));
+    el('resetData').addEventListener('click', () => { if (!confirm('Tüm veriler sıfırlansın mı?')) return; localStorage.removeItem(STORAGE_KEY); state = deepClone(SAMPLE_STATE); save(); renderAll(); });
+
+    renderAll();
   }
-  document.getElementById("weeklyOeeList").innerHTML = state.weeklyOeeHistory
-    .map((item) => {
-      const avg = Math.round(item.values.reduce((acc, v) => acc + v.oee, 0) / (item.values.length || 1));
-      return `<div class="list-item"><strong>${item.day}</strong> Ortalama OEE: ${avg}%</div>`;
-    })
-    .join("");
-}
 
-function populateLineSelects() {
-  const options = state.lines.map((line) => `<option value="${line.id}">${line.name}</option>`).join("");
-  document.getElementById("stopLineSelect").innerHTML = options;
-}
-
-function populateReasons() {
-  const options = state.downtimeReasons.map((reason) => `<option value="${reason}">${reason}</option>`).join("");
-  document.getElementById("stopReasonSelect").innerHTML = options;
-  document.getElementById("reasonChips").innerHTML = state.downtimeReasons
-    .map((reason, idx) => `<span class="chip">${reason}<button data-reason-index="${idx}">×</button></span>`)
-    .join("");
-  document.querySelectorAll("[data-reason-index]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      if (state.downtimeReasons.length <= 1) return;
-      state.downtimeReasons.splice(Number(btn.dataset.reasonIndex), 1);
-      saveState();
-      renderAll();
-    });
-  });
-}
-
-function renderDowntimeReports() {
-  document.getElementById("stopLineRanking").innerHTML = totalDowntimeByLine()
-    .map((item) => `<div class="list-item"><strong>${item.name}</strong> • ${item.total} dk</div>`)
-    .join("");
-  document.getElementById("stopReasonRanking").innerHTML = topDowntimeReasons()
-    .map((item) => `<div class="list-item"><strong>${item.reason}</strong> • ${item.count} kez</div>`)
-    .join("") || "<div class='list-item'>Kayıt yok</div>";
-}
-
-function renderKaizen() {
-  document.getElementById("kaizenTable").innerHTML = state.kaizens
-    .map(
-      (k) => `
-      <tr>
-        <td>${k.title}</td><td>${k.owner}</td><td>${k.status}</td>
-        <td>${k.gainTime} dk/gün</td><td>${k.gainCost} ₺/ay</td><td>%${k.gainQuality}</td>
-        <td><button class="btn btn-danger" data-kaizen-id="${k.id}">Sil</button></td>
-      </tr>
-    `
-    )
-    .join("");
-  document.querySelectorAll("[data-kaizen-id]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      state.kaizens = state.kaizens.filter((item) => item.id !== btn.dataset.kaizenId);
-      saveState();
-      renderAll();
-    });
-  });
-}
-
-function fiveSAvg(item) {
-  return Math.round((item.seiri + item.seiton + item.seiso + item.seiketsu + item.shitsuke) / 5);
-}
-
-function renderFiveS() {
-  document.getElementById("fiveSChart").innerHTML = state.fiveS
-    .map((item) => {
-      const avg = fiveSAvg(item);
-      return `
-        <div class="bar-row">
-          <span>${item.department}</span>
-          <span class="bar"><i style="width:${avg}%"></i></span>
-          <strong>${avg}</strong>
-        </div>
-      `;
-    })
-    .join("") || "<div class='list-item'>Henüz 5S girişi yok.</div>";
-
-  const missing = [];
-  state.fiveS.forEach((item) => {
-    ["seiri", "seiton", "seiso", "seiketsu", "shitsuke"].forEach((key) => {
-      if (item[key] < 80) missing.push(`${item.department} • ${key.toUpperCase()} (${item[key]})`);
-    });
-  });
-  document.getElementById("fiveSMissing").innerHTML = missing.map((m) => `<div class="list-item">${m}</div>`).join("") || "<div class='list-item'>Eksik alan bulunmuyor.</div>";
-}
-
-function renderFmea() {
-  const sorted = [...state.fmea].sort((a, b) => b.rpn - a.rpn);
-  document.getElementById("fmeaTable").innerHTML = sorted
-    .map(
-      (f) => `
-      <tr>
-        <td>${f.process}</td><td>${f.type}</td><td>${f.effect}</td><td>${f.cause}</td>
-        <td>${f.s}</td><td>${f.o}</td><td>${f.d}</td><td>${f.rpn}</td>
-        <td>${f.owner}</td><td>${f.targetDate || "-"}</td><td>${f.status}</td>
-      </tr>
-    `
-    )
-    .join("");
-}
-
-function addChatMessage(type, text) {
-  const div = document.createElement("div");
-  div.className = `msg ${type}`;
-  div.textContent = text;
-  const box = document.getElementById("chatBox");
-  box.appendChild(div);
-  box.scrollTop = box.scrollHeight;
-}
-
-function aiRespond(question) {
-  const q = question.toLowerCase();
-  if (q.includes("zayıf hat") || q.includes("en zayıf")) {
-    const line = weakestLine();
-    if (!line) return "Henüz hat verisi bulunmuyor.";
-    return `Bugün en zayıf hat: ${line.name} (Verim: ${pct(line.actual, line.target)}%).`;
-  }
-  if (q.includes("duruş") && q.includes("neden")) {
-    const top = topDowntimeReasons()[0];
-    return top ? `En çok duruş nedeni: ${top.reason} (${top.count} tekrar).` : "Duruş kaydı bulunamadı.";
-  }
-  if (q.includes("kaizen") && q.includes("hangi hat")) {
-    const line = weakestLine();
-    return line ? `Kaizen önceliği için önerilen hat: ${line.name}.` : "Önceliklendirme için veri yok.";
-  }
-  if (q.includes("fmea") || q.includes("risk")) {
-    const risk = highestFmeaRisk();
-    return risk ? `En kritik FMEA maddesi: ${risk.process} / ${risk.type}, RPN: ${risk.rpn}.` : "FMEA kaydı yok.";
-  }
-  if (q.includes("5s") || q.includes("en düşük bölüm")) {
-    const low = lowestFiveS();
-    return low ? `5S puanı en düşük bölüm: ${low.department} (Ortalama: ${fiveSAvg(low)}).` : "5S verisi bulunmuyor.";
-  }
-  return "Bu demo analiz motoru; hat performansı, duruş, kaizen, 5S ve FMEA ile ilgili sorular sorabilirsiniz.";
-}
-
-function generateReports() {
-  const totalTarget = state.lines.reduce((acc, l) => acc + l.target, 0);
-  const totalActual = state.lines.reduce((acc, l) => acc + l.actual, 0);
-  const totalStop = state.lines.reduce((acc, l) => acc + l.downtime.totalMin, 0);
-  const avgOee = Math.round(state.lines.reduce((acc, l) => acc + lineOee(l).oee, 0) / (state.lines.length || 1));
-
-  return {
-    daily: `Günlük Üretim Raporu\nTarih: ${todayStr()}\nToplam Hedef: ${totalTarget}\nToplam Gerçekleşen: ${totalActual}\nVerim: ${pct(totalActual, totalTarget)}%\nToplam Duruş: ${totalStop} dk`,
-    weekly: `Haftalık Verimlilik (simülasyon)\nSon 7 gün ortalama OEE: ${avgOee}%\nEn iyi hat: ${[...state.lines].sort((a, b) => lineOee(b).oee - lineOee(a).oee)[0]?.name || "-"}`,
-    shift: `Vardiya Raporu\n${state.lines.map((l) => `${l.name} • ${l.shift} • Operatör: ${l.operator || "-"}`).join("\n")}`,
-    oee: `OEE Raporu\n${state.lines.map((l) => `${l.name}: ${lineOee(l).oee}% (A:${lineOee(l).availability}/P:${lineOee(l).performance}/Q:${lineOee(l).quality})`).join("\n")}`,
-    stop: `Duruş Raporu\n${totalDowntimeByLine().map((s) => `${s.name}: ${s.total} dk`).join("\n")}\n---\nSebepler\n${topDowntimeReasons().map((r) => `${r.reason}: ${r.count}`).join("\n")}`,
-    kaizen: `Kaizen Raporu\nToplam Öneri: ${state.kaizens.length}\nUygulanan: ${state.kaizens.filter((k) => k.status === "uygulandı").length}\nKabul: ${state.kaizens.filter((k) => k.status === "kabul edildi").length}`,
-    fmea: `FMEA Risk Raporu\nToplam Madde: ${state.fmea.length}\nKritik (RPN >= 150): ${state.fmea.filter((f) => f.rpn >= 150).length}\nEn kritik: ${highestFmeaRisk()?.type || "-"}`
-  };
-}
-
-function downloadCsv() {
-  const headers = ["Hat", "Grup", "Hedef", "Gerçekleşen", "Verim", "Duruş dk", "OEE", "Vardiya", "Operatör"];
-  const rows = state.lines.map((l) => [
-    l.name,
-    l.group,
-    l.target,
-    l.actual,
-    pct(l.actual, l.target),
-    l.downtime.totalMin,
-    lineOee(l).oee,
-    l.shift,
-    l.operator
-  ]);
-  const csv = [headers, ...rows].map((r) => r.join(";")).join("\n");
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `uretim-raporu-${new Date().toISOString().slice(0, 10)}.csv`;
-  a.click();
-}
-
-function bindActions() {
-  document.getElementById("todayInfo").textContent = todayStr();
-
-  document.getElementById("tvModeBtn").addEventListener("click", () => {
-    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-    else document.exitFullscreen();
-  });
-
-  document.getElementById("resetBtn").addEventListener("click", () => {
-    if (!confirm("Tüm kayıtlar silinecek. Emin misiniz?")) return;
-    localStorage.removeItem(STORAGE_KEY);
-    state = defaultState();
-    saveState();
-    renderAll();
-  });
-
-  document.getElementById("addLineBtn").addEventListener("click", () => {
-    const name = document.getElementById("lineNameInput").value.trim();
-    const group = document.getElementById("lineGroupInput").value;
-    if (!name) return alert("Hat adı girin.");
-    state.lines.push(createLine(name, group));
-    document.getElementById("lineNameInput").value = "";
-    saveState();
-    renderAll();
-  });
-
-  document.getElementById("addReasonBtn").addEventListener("click", () => {
-    const reason = document.getElementById("newReasonInput").value.trim().toLowerCase();
-    if (!reason) return;
-    if (!state.downtimeReasons.includes(reason)) state.downtimeReasons.push(reason);
-    document.getElementById("newReasonInput").value = "";
-    saveState();
-    renderAll();
-  });
-
-  document.getElementById("startStopBtn").addEventListener("click", () => {
-    const line = getLine(document.getElementById("stopLineSelect").value);
-    if (!line) return;
-    if (line.downtime.active) return alert("Seçili hatta aktif duruş zaten var.");
-    line.downtime.active = {
-      id: uid("stop"),
-      start: nowIso(),
-      type: document.getElementById("stopTypeSelect").value,
-      reason: document.getElementById("stopReasonSelect").value
-    };
-    saveState();
-    renderAll();
-  });
-
-  document.getElementById("endStopBtn").addEventListener("click", () => {
-    const line = getLine(document.getElementById("stopLineSelect").value);
-    if (!line?.downtime.active) return alert("Aktif duruş yok.");
-    const end = nowIso();
-    const min = minutesDiff(line.downtime.active.start, end);
-    line.downtime.logs.push({ ...line.downtime.active, end, minutes: min });
-    line.downtime.totalMin += min;
-    line.downtime.active = null;
-    saveState();
-    renderAll();
-  });
-
-  document.getElementById("addKaizenBtn").addEventListener("click", () => {
-    const title = document.getElementById("kaizenTitle").value.trim();
-    const owner = document.getElementById("kaizenOwner").value.trim();
-    if (!title || !owner) return alert("Başlık ve öneri sahibi zorunludur.");
-    state.kaizens.push({
-      id: uid("kaizen"),
-      title,
-      owner,
-      status: document.getElementById("kaizenStatus").value,
-      gainTime: Math.max(0, Number(document.getElementById("gainTime").value) || 0),
-      gainCost: Math.max(0, Number(document.getElementById("gainCost").value) || 0),
-      gainQuality: Math.max(0, Number(document.getElementById("gainQuality").value) || 0)
-    });
-    ["kaizenTitle", "kaizenOwner"].forEach((id) => (document.getElementById(id).value = ""));
-    saveState();
-    renderAll();
-  });
-
-  document.getElementById("addFiveSBtn").addEventListener("click", () => {
-    const department = document.getElementById("fiveSDept").value.trim();
-    if (!department) return alert("Bölüm adı zorunludur.");
-    state.fiveS.push({
-      id: uid("5s"),
-      department,
-      seiri: clamp(document.getElementById("seiriInput").value, 0, 100),
-      seiton: clamp(document.getElementById("seitonInput").value, 0, 100),
-      seiso: clamp(document.getElementById("seisoInput").value, 0, 100),
-      seiketsu: clamp(document.getElementById("seiketsuInput").value, 0, 100),
-      shitsuke: clamp(document.getElementById("shitsukeInput").value, 0, 100)
-    });
-    document.getElementById("fiveSDept").value = "";
-    saveState();
-    renderAll();
-  });
-
-  document.getElementById("addFmeaBtn").addEventListener("click", () => {
-    const process = document.getElementById("fmeaProcess").value.trim();
-    const type = document.getElementById("fmeaType").value.trim();
-    if (!process || !type) return alert("Proses ve hata türü zorunludur.");
-    const s = clamp(document.getElementById("fmeaS").value, 1, 10);
-    const o = clamp(document.getElementById("fmeaO").value, 1, 10);
-    const d = clamp(document.getElementById("fmeaD").value, 1, 10);
-    state.fmea.push({
-      id: uid("fmea"),
-      process,
-      type,
-      effect: document.getElementById("fmeaEffect").value.trim(),
-      cause: document.getElementById("fmeaCause").value.trim(),
-      s,
-      o,
-      d,
-      rpn: s * o * d,
-      owner: document.getElementById("fmeaOwner").value.trim(),
-      targetDate: document.getElementById("fmeaTarget").value,
-      status: document.getElementById("fmeaStatus").value
-    });
-    ["fmeaProcess", "fmeaType", "fmeaEffect", "fmeaCause", "fmeaOwner", "fmeaTarget"].forEach((id) => {
-      document.getElementById(id).value = "";
-    });
-    saveState();
-    renderAll();
-  });
-
-  document.getElementById("askAiBtn").addEventListener("click", () => {
-    const input = document.getElementById("aiInput");
-    const question = input.value.trim();
-    if (!question) return;
-    addChatMessage("user", question);
-    addChatMessage("ai", aiRespond(question));
-    input.value = "";
-  });
-
-  const reportOutput = document.getElementById("reportOutput");
-  document.getElementById("dailyReportBtn").addEventListener("click", () => (reportOutput.textContent = generateReports().daily));
-  document.getElementById("weeklyReportBtn").addEventListener("click", () => (reportOutput.textContent = generateReports().weekly));
-  document.getElementById("shiftReportBtn").addEventListener("click", () => (reportOutput.textContent = generateReports().shift));
-  document.getElementById("oeeReportBtn").addEventListener("click", () => (reportOutput.textContent = generateReports().oee));
-  document.getElementById("stopReportBtn").addEventListener("click", () => (reportOutput.textContent = generateReports().stop));
-  document.getElementById("kaizenReportBtn").addEventListener("click", () => (reportOutput.textContent = generateReports().kaizen));
-  document.getElementById("fmeaReportBtn").addEventListener("click", () => (reportOutput.textContent = generateReports().fmea));
-  document.getElementById("csvExportBtn").addEventListener("click", downloadCsv);
-}
-
-function renderAll() {
-  renderLineManagement();
-  renderTvDashboard();
-  renderOee();
-  populateLineSelects();
-  populateReasons();
-  renderDowntimeReports();
-  renderKaizen();
-  renderFiveS();
-  renderFmea();
-}
-
-bindTabs();
-bindActions();
-renderAll();
-addChatMessage("ai", "Merhaba, ben FabrikaOS AI Asistanı. Üretim sorularınızı cevaplayabilirim.");
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
