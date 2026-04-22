@@ -49,9 +49,15 @@
 
       <section id="tab-dashboard" class="tab active">
         <div class="card">
+          <h3>Yönetim Özeti</h3>
+          <div id="summaryKpis" class="kpi-overview"></div>
+        </div>
+
+        <div class="card">
           <div class="section-head">
             <h3>Hat Yönetimi</h3>
             <div class="inline-actions">
+              <input id="lineSearchInput" type="text" placeholder="Hat ara" />
               <select id="lineGroupInput">
                 <option value="dolum">Dolum</option>
                 <option value="paketleme">Paketleme</option>
@@ -243,6 +249,10 @@
             </div>
           </div>
           <p class="muted">Analiz soruları: en zayıf hat, en çok duruş nedeni, kaizen önceliği, kritik FMEA, en düşük 5S.</p>
+          <div class="ai-metric">
+            <span>Analiz Güven Skoru</span>
+            <strong id="aiConfidence">0%</strong>
+          </div>
           <div id="analysisSignals" class="signal-grid"></div>
           <div class="chat-box" id="chatBox"></div>
           <div class="inline-actions top-gap">

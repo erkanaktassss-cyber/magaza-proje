@@ -104,6 +104,13 @@ python3 -m http.server 8080
 ```
 Tarayıcı: `http://localhost:8080`
 
+### Yöntem 3 (Repo kökünden tek komut)
+```bash
+cd ..
+npm run fabrika
+```
+Tarayıcı: `http://localhost:8080`
+
 ## Kullanım Sırası Önerisi
 
 1. Dashboard’da hatları düzenleyin.

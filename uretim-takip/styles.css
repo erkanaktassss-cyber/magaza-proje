@@ -339,3 +339,29 @@ th, td { padding: 8px; text-align: left; border-bottom: 1px solid var(--line); }
   .sidebar { border-right: 0; border-bottom: 1px solid var(--line); }
   .two-col { grid-template-columns: 1fr; }
 }
+
+.kpi-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+.kpi-tile {
+  border: 1px solid var(--line);
+  background: #0d1834;
+  border-radius: 12px;
+  padding: 10px;
+}
+.kpi-tile span { color: var(--muted); font-size: 0.82rem; display: block; }
+.kpi-tile strong { font-size: 1.2rem; }
+
+.ai-metric {
+  margin: 10px 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #0c1733;
+  padding: 8px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

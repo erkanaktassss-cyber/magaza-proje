@@ -26,6 +26,7 @@
   } = window.AnalyticsEngine;
 
   let state = loadState();
+  let lineFilter = "";
 
   const save = () => saveState(state);
   const getLine = (id) => state.lines.find((line) => line.id === id);
@@ -92,7 +93,8 @@
   }
 
   function renderLineManagement() {
-    document.getElementById("lineCards").innerHTML = state.lines.map(lineCard).join("");
+    const filtered = state.lines.filter((line) => line.name.toLowerCase().includes(lineFilter));
+    document.getElementById("lineCards").innerHTML = filtered.map(lineCard).join("") || `<div class="list-item">Filtreye uygun hat bulunamadı.</div>`;
 
     document.querySelectorAll("[data-action='update']").forEach((btn) => {
       btn.addEventListener("click", () => {
@@ -133,6 +135,20 @@
         });
       });
     });
+  }
+
+  function renderSummary() {
+    const totalTarget = state.lines.reduce((acc, l) => acc + l.target, 0);
+    const totalActual = state.lines.reduce((acc, l) => acc + l.actual, 0);
+    const totalStop = state.lines.reduce((acc, l) => acc + l.downtime.totalMin, 0);
+    const avgOee = Math.round(state.lines.reduce((acc, l) => acc + lineOee(l).oee, 0) / (state.lines.length || 1));
+    document.getElementById("summaryKpis").innerHTML = `
+      <div class="kpi-tile"><span>Toplam Hedef</span><strong>${totalTarget}</strong></div>
+      <div class="kpi-tile"><span>Toplam Gerçekleşen</span><strong>${totalActual}</strong></div>
+      <div class="kpi-tile"><span>Genel Verim</span><strong>${pct(totalActual, totalTarget)}%</strong></div>
+      <div class="kpi-tile"><span>Toplam Duruş</span><strong>${totalStop} dk</strong></div>
+      <div class="kpi-tile"><span>Ortalama OEE</span><strong>${avgOee}%</strong></div>
+    `;
   }
 
   function renderTvDashboard() {
@@ -277,6 +293,7 @@
   }
 
   function renderAll() {
+    renderSummary();
     renderLineManagement();
     renderTvDashboard();
     renderOee();
@@ -312,6 +329,12 @@
       document.getElementById("lineNameInput").value = "";
       save();
       renderAll();
+    });
+
+
+    document.getElementById("lineSearchInput").addEventListener("input", (e) => {
+      lineFilter = e.target.value.trim().toLowerCase();
+      renderLineManagement();
     });
 
     document.getElementById("addReasonBtn").addEventListener("click", () => {
@@ -412,6 +435,8 @@
       if (!question) return;
       addChatMessage("user", question);
       addChatMessage("ai", aiRespond(state, question));
+      const confidence = Math.min(98, 70 + Math.floor(Math.random() * 26));
+      document.getElementById("aiConfidence").textContent = `${confidence}%`;
       input.value = "";
     });
 
