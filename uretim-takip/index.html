@@ -58,7 +58,7 @@
         <section class="tab" id="tab-line">
           <div class="card form-row">
             <input id="lineName" placeholder="Hat adı" />
-            <select id="lineType"><option value="dolum">Dolum</option><option value="paketleme">Paketleme</option></select>
+            <select id="lineType"><option value="dolum">Dolum</option><option value="paketleme">Paketleme</option><option value="diger">Diğer</option></select>
             <input id="lineGroup" placeholder="Hat grubu" />
             <button id="addLine">Hat Ekle</button>
           </div>
@@ -91,6 +91,7 @@
         </section>
 
         <section class="tab" id="tab-oee">
+          <div class="card form-row controls"><select id="oeeView"><option value="daily">Günlük</option><option value="weekly">Haftalık</option></select></div>
           <div class="card"><h3>OEE Kartları</h3><div id="oeeCards" class="line-grid"></div></div>
           <div class="triple">
             <div class="card"><h4>Dönemsel OEE</h4><ul id="oeePeriod" class="simple-list"></ul></div>
@@ -99,6 +100,7 @@
         </section>
 
         <section class="tab" id="tab-kaizen">
+          <div class="card form-row controls"><select id="kaizenFilter"><option value="all">Tümü</option><option>yeni</option><option>incelemede</option><option>kabul edildi</option><option>reddedildi</option><option>uygulandı</option></select></div>
           <div class="card form-grid">
             <input id="kaizenTitle" placeholder="Kaizen başlığı" /><select id="kaizenDept"></select>
             <select id="kaizenStatus"><option>yeni</option><option>incelemede</option><option>kabul edildi</option><option>reddedildi</option><option>uygulandı</option></select>
@@ -116,6 +118,7 @@
             <input id="seiketsu" type="number" placeholder="Seiketsu" value="80" /><input id="shitsuke" type="number" placeholder="Shitsuke" value="80" />
             <textarea id="fiveSNote" placeholder="Denetim notu"></textarea><button id="addFiveS">5S Kaydet</button>
           </div>
+          <div class="card"><h4>5S Skor Özeti</h4><div id="fiveSSummary"></div></div>
           <div class="card"><table><thead><tr><th>Bölüm</th><th>Seiri</th><th>Seiton</th><th>Seiso</th><th>Seiketsu</th><th>Shitsuke</th><th>Toplam</th><th>Not</th></tr></thead><tbody id="fiveSRows"></tbody></table></div>
         </section>
 
@@ -149,7 +152,7 @@
             <select id="dataSource"><option value="manual">Manuel</option><option value="barcode">Barkod</option><option value="delta">Delta HMI/PLC</option></select>
             <input id="barcodePrefix" placeholder="Barkod prefix" />
             <input id="deltaIp" placeholder="Delta IP" /><input id="deltaPort" type="number" placeholder="Port" />
-            <input value="Modbus TCP" disabled /><input id="deltaCounter" placeholder="Sayaç adresi" />
+            <input id="deltaProtocol" placeholder="Protokol" /><input id="deltaCounter" placeholder="Sayaç adresi" />
             <input id="deltaRun" placeholder="Run adresi" /><input id="deltaAlarm" placeholder="Alarm adresi" />
             <select id="aiProvider"><option value="mock">Mock</option><option value="openai-ready">OpenAI-Ready</option></select>
             <input id="aiModel" placeholder="AI model" /><button id="saveSettings">Ayarları Kaydet</button><button id="testIntegration">Bağlantı Testi</button>
@@ -159,6 +162,16 @@
 
         <section class="tab" id="tab-report">
           <div class="card form-row">
+            <select id="reportType">
+              <option value="daily">Günlük rapor</option>
+              <option value="weekly">Haftalık rapor</option>
+              <option value="shift">Vardiya raporu</option>
+              <option value="oee">OEE raporu</option>
+              <option value="downtime">Duruş raporu</option>
+              <option value="kaizen">Kaizen raporu</option>
+              <option value="fmea">FMEA raporu</option>
+              <option value="5s">5S raporu</option>
+            </select>
             <button id="generateReport">Rapor Oluştur</button>
             <button id="exportCsv">CSV Export</button>
             <button id="exportExcel">Excel Export</button>
