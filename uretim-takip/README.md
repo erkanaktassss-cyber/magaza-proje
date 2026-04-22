@@ -1,22 +1,23 @@
-# FabrikaOS Pro — Profesyonel Üretim Yönetim Sistemi
+# FabrikaOS Pro — Web Tabanlı Fabrika Üretim Yönetim Sistemi
 
-FabrikaOS Pro; dolum ve paketleme hatları olan tesislerde **gerçek kullanım odaklı üretim yönetimi** için tasarlanmış, modüler ve koyu tema kurumsal web panelidir.
+FabrikaOS Pro, dolum ve paketleme hatlarını uçtan uca yönetmek için geliştirilmiş, **tam çalışan**, Türkçe, koyu temalı ve modüler bir üretim yönetim uygulamasıdır.
 
-## Ana Modüller
+## Özellikler
 
-- Ana Dashboard (hat kartları, üst KPI özetleri, kritik listeler)
-- Hat Yönetimi (ekle, sil, sırala, grupla)
-- Üretim Girişi (hedef, gerçekleşen, fire, kalite, vardiya, operatör, barkod)
-- Duruş Yönetimi (başlat/bitir, planlı/plansız, sebep yönetimi, geçmiş + Pareto benzeri listeler)
-- OEE Modülü (Availability, Performance, Quality, OEE + trend)
-- Kaizen Modülü (öneri, durum, kazanım alanları, liste)
-- 5S Modülü (bölüm bazlı puanlama + not)
-- FMEA Modülü (RPN otomatik hesaplama, kritik risk vurgusu)
-- Üretim Analiz Motoru (AI-ready analiz paneli, mock analiz yanıtları)
-- Entegrasyon/Ayarlar (Manuel, Barkod, Delta HMI/PLC Modbus TCP hazırlığı)
-- Raporlama (günlük özet, CSV export, Excel export, yazdırma)
+- **Ana Dashboard**: Hat kartları, toplam KPI, zayıf hat, kritik FMEA risk sayısı.
+- **Hat Yönetimi**: Hat ekleme/düzenleme/silme, tip seçimi (Dolum/Paketleme/Diğer), sıra değiştirme.
+- **Üretim Girişi**: Hedef, gerçekleşen, hatalı ürün, vardiya, operatör, barkod kaydı.
+- **Duruş Yönetimi**: Duruş başlat/bitir, planlı-plansız ayrımı, sebep yönetimi ve listeleme.
+- **OEE Modülü**: Availability, Performance, Quality, OEE hesapları + günlük/haftalık görünüm.
+- **Kaizen**: Öneri ekleme, durum takibi ve durum filtreleme.
+- **5S**: Seiri/Seiton/Seiso/Seiketsu/Shitsuke puanlama + skor özeti.
+- **FMEA**: Kayıt formu, otomatik RPN, kritik satır vurgusu.
+- **Üretim Analiz Motoru**: Veri odaklı mock analiz yanıtları.
+- **Entegrasyon Altyapısı**: Manuel/Barkod/Delta HMI-PLC ayarları (IP, Port, Protokol, adresler).
+- **Raporlama**: Günlük, haftalık, vardiya, OEE, duruş, Kaizen, FMEA, 5S raporları + CSV/Excel.
+- **TV Modu**: Tam ekran ve büyük ekran uyumu.
 
-## Mimarî
+## Proje Yapısı
 
 ```text
 uretim-takip/
@@ -41,28 +42,21 @@ uretim-takip/
         └── oee.js
 ```
 
-- Veri katmanı: localStorage (ilk sürüm)
-- Geleceğe hazırlık: servis katmanı sayesinde DB/API entegrasyonuna uygun
-- AI-ready: mock motor + gerçek API takılabilecek yapı
+## Nasıl Çalıştırılır?
 
-## Kurulum
-
-### 1) Basit kullanım
+### Seçenek 1: Doğrudan aç
 `uretim-takip/index.html` dosyasını tarayıcıda açın.
 
-### 2) Lokal sunucu (önerilen)
-
+### Seçenek 2: Lokal sunucu (önerilen)
 ```bash
 cd uretim-takip
 python3 -m http.server 8080
 ```
+Tarayıcıdan açın: `http://localhost:8080`
 
-Tarayıcı:
-- http://localhost:8080
+## Teknik Notlar
 
-## Notlar
-
-- Uygulama açıldığında örnek verilerle dolu gelir.
-- "Verileri Sıfırla" ile örnek veri başlangıcına dönülür.
-- Delta PLC alanı mock test verir; gerçek sürücü entegrasyonu için `services/integrationService.js` genişletilir.
-- AI motoru mock cevap üretir; gerçek OpenAI API bağlantısı için `services/aiService.js` içerisine HTTP katmanı eklenebilir.
+- İlk sürümde veri katmanı `localStorage` kullanır.
+- Uygulama açıldığında örnek veriler otomatik yüklenir.
+- `Verileri Sıfırla` butonu tüm veriyi örnek başlangıç durumuna döndürür.
+- Servis katmanı (services) daha sonra API/DB bağlantısına uygun tasarlanmıştır.

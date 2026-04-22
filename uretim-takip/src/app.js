@@ -29,12 +29,12 @@ function renderAll() {
   renderLineManagement(state);
   fillLineSelects(state);
   renderDowntime(state);
-  renderOee(state);
-  renderKaizen(state);
+  renderOee(state, document.getElementById('oeeView')?.value || 'daily');
+  renderKaizen(state, document.getElementById('kaizenFilter')?.value || 'all');
   renderFiveS(state);
   renderFmea(state);
   renderSettings(state);
-  renderReport(ReportService.buildSummary(state));
+  renderReport(ReportService.buildReport(getState(), document.getElementById('reportType')?.value || 'daily'));
 }
 
 function bindTabs() {
@@ -92,7 +92,11 @@ function bindLineActions() {
       } else if (action === 'edit') {
         const line = state.lines[idx];
         const nextName = prompt('Hat adı', line.name);
-        if (nextName) line.name = nextName.trim();
+        const nextType = prompt('Hat tipi (dolum/paketleme/diger)', line.type);
+        const nextGroup = prompt('Hat grubu', line.group);
+        if (nextName?.trim()) line.name = nextName.trim();
+        if (['dolum', 'paketleme', 'diger'].includes(nextType)) line.type = nextType;
+        if (nextGroup?.trim()) line.group = nextGroup.trim();
       }
       state.lines.forEach((line, i) => (line.order = i + 1));
     });
@@ -183,6 +187,8 @@ function bindKaizen() {
       });
     });
   });
+
+  document.getElementById('kaizenFilter').addEventListener('change', () => renderKaizen(getState(), document.getElementById('kaizenFilter').value));
 }
 
 function bindFiveS() {
@@ -243,6 +249,7 @@ function bindSettings() {
       state.settings.barcodePrefix = document.getElementById('barcodePrefix').value.trim();
       state.settings.delta.ip = document.getElementById('deltaIp').value.trim();
       state.settings.delta.port = Number(document.getElementById('deltaPort').value) || 502;
+      state.settings.delta.protocol = document.getElementById('deltaProtocol').value.trim() || 'Modbus TCP';
       state.settings.delta.counterAddress = document.getElementById('deltaCounter').value.trim();
       state.settings.delta.runAddress = document.getElementById('deltaRun').value.trim();
       state.settings.delta.alarmAddress = document.getElementById('deltaAlarm').value.trim();
@@ -260,10 +267,11 @@ function bindSettings() {
 
 function bindReports() {
   document.getElementById('generateReport').addEventListener('click', () => {
-    renderReport(ReportService.buildSummary(getState()));
+    const reportType = document.getElementById('reportType').value;
+    renderReport(ReportService.buildReport(getState(), reportType));
   });
-  document.getElementById('exportCsv').addEventListener('click', () => ReportService.exportCsv(getState()));
-  document.getElementById('exportExcel').addEventListener('click', () => ReportService.exportExcel(getState()));
+  document.getElementById('exportCsv').addEventListener('click', () => ReportService.exportCsv(getState(), document.getElementById('reportType').value));
+  document.getElementById('exportExcel').addEventListener('click', () => ReportService.exportExcel(getState(), document.getElementById('reportType').value));
   document.getElementById('printReport').addEventListener('click', () => ReportService.print());
 }
 
@@ -273,6 +281,9 @@ function bindGlobal() {
     if (!confirm('Tüm veriler sıfırlansın mı?')) return;
     resetAll();
   });
+
+  document.getElementById('oeeView').addEventListener('change', () => renderOee(getState(), document.getElementById('oeeView').value));
+  document.getElementById('reportType').addEventListener('change', () => renderReport(ReportService.buildReport(getState(), document.getElementById('reportType').value)));
 }
 
 function init() {

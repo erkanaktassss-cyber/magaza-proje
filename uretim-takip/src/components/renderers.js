@@ -2,6 +2,7 @@ import { toTrDate } from '../utils/format.js';
 import { calculateRpn, fiveSScore, getLineMetrics, safePercent } from '../utils/oee.js';
 
 const el = (id) => document.getElementById(id);
+const lineTypeLabel = (type) => ({ dolum: 'Dolum', paketleme: 'Paketleme', diger: 'Diğer' }[type] || 'Diğer');
 
 export function renderHeader(state) {
   el('plantName').textContent = state.meta.plantName;
@@ -10,13 +11,14 @@ export function renderHeader(state) {
 
 export function renderDashboard(state) {
   const cards = state.lines
+    .slice()
     .sort((a, b) => a.order - b.order)
     .map((line) => {
       const m = getLineMetrics(line);
       const lastReason = line.downtime.active?.reason || line.downtime.logs.at(-1)?.reason || '-';
       const statusText = line.status === 'running' ? 'Çalışıyor' : line.status === 'stopped' ? 'Duruşta' : 'Beklemede';
       return `<article class="line-card ${m.statusBand}">
-        <div class="card-head"><h4>${line.name}</h4><span class="pill">${line.type === 'dolum' ? 'Dolum' : 'Paketleme'}</span></div>
+        <div class="card-head"><h4>${line.name}</h4><span class="pill">${lineTypeLabel(line.type)}</span></div>
         <div class="kpi-grid">
           <span>Hedef<b>${line.dailyTarget}</b></span><span>Gerçekleşen<b>${line.actual}</b></span>
           <span>Verim<b>%${m.efficiencyPct}</b></span><span>Durum<b>${statusText}</b></span>
@@ -34,7 +36,7 @@ export function renderDashboard(state) {
   const avgOee = Math.round(state.lines.reduce((s, l) => s + getLineMetrics(l).oeePct, 0) / Math.max(1, state.lines.length));
   const totalDown = state.lines.reduce((s, l) => s + l.downtime.totalMin, 0);
   const weakest = [...state.lines].sort((a, b) => safePercent(a.actual, a.dailyTarget) - safePercent(b.actual, b.dailyTarget))[0];
-  const critical = state.lines.filter((l) => getLineMetrics(l).oeePct < 60).length;
+  const critical = state.fmea.filter((item) => calculateRpn(item) >= 200).length;
 
   el('summaryCards').innerHTML = [
     ['Toplam Hedef', totalTarget],
@@ -42,7 +44,7 @@ export function renderDashboard(state) {
     ['Ortalama OEE', `%${avgOee}`],
     ['Toplam Duruş', `${totalDown} dk`],
     ['En Zayıf Hat', weakest?.name || '-'],
-    ['Kritik Alarm', `${critical} adet`]
+    ['Kritik Risk Sayısı', `${critical} adet`]
   ]
     .map(([t, v]) => `<div class="summary-item"><small>${t}</small><strong>${v}</strong></div>`)
     .join('');
@@ -70,9 +72,10 @@ export function renderDashboard(state) {
 
 export function renderLineManagement(state) {
   el('lineList').innerHTML = state.lines
+    .slice()
     .sort((a, b) => a.order - b.order)
     .map((line) => `<tr>
-      <td>${line.order}</td><td>${line.name}</td><td>${line.type}</td><td>${line.group}</td>
+      <td>${line.order}</td><td>${line.name}</td><td>${lineTypeLabel(line.type)}</td><td>${line.group}</td>
       <td>
         <button data-action="up" data-id="${line.id}">↑</button>
         <button data-action="down" data-id="${line.id}">↓</button>
@@ -85,6 +88,7 @@ export function renderLineManagement(state) {
 
 export function fillLineSelects(state) {
   const options = state.lines
+    .slice()
     .sort((a, b) => a.order - b.order)
     .map((line) => `<option value="${line.id}">${line.name}</option>`)
     .join('');
@@ -113,7 +117,8 @@ export function renderDowntime(state) {
   el('reasonChips').innerHTML = state.downtimeReasons.map((r) => `<button class="chip" data-reason="${r}">${r} ✕</button>`).join('');
 }
 
-export function renderOee(state) {
+export function renderOee(state, viewMode = 'daily') {
+  const historySize = viewMode === 'weekly' ? 7 : 1;
   el('oeeCards').innerHTML = state.lines
     .map((line) => {
       const m = getLineMetrics(line);
@@ -121,20 +126,21 @@ export function renderOee(state) {
     })
     .join('');
 
-  const periods = ['Günlük', 'Haftalık', 'Aylık'];
+  const periods = ['Günlük', 'Haftalık'];
   const avg = Math.round(state.lines.reduce((sum, l) => sum + getLineMetrics(l).oeePct, 0) / Math.max(1, state.lines.length));
-  el('oeePeriod').innerHTML = periods.map((p, i) => `<li>${p}<span>%${Math.max(0, avg - (i * 3 - 2))}</span></li>`).join('');
+  el('oeePeriod').innerHTML = periods.map((p, i) => `<li>${p}<span>%${Math.max(0, avg - i * 2)}</span></li>`).join('');
 
   el('oeeTrend').innerHTML = state.lines
     .map((line) => {
-      const bars = (line.oeeHistory || []).map((v) => `<i style="height:${v}%"></i>`).join('');
+      const bars = (line.oeeHistory || []).slice(-historySize).map((v) => `<i style="height:${v}%"></i>`).join('');
       return `<div class="trend-row"><span>${line.name}</span><div class="spark">${bars}</div></div>`;
     })
     .join('');
 }
 
-export function renderKaizen(state) {
-  el('kaizenRows').innerHTML = state.kaizens
+export function renderKaizen(state, statusFilter = 'all') {
+  const rows = statusFilter === 'all' ? state.kaizens : state.kaizens.filter((k) => k.status === statusFilter);
+  el('kaizenRows').innerHTML = rows
     .slice()
     .reverse()
     .map((k) => `<tr><td>${k.title}</td><td>${k.department}</td><td>${k.status}</td><td>${k.gains.time} dk</td><td>${k.gains.cost} ₺</td><td>${k.gains.quality}%</td><td>${k.gains.safety}</td></tr>`)
@@ -142,10 +148,17 @@ export function renderKaizen(state) {
 }
 
 export function renderFiveS(state) {
-  el('fiveSRows').innerHTML = state.fiveS
-    .map((s) => ({ ...s, score: fiveSScore(s) }))
+  const scored = state.fiveS.map((s) => ({ ...s, score: fiveSScore(s) }));
+  el('fiveSRows').innerHTML = scored
     .map((s) => `<tr><td>${s.department}</td><td>${s.seiri}</td><td>${s.seiton}</td><td>${s.seiso}</td><td>${s.seiketsu}</td><td>${s.shitsuke}</td><td>${s.score}</td><td>${s.note || '-'}</td></tr>`)
     .join('');
+
+  const summary = scored
+    .slice()
+    .sort((a, b) => b.score - a.score)
+    .map((item) => `<div class="score-bar"><span>${item.department}</span><div class="bar"><i style="width:${item.score}%"></i></div><strong>${item.score}</strong></div>`)
+    .join('');
+  el('fiveSSummary').innerHTML = summary;
 }
 
 export function renderFmea(state) {
@@ -160,6 +173,7 @@ export function renderSettings(state) {
   el('dataSource').value = state.settings.dataSource;
   el('deltaIp').value = state.settings.delta.ip;
   el('deltaPort').value = state.settings.delta.port;
+  el('deltaProtocol').value = state.settings.delta.protocol;
   el('deltaCounter').value = state.settings.delta.counterAddress;
   el('deltaRun').value = state.settings.delta.runAddress;
   el('deltaAlarm').value = state.settings.delta.alarmAddress;

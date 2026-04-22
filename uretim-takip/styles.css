@@ -79,3 +79,10 @@ pre { white-space: pre-wrap; }
   .triple, .analysis-shell { grid-template-columns: 1fr; }
   .span-2 { grid-column: span 1; }
 }
+
+
+.controls{justify-content:flex-end}
+#fiveSSummary{display:grid;gap:8px}
+.score-bar{display:grid;grid-template-columns:140px 1fr 48px;align-items:center;gap:8px}
+.score-bar .bar{height:10px;border-radius:999px;background:#0a152a;border:1px solid var(--line);overflow:hidden}
+.score-bar .bar i{display:block;height:100%;background:linear-gradient(90deg,#44d6aa,#3f78f9)}
