@@ -3,141 +3,301 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Üretim Takip Sistemi</title>
+  <title>FabrikaOS | Üretim Yönetim Sistemi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-  <div class="app-shell">
-    <header class="topbar">
-      <div>
-        <h1>Üretim Takip Sistemi</h1>
-        <p class="sub">Canlı izleme • Duruş takibi • Hedef / gerçekleşen</p>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>FabrikaOS</h1>
+        <p>Kurumsal Üretim Yönetim Merkezi</p>
       </div>
-      <div class="topbar-actions">
-        <button id="tamEkranBtn" class="btn secondary">TV Tam Ekran</button>
-        <button id="veriTemizleBtn" class="btn danger">Tüm Verileri Sıfırla</button>
+
+      <nav class="menu">
+        <button class="menu-btn active" data-tab="dashboard">Yönetim Paneli</button>
+        <button class="menu-btn" data-tab="oee">OEE Modülü</button>
+        <button class="menu-btn" data-tab="durus">Duruş Yönetimi</button>
+        <button class="menu-btn" data-tab="kaizen">Kaizen</button>
+        <button class="menu-btn" data-tab="besS">5S Modülü</button>
+        <button class="menu-btn" data-tab="fmea">FMEA</button>
+        <button class="menu-btn" data-tab="ai">Üretim Analiz Motoru</button>
+        <button class="menu-btn" data-tab="rapor">Raporlama</button>
+        <button class="menu-btn" data-tab="ayarlar">Ayarlar & Entegrasyon</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="tvModeBtn" class="btn btn-secondary">TV Tam Ekran</button>
+        <button id="resetBtn" class="btn btn-danger">Veriyi Sıfırla</button>
       </div>
-    </header>
+    </aside>
 
-    <nav class="tabs" aria-label="Ana modüller">
-      <button class="tab-btn active" data-tab="ozet">Şef Özeti</button>
-      <button class="tab-btn" data-tab="hat">Hat Ekranı</button>
-      <button class="tab-btn" data-tab="dashboard">Dashboard</button>
-      <button class="tab-btn" data-tab="rapor">Rapor</button>
-    </nav>
+    <main class="content">
+      <header class="content-header card">
+        <div>
+          <h2>Gerçek Zamanlı Fabrika Performans İzleme</h2>
+          <p>Dolum • Paketleme • OEE • Duruş • Kaizen • 5S • FMEA • AI Analiz</p>
+        </div>
+        <div class="head-right">
+          <div id="todayInfo" class="tag"></div>
+          <div id="integrationStatus" class="tag">Kaynak: Manuel</div>
+        </div>
+      </header>
 
-    <main>
-      <section id="tab-ozet" class="tab-panel active">
-        <div class="grid cards-4" id="ozetKartlari"></div>
-        <div class="panel">
-          <h2>Hızlı Durum</h2>
-          <p>Bu alan, en kritik hatları hızlıca görmeniz için otomatik güncellenir.</p>
-          <div id="kritikHatlar" class="chip-row"></div>
+      <section id="tab-dashboard" class="tab active">
+        <div class="card">
+          <div class="section-head">
+            <h3>Hat Yönetimi</h3>
+            <div class="inline-actions">
+              <select id="lineGroupInput">
+                <option value="dolum">Dolum</option>
+                <option value="paketleme">Paketleme</option>
+                <option value="diger">Diğer</option>
+              </select>
+              <input id="lineNameInput" type="text" placeholder="Yeni hat adı" />
+              <button id="addLineBtn" class="btn">Hat Ekle</button>
+            </div>
+          </div>
+          <div id="lineCards" class="line-grid"></div>
+        </div>
+
+        <div class="card two-col">
+          <div>
+            <h3>Canlı Hat Dashboard (TV Uyumlu)</h3>
+            <div id="tvGrid" class="tv-grid"></div>
+          </div>
+          <div>
+            <h3>Kritik Risk ve İyileştirme Radar</h3>
+            <div id="criticalRiskCard" class="critical-card"></div>
+            <div id="weakLineCard" class="critical-card"></div>
+          </div>
         </div>
       </section>
 
-      <section id="tab-hat" class="tab-panel">
-        <div class="panel">
-          <h2>Hat Seçimi ve Güncelleme</h2>
+      <section id="tab-oee" class="tab">
+        <div class="card">
+          <h3>Hat Bazlı OEE Kartları</h3>
+          <div id="oeeCards" class="line-grid"></div>
+        </div>
+        <div class="card two-col">
+          <div>
+            <h4>Günlük OEE Görünümü</h4>
+            <div id="dailyOeeList" class="list"></div>
+          </div>
+          <div>
+            <h4>Haftalık OEE Trend (Grafik)</h4>
+            <div id="weeklyOeeChart" class="bars"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-durus" class="tab">
+        <div class="card two-col">
+          <div>
+            <h3>Duruş Başlat / Bitir</h3>
+            <div class="form-grid">
+              <label>Hat<select id="stopLineSelect"></select></label>
+              <label>Duruş Türü
+                <select id="stopTypeSelect">
+                  <option value="plansiz">Plansız</option>
+                  <option value="planli">Planlı</option>
+                </select>
+              </label>
+              <label>Duruş Sebebi<select id="stopReasonSelect"></select></label>
+            </div>
+            <div class="inline-actions top-gap">
+              <button id="startStopBtn" class="btn btn-danger">Duruş Başlat</button>
+              <button id="endStopBtn" class="btn btn-success">Duruş Bitir</button>
+            </div>
+          </div>
+          <div>
+            <h3>Duruş Sebebi Yönetimi</h3>
+            <div class="inline-actions">
+              <input id="newReasonInput" type="text" placeholder="Yeni sebep" />
+              <button id="addReasonBtn" class="btn">Ekle</button>
+            </div>
+            <div id="reasonChips" class="chip-wrap"></div>
+          </div>
+        </div>
+        <div class="card two-col">
+          <div>
+            <h4>En Çok Duruş Yapan Hatlar</h4>
+            <div id="stopLineRanking" class="list"></div>
+          </div>
+          <div>
+            <h4>En Çok Tekrarlayan Duruş Sebepleri</h4>
+            <div id="stopReasonRanking" class="list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-kaizen" class="tab">
+        <div class="card">
+          <h3>Kaizen Öneri Girişi</h3>
           <div class="form-grid">
-            <label>
-              Hat
-              <select id="hatSecimi"></select>
-            </label>
-            <label>
-              Vardiya
-              <select id="vardiyaInput">
-                <option>1. Vardiya</option>
-                <option>2. Vardiya</option>
-                <option>3. Vardiya</option>
+            <label>Başlık<input id="kaizenTitle" type="text" /></label>
+            <label>Öneri Sahibi<input id="kaizenOwner" type="text" /></label>
+            <label>Durum
+              <select id="kaizenStatus">
+                <option>yeni</option>
+                <option>incelemede</option>
+                <option>kabul edildi</option>
+                <option>reddedildi</option>
+                <option>uygulandı</option>
               </select>
             </label>
-            <label>
-              Operatör
-              <input id="operatorInput" type="text" placeholder="Ad Soyad" />
-            </label>
-            <label>
-              Günlük Hedef
-              <input id="hedefInput" type="number" min="0" step="1" />
-            </label>
+            <label>Zaman Kazancı (dk/gün)<input id="gainTime" type="number" min="0" value="0" /></label>
+            <label>Maliyet Kazancı (₺/ay)<input id="gainCost" type="number" min="0" value="0" /></label>
+            <label>Kalite Kazancı (%)<input id="gainQuality" type="number" min="0" value="0" /></label>
           </div>
+          <button id="addKaizenBtn" class="btn top-gap">Kaizen Önerisi Ekle</button>
+        </div>
 
-          <div class="line-metrics">
-            <div class="metric-card">
-              <span>Anlık Gerçekleşen</span>
-              <strong id="gerceklesenGostergesi">0</strong>
-            </div>
-            <div class="metric-card">
-              <span>Duruş Durumu</span>
-              <strong id="durusDurumuGostergesi">Çalışıyor</strong>
-            </div>
-            <div class="metric-card">
-              <span>Toplam Duruş</span>
-              <strong id="toplamDurusGostergesi">0 dk</strong>
-            </div>
-            <div class="metric-card">
-              <span>Başarı Yüzdesi</span>
-              <strong id="basariYuzdesiGostergesi">0%</strong>
-            </div>
-          </div>
-
-          <div class="action-row">
-            <button class="btn success" id="adetArttirBtn">+1 Adet</button>
-            <button class="btn" id="manuelAdetBtn">Manuel Adet Ekle</button>
-            <input id="manuelAdetInput" type="number" min="1" step="1" placeholder="Adet" />
-            <button class="btn warning" id="barkodArttirBtn">Barkod Simülasyonu (+1)</button>
-          </div>
-
-          <h3>Duruş Takibi</h3>
-          <div class="action-row">
-            <select id="durusSebebiSecim">
-              <option value="arıza">Arıza</option>
-              <option value="malzeme bekleme">Malzeme Bekleme</option>
-              <option value="operatör yok">Operatör Yok</option>
-              <option value="ayar">Ayar</option>
-              <option value="kalite kontrol">Kalite Kontrol</option>
-              <option value="elektrik">Elektrik</option>
-              <option value="diğer">Diğer</option>
-            </select>
-            <button class="btn danger" id="durusBaslatBtn">Duruş Başlat</button>
-            <button class="btn success" id="durusBitirBtn">Duruş Bitir</button>
-          </div>
-
+        <div class="card">
+          <h3>Kaizen Takip Tablosu</h3>
           <div class="table-wrap">
             <table>
               <thead>
-                <tr>
-                  <th>Başlangıç</th>
-                  <th>Bitiş</th>
-                  <th>Süre (dk)</th>
-                  <th>Sebep</th>
-                </tr>
+                <tr><th>Başlık</th><th>Sahip</th><th>Durum</th><th>Zaman</th><th>Maliyet</th><th>Kalite</th><th>Sil</th></tr>
               </thead>
-              <tbody id="durusTablosuBody"></tbody>
+              <tbody id="kaizenTable"></tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <section id="tab-dashboard" class="tab-panel">
-        <div class="panel">
-          <h2>Canlı Hat Dashboard (TV Uyumlu)</h2>
-          <p>Renkler: <span class="legend yesil"></span> Çalışıyor, <span class="legend kirmizi"></span> Durmuş, <span class="legend sari"></span> Hedefin gerisinde</p>
-          <div id="dashboardGrid" class="grid cards-5"></div>
+      <section id="tab-besS" class="tab">
+        <div class="card">
+          <h3>5S Puanlama</h3>
+          <div class="form-grid">
+            <label>Bölüm<input id="fiveSDept" type="text" /></label>
+            <label>Seiri<input id="seiriInput" type="number" min="0" max="100" value="80" /></label>
+            <label>Seiton<input id="seitonInput" type="number" min="0" max="100" value="80" /></label>
+            <label>Seiso<input id="seisoInput" type="number" min="0" max="100" value="80" /></label>
+            <label>Seiketsu<input id="seiketsuInput" type="number" min="0" max="100" value="80" /></label>
+            <label>Shitsuke<input id="shitsukeInput" type="number" min="0" max="100" value="80" /></label>
+          </div>
+          <button id="addFiveSBtn" class="btn top-gap">5S Puanı Kaydet</button>
+        </div>
+        <div class="card two-col">
+          <div>
+            <h4>5S Puan Grafiği</h4>
+            <div id="fiveSChart" class="bars"></div>
+          </div>
+          <div>
+            <h4>Eksik Alanlar (80 altı)</h4>
+            <div id="fiveSMissing" class="list"></div>
+          </div>
         </div>
       </section>
 
-      <section id="tab-rapor" class="tab-panel">
-        <div class="panel">
-          <h2>Raporlar</h2>
-          <div class="action-row">
-            <button class="btn" id="gunlukRaporBtn">Günlük Rapor</button>
-            <button class="btn" id="vardiyaRaporBtn">Vardiya Raporu</button>
-            <button class="btn" id="hatRaporBtn">Hat Bazlı Rapor</button>
-            <button class="btn" id="durusRaporBtn">Duruş Sebebi Raporu</button>
-            <button class="btn success" id="csvDisaAktarBtn">CSV Dışa Aktar</button>
+      <section id="tab-fmea" class="tab">
+        <div class="card">
+          <h3>FMEA Kayıt Girişi</h3>
+          <div class="form-grid">
+            <label>Proses<input id="fmeaProcess" type="text" /></label>
+            <label>Hata Türü<input id="fmeaType" type="text" /></label>
+            <label>Hata Etkisi<input id="fmeaEffect" type="text" /></label>
+            <label>Hata Sebebi<input id="fmeaCause" type="text" /></label>
+            <label>Şiddet (S)<input id="fmeaS" type="number" min="1" max="10" value="5" /></label>
+            <label>Oluşma (O)<input id="fmeaO" type="number" min="1" max="10" value="5" /></label>
+            <label>Tespit (D)<input id="fmeaD" type="number" min="1" max="10" value="5" /></label>
+            <label>Sorumlu<input id="fmeaOwner" type="text" /></label>
+            <label>Hedef Tarih<input id="fmeaTarget" type="date" /></label>
+            <label>Durum
+              <select id="fmeaStatus">
+                <option>açık</option>
+                <option>aksiyonda</option>
+                <option>kapatıldı</option>
+              </select>
+            </label>
           </div>
-          <pre id="raporCikti" class="report-box">Rapor seçin...</pre>
+          <button id="addFmeaBtn" class="btn top-gap">FMEA Kaydı Ekle</button>
+        </div>
+
+        <div class="card">
+          <h3>Risk Sıralaması (RPN)</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Proses</th><th>Hata Türü</th><th>Etki</th><th>Sebep</th><th>S</th><th>O</th><th>D</th><th>RPN</th><th>Sorumlu</th><th>Hedef</th><th>Durum</th></tr>
+              </thead>
+              <tbody id="fmeaTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-ai" class="tab">
+        <div class="card">
+          <div class="section-head">
+            <h3>Üretim Analiz Motoru</h3>
+            <div class="ai-core">
+              <div class="ring ring-1"></div>
+              <div class="ring ring-2"></div>
+              <div class="ring ring-3"></div>
+              <div class="core-dot"></div>
+            </div>
+          </div>
+          <p class="muted">Analiz soruları: en zayıf hat, en çok duruş nedeni, kaizen önceliği, kritik FMEA, en düşük 5S.</p>
+          <div id="analysisSignals" class="signal-grid"></div>
+          <div class="chat-box" id="chatBox"></div>
+          <div class="inline-actions top-gap">
+            <input id="aiInput" type="text" placeholder="Sorunuzu yazın" />
+            <button id="askAiBtn" class="btn">Analiz Et</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-rapor" class="tab">
+        <div class="card">
+          <h3>Raporlama ve Dışa Aktarma</h3>
+          <div class="inline-actions wrap">
+            <button id="dailyReportBtn" class="btn">Günlük Rapor</button>
+            <button id="shiftReportBtn" class="btn">Vardiya Raporu</button>
+            <button id="oeeReportBtn" class="btn">OEE Raporu</button>
+            <button id="stopReportBtn" class="btn">Duruş Raporu</button>
+            <button id="kaizenReportBtn" class="btn">Kaizen Raporu</button>
+            <button id="fmeaReportBtn" class="btn">FMEA Raporu</button>
+            <button id="csvExportBtn" class="btn btn-success">CSV Export</button>
+            <button id="excelExportBtn" class="btn btn-success">Excel Export</button>
+          </div>
+          <pre id="reportOutput" class="report-box">Rapor seçiniz...</pre>
+        </div>
+      </section>
+
+      <section id="tab-ayarlar" class="tab">
+        <div class="card two-col">
+          <div>
+            <h3>Veri Kaynağı</h3>
+            <label>Kaynak Tipi
+              <select id="dataSourceType">
+                <option value="manuel">Manuel</option>
+                <option value="barkod">Barkod</option>
+                <option value="delta">Delta HMI/PLC</option>
+              </select>
+            </label>
+            <div id="deltaSettings" class="form-grid top-gap">
+              <label>IP Adresi<input id="deltaIp" type="text" placeholder="192.168.1.10" /></label>
+              <label>Port<input id="deltaPort" type="number" placeholder="502" /></label>
+              <label>Sayaç Adresi<input id="deltaCounter" type="text" placeholder="D100" /></label>
+              <label>Run Adresi<input id="deltaRun" type="text" placeholder="M10" /></label>
+              <label>Alarm Adresi<input id="deltaAlarm" type="text" placeholder="M20" /></label>
+            </div>
+            <button id="saveIntegrationBtn" class="btn top-gap">Entegrasyon Ayarlarını Kaydet</button>
+          </div>
+          <div>
+            <h3>Entegrasyon Durumu</h3>
+            <div id="integrationSummary" class="list"></div>
+            <h4 class="top-gap">Mock Veri Akışı Testi</h4>
+            <div class="inline-actions">
+              <button id="simulateDataBtn" class="btn">Mock Veri Üret</button>
+            </div>
+            <p class="muted top-gap">Not: Bu sürümde PLC bağlantısı mock olarak simüle edilir, kod altyapısı gerçek entegrasyona hazırdır.</p>
+          </div>
         </div>
       </section>
     </main>

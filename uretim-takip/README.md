@@ -1,63 +1,110 @@
-# Üretim Takip Sistemi (v1)
+# FabrikaOS — Profesyonel Fabrika Üretim Yönetim Sistemi
 
-Bu proje, dolum ve paketleme hatları için **tek bilgisayarda çalışan**, **web tabanlı**, **çok basit kurulumlu** bir üretim takip ekranıdır.
+Bu proje, mevcut çalışan üretim paneli korunarak geliştirilmiş; sahada kullanılabilir, Türkçe, kurumsal görünümlü ve modüler bir üretim yönetim uygulamasıdır.
 
-## Özellikler
+## Öne Çıkan Özellikler
 
-- Türkçe, koyu temalı ve sade arayüz
-- Hat seçimi: `D1-D5` ve `P1-P5`
-- Her hat için:
-  - günlük hedef
-  - anlık gerçekleşen
-  - duruş durumu / sebebi
-  - vardiya
-  - operatör
-- Manuel adet artırma
-- Barkod simülasyonu ile adet artırma (`+1`)
-- Duruş başlat / duruş bitir
-- Toplam duruş süresi hesaplama
-- Tüm hatları tek ekranda canlı dashboard
-- TV için tam ekran modu
-- Günlük / vardiya / hat bazlı / duruş sebebi raporu
-- CSV dışa aktarma
-- Veriler `localStorage` içinde saklanır (veritabanısız kullanım)
+- **Gelişmiş Hat Yönetimi**
+  - Hat ekleme / silme / isim düzenleme
+  - Hat tipi seçimi: **Dolum / Paketleme / Diğer**
+  - Hat bazlı hedef, gerçekleşen, verim, OEE, operatör, vardiya, duruş bilgileri
 
-## Kurulum (Çok Basit)
+- **Profesyonel Dashboard**
+  - Tüm hatlar tek ekranda
+  - Premium kart yapısı ve koyu tema
+  - TV ekranı için tam ekran kullanım
+  - Kritik FMEA riski ve kaizen öncelikli hat alanları
 
-### Yöntem 1: Direkt aç
-1. `uretim-takip` klasörünü bilgisayara kopyalayın.
-2. `index.html` dosyasına çift tıklayın.
-3. Tarayıcıda sistem açılır.
+- **OEE Modülü**
+  - Availability / Performance / Quality hesaplama
+  - Otomatik OEE
+  - Günlük OEE listesi + haftalık trend grafik görünümü
 
-### Yöntem 2: Lokal sunucu (önerilir)
-> Bu yöntem özellikle TV veya ağdaki başka cihazlardan erişim için daha stabil olur.
+- **Duruş Yönetimi**
+  - Duruş başlat / bitir
+  - Planlı / plansız duruş ayrımı
+  - Duruş sebebi ekleme/silme
+  - En çok duran hat ve sebep raporları
 
-1. Terminal açın.
-2. Proje klasörüne girin:
-   ```bash
-   cd uretim-takip
-   ```
-3. Basit sunucu başlatın (Python yüklüyse):
-   ```bash
-   python3 -m http.server 8080
-   ```
-4. Tarayıcıdan açın:
-   - `http://localhost:8080`
+- **Kaizen Modülü**
+  - Öneri ekleme ve takip
+  - Durumlar: yeni, incelemede, kabul edildi, reddedildi, uygulandı
+  - Zaman / maliyet / kalite kazanımı alanları
 
-## Kullanım Akışı
+- **5S Modülü**
+  - Seiri / Seiton / Seiso / Seiketsu / Shitsuke puanlama
+  - Grafiksel puan gösterimi
+  - Eksik alanların listelenmesi
 
-1. **Hat Ekranı** sekmesine geçin.
-2. Hat seçin (`D1 ... P5`).
-3. Hedef, vardiya ve operatör bilgisini girin.
-4. Üretim adetini `+1` veya manuel adet ile artırın.
-5. Duruş durumunda sebep seçip `Duruş Başlat` butonuna basın.
-6. Duruş bittiğinde `Duruş Bitir` ile süreyi otomatik hesaplatın.
-7. **Dashboard** ekranında tüm hatları renkli izleyin.
-8. **Rapor** ekranından rapor metni alın veya CSV indirin.
+- **FMEA Modülü**
+  - Proses, hata türü/etkisi/sebebi, S/O/D, RPN, sorumlu, hedef tarih, durum
+  - Otomatik RPN hesaplama
+  - Risk sıralaması ve dashboard kritik risk kutusu
 
-## Notlar
+- **Üretim Analiz Motoru (AI Demo)**
+  - Animasyonlu, teknolojik analiz paneli
+  - Şu sorulara analiz yanıtı üretir:
+    - en zayıf hat hangisi
+    - en çok duruş nedeni ne
+    - hangi hatta kaizen gerekir
+    - en kritik FMEA riski ne
+    - en düşük 5S puanı hangi bölümde
+  - Altyapı ileride gerçek API bağlantısına uygun tutulmuştur.
 
-- Gün değiştiğinde sistem yeni güne otomatik geçer.
-- Hedef, vardiya ve operatör bilgileri bir sonraki güne taşınır.
-- PLC entegrasyonu yoktur; ilk sürüm manuel kullanım içindir.
-- Sonraki sürümde SQLite/API entegrasyonu eklenebilir.
+- **Raporlama**
+  - Günlük, vardiya, OEE, duruş, kaizen, FMEA raporları
+  - CSV ve Excel dışa aktarma
+
+- **Entegrasyon Ayarları Altyapısı**
+  - Veri kaynağı seçimi: Manuel / Barkod / Delta HMI/PLC
+  - Delta ayar alanları: IP, Port, Sayaç, Run, Alarm
+  - Mock veri akışı simülasyonu
+
+## Başlangıçta Dolu Veri
+
+Uygulama açıldığında boş gelmez:
+- Örnek hatlar
+- Örnek kaizen kayıtları
+- Örnek 5S puanları
+- Örnek FMEA riskleri
+
+Bu sayede sistem ilk açılışta gerçek panel hissi verir.
+
+## Teknik Yapı
+
+- Web tabanlı (HTML + CSS + Vanilla JS)
+- Veri katmanı: `localStorage`
+- Kod okunaklı ve modüler fonksiyonlarla düzenlenmiştir
+- Sonradan API/veritabanı entegrasyonuna uygun mimari
+
+## Klasör Yapısı
+
+```text
+uretim-takip/
+├── index.html
+├── styles.css
+├── app.js
+└── README.md
+```
+
+## Çalıştırma
+
+### Yöntem 1 (Hızlı)
+1. `uretim-takip` klasörüne girin.
+2. `index.html` dosyasını tarayıcıda açın.
+
+### Yöntem 2 (Önerilir)
+```bash
+cd uretim-takip
+python3 -m http.server 8080
+```
+Tarayıcı: `http://localhost:8080`
+
+## Kullanım Sırası Önerisi
+
+1. Dashboard’da hatları düzenleyin.
+2. Duruş yönetiminden duruşları izleyin.
+3. OEE ekranından performansı kontrol edin.
+4. Kaizen, 5S ve FMEA modüllerini kullanarak iyileştirme kültürünü yönetin.
+5. Ayarlar ekranından veri kaynağı/Delta parametrelerini hazırlayın.
+6. Raporlama ekranından CSV/Excel export alın.
