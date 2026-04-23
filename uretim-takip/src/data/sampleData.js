@@ -176,6 +176,30 @@ export const SAMPLE_STATE = {
       oeeHistory: [70, 69, 67, 66, 67, 68, 69]
     }
   ],
+  productionEntries: [
+    {
+      id: 'prd_1',
+      lineId: 'line_dolum_a',
+      shift: '1. Vardiya',
+      operator: 'Hakan Yılmaz',
+      target: 24000,
+      actual: 19850,
+      defect: 420,
+      barcode: '8691234567001',
+      createdAt: new Date(Date.now() - 1000 * 60 * 90).toISOString()
+    },
+    {
+      id: 'prd_2',
+      lineId: 'line_pack_a',
+      shift: '1. Vardiya',
+      operator: 'Sena Kılıç',
+      target: 22000,
+      actual: 17610,
+      defect: 180,
+      barcode: '8691234567003',
+      createdAt: new Date(Date.now() - 1000 * 60 * 60).toISOString()
+    }
+  ],
   kaizens: [
     {
       id: 'kz_1',

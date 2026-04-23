@@ -48,6 +48,9 @@ export class AiService {
       return `OEE düşüşü genelde Availability kaynaklı. Plansız duruşlar ve kalite fireleri artınca OEE hızlı düşüyor. ${SUGGESTION}`;
     }
 
-    return `Analiz tamamlandı. Soru daha spesifik olursa kök neden, etki ve aksiyon üçlüsü ile yanıt üretebilirim. ${SUGGESTION}`;
+    const totalProduction = (state.productionEntries || []).reduce((sum, row) => sum + row.actual, 0);
+    const totalDefect = (state.productionEntries || []).reduce((sum, row) => sum + row.defect, 0);
+    const defectRate = totalProduction > 0 ? Math.round((totalDefect / totalProduction) * 1000) / 10 : 0;
+    return `Analiz tamamlandı. Toplam kayıt üretimi ${totalProduction}, toplam fire ${totalDefect} (%${defectRate}). En zayıf hat ${weak.line.name}. ${SUGGESTION}`;
   }
 }

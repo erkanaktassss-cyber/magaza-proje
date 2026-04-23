@@ -14,6 +14,7 @@ import {
   renderKaizen,
   renderLineManagement,
   renderOee,
+  renderProduction,
   renderReport,
   renderSettings
 } from './components/renderers.js';
@@ -28,6 +29,7 @@ function renderAll() {
   renderDashboard(state);
   renderLineManagement(state);
   fillLineSelects(state);
+  renderProduction(state);
   renderDowntime(state);
   renderOee(state, document.getElementById('oeeView')?.value || 'daily');
   renderKaizen(state, document.getElementById('kaizenFilter')?.value || 'all');
@@ -109,13 +111,55 @@ function bindProductionEntry() {
     setState((state) => {
       const line = state.lines.find((l) => l.id === lineId);
       if (!line) return;
-      line.dailyTarget = Math.max(0, Number(document.getElementById('targetInput').value) || 0);
-      line.actual = Math.max(0, Number(document.getElementById('actualInput').value) || 0);
-      line.defect = clamp(document.getElementById('defectInput').value, 0, line.actual);
+      const target = Math.max(0, Number(document.getElementById('targetInput').value) || 0);
+      const actual = Math.max(0, Number(document.getElementById('actualInput').value) || 0);
+      const defect = clamp(document.getElementById('defectInput').value, 0, actual);
+      line.dailyTarget = target;
+      line.actual = actual;
+      line.defect = defect;
       line.shift = document.getElementById('shiftInput').value;
       line.operator = document.getElementById('operatorInput').value.trim();
       line.barcode = document.getElementById('barcodeInput').value.trim();
       line.status = line.actual > 0 ? 'running' : 'idle';
+      state.productionEntries ||= [];
+      state.productionEntries.push({
+        id: uid('prd'),
+        lineId: line.id,
+        shift: line.shift,
+        operator: line.operator,
+        target,
+        actual,
+        defect,
+        barcode: line.barcode,
+        createdAt: new Date().toISOString()
+      });
+    });
+  });
+
+  document.getElementById('productionRows').addEventListener('click', (e) => {
+    const id = e.target.dataset.id;
+    const action = e.target.dataset.action;
+    if (!id || !action) return;
+    setState((state) => {
+      const row = (state.productionEntries || []).find((item) => item.id === id);
+      if (!row) return;
+      if (action === 'delete') {
+        state.productionEntries = state.productionEntries.filter((item) => item.id !== id);
+        return;
+      }
+
+      const nextTarget = Number(prompt('Hedef', String(row.target)) || row.target);
+      const nextActual = Number(prompt('Gerçekleşen', String(row.actual)) || row.actual);
+      const nextDefect = clamp(prompt('Fire', String(row.defect)) || row.defect, 0, nextActual);
+      row.target = Math.max(0, nextTarget);
+      row.actual = Math.max(0, nextActual);
+      row.defect = nextDefect;
+      const line = state.lines.find((l) => l.id === row.lineId);
+      if (!line) return;
+      line.dailyTarget = row.target;
+      line.actual = row.actual;
+      line.defect = row.defect;
+      line.status = row.actual > 0 ? 'running' : 'idle';
     });
   });
 }
@@ -189,6 +233,22 @@ function bindKaizen() {
   });
 
   document.getElementById('kaizenFilter').addEventListener('change', () => renderKaizen(getState(), document.getElementById('kaizenFilter').value));
+  document.getElementById('kaizenRows').addEventListener('click', (e) => {
+    const id = e.target.dataset.id;
+    const action = e.target.dataset.action;
+    if (!id || !action) return;
+    const flow = ['yeni', 'incelemede', 'kabul edildi', 'uygulandı', 'reddedildi'];
+    setState((state) => {
+      const item = state.kaizens.find((k) => k.id === id);
+      if (!item) return;
+      if (action === 'delete') {
+        state.kaizens = state.kaizens.filter((k) => k.id !== id);
+        return;
+      }
+      const idx = flow.indexOf(item.status);
+      item.status = flow[(idx + 1) % flow.length];
+    });
+  });
 }
 
 function bindFiveS() {
@@ -229,6 +289,30 @@ function bindFmea() {
         targetDate: document.getElementById('fDate').value,
         status: document.getElementById('fStatus').value
       });
+    });
+  });
+
+  document.getElementById('fmeaRows').addEventListener('click', (e) => {
+    const id = e.target.dataset.id;
+    const action = e.target.dataset.action;
+    if (!id || !action) return;
+    setState((state) => {
+      const item = state.fmea.find((f) => f.id === id);
+      if (!item) return;
+      if (action === 'delete') {
+        state.fmea = state.fmea.filter((f) => f.id !== id);
+        return;
+      }
+      const nextSeverity = clamp(prompt('Şiddet (1-10)', String(item.severity)) || item.severity, 1, 10);
+      const nextOccurrence = clamp(prompt('Oluşma (1-10)', String(item.occurrence)) || item.occurrence, 1, 10);
+      const nextDetection = clamp(prompt('Tespit (1-10)', String(item.detection)) || item.detection, 1, 10);
+      const nextAction = prompt('Aksiyon', item.action) || item.action;
+      const nextStatus = prompt('Durum', item.status) || item.status;
+      item.severity = nextSeverity;
+      item.occurrence = nextOccurrence;
+      item.detection = nextDetection;
+      item.action = nextAction;
+      item.status = nextStatus;
     });
   });
 }
@@ -302,4 +386,4 @@ function init() {
   renderAll();
 }
 
-init();
+document.addEventListener('DOMContentLoaded', init);
