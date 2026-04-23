@@ -72,6 +72,14 @@
             <input id="actualInput" type="number" placeholder="Gerçekleşen" /><input id="defectInput" type="number" placeholder="Hatalı ürün" />
             <input id="barcodeInput" placeholder="Barkod" /><button id="saveProduction">Üretim Verisini Kaydet</button>
           </div>
+          <div class="card">
+            <table>
+              <thead>
+                <tr><th>Tarih</th><th>Hat</th><th>Vardiya</th><th>Operatör</th><th>Hedef</th><th>Gerçekleşen</th><th>Fire</th><th>Barkod</th><th>İşlemler</th></tr>
+              </thead>
+              <tbody id="productionRows"></tbody>
+            </table>
+          </div>
         </section>
 
         <section class="tab" id="tab-downtime">
@@ -108,7 +116,7 @@
             <input id="gainQuality" type="number" placeholder="Kalite kazancı" /><input id="gainSafety" type="number" placeholder="İSG kazancı" />
             <textarea id="kaizenDesc" placeholder="Açıklama"></textarea><button id="addKaizen">Kaizen Ekle</button>
           </div>
-          <div class="card"><table><thead><tr><th>Başlık</th><th>Bölüm</th><th>Durum</th><th>Zaman</th><th>Maliyet</th><th>Kalite</th><th>İSG</th></tr></thead><tbody id="kaizenRows"></tbody></table></div>
+          <div class="card"><table><thead><tr><th>Başlık</th><th>Bölüm</th><th>Durum</th><th>Zaman</th><th>Maliyet</th><th>Kalite</th><th>İSG</th><th>İşlemler</th></tr></thead><tbody id="kaizenRows"></tbody></table></div>
         </section>
 
         <section class="tab" id="tab-fiveS">
@@ -130,7 +138,7 @@
             <input id="fAction" placeholder="Aksiyon" /><input id="fOwner" placeholder="Sorumlu" /><input id="fDate" type="date" />
             <select id="fStatus"><option>açık</option><option>aksiyon alındı</option><option>kapatıldı</option></select><button id="addFmea">FMEA Ekle</button>
           </div>
-          <div class="card"><table><thead><tr><th>Proses</th><th>Hata Türü</th><th>Etki</th><th>Sebep</th><th>S</th><th>O</th><th>D</th><th>RPN</th><th>Aksiyon</th><th>Sorumlu</th><th>Hedef</th><th>Durum</th></tr></thead><tbody id="fmeaRows"></tbody></table></div>
+          <div class="card"><table><thead><tr><th>Proses</th><th>Hata Türü</th><th>Etki</th><th>Sebep</th><th>S</th><th>O</th><th>D</th><th>RPN</th><th>Aksiyon</th><th>Sorumlu</th><th>Hedef</th><th>Durum</th><th>İşlemler</th></tr></thead><tbody id="fmeaRows"></tbody></table></div>
         </section>
 
         <section class="tab" id="tab-analysis">

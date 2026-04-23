@@ -138,12 +138,30 @@ export function renderOee(state, viewMode = 'daily') {
     .join('');
 }
 
+export function renderProduction(state) {
+  const lineMap = new Map(state.lines.map((line) => [line.id, line.name]));
+  el('productionRows').innerHTML = (state.productionEntries || [])
+    .slice()
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .map(
+      (row) => `<tr>
+      <td>${toTrDate(row.createdAt)}</td><td>${lineMap.get(row.lineId) || '-'}</td><td>${row.shift}</td><td>${row.operator || '-'}</td>
+      <td>${row.target}</td><td>${row.actual}</td><td>${row.defect}</td><td>${row.barcode || '-'}</td>
+      <td><button data-action="edit" data-id="${row.id}">Düzenle</button><button data-action="delete" data-id="${row.id}">Sil</button></td>
+      </tr>`
+    )
+    .join('');
+}
+
 export function renderKaizen(state, statusFilter = 'all') {
   const rows = statusFilter === 'all' ? state.kaizens : state.kaizens.filter((k) => k.status === statusFilter);
   el('kaizenRows').innerHTML = rows
     .slice()
     .reverse()
-    .map((k) => `<tr><td>${k.title}</td><td>${k.department}</td><td>${k.status}</td><td>${k.gains.time} dk</td><td>${k.gains.cost} ₺</td><td>${k.gains.quality}%</td><td>${k.gains.safety}</td></tr>`)
+    .map(
+      (k) => `<tr><td>${k.title}</td><td>${k.department}</td><td>${k.status}</td><td>${k.gains.time} dk</td><td>${k.gains.cost} ₺</td><td>${k.gains.quality}%</td><td>${k.gains.safety}</td>
+      <td><button data-action="next-status" data-id="${k.id}">Durum İlerle</button><button data-action="delete" data-id="${k.id}">Sil</button></td></tr>`
+    )
     .join('');
 }
 
@@ -165,7 +183,10 @@ export function renderFmea(state) {
   el('fmeaRows').innerHTML = state.fmea
     .map((f) => ({ ...f, rpn: calculateRpn(f) }))
     .sort((a, b) => b.rpn - a.rpn)
-    .map((f) => `<tr class="${f.rpn >= 200 ? 'critical' : ''}"><td>${f.process}</td><td>${f.failureMode}</td><td>${f.effect}</td><td>${f.cause}</td><td>${f.severity}</td><td>${f.occurrence}</td><td>${f.detection}</td><td>${f.rpn}</td><td>${f.action}</td><td>${f.owner}</td><td>${f.targetDate}</td><td>${f.status}</td></tr>`)
+    .map(
+      (f) => `<tr class="${f.rpn >= 200 ? 'critical' : ''}"><td>${f.process}</td><td>${f.failureMode}</td><td>${f.effect}</td><td>${f.cause}</td><td>${f.severity}</td><td>${f.occurrence}</td><td>${f.detection}</td><td>${f.rpn}</td><td>${f.action}</td><td>${f.owner}</td><td>${f.targetDate}</td><td>${f.status}</td>
+      <td><button data-action="edit" data-id="${f.id}">Düzenle</button><button data-action="delete" data-id="${f.id}">Sil</button></td></tr>`
+    )
     .join('');
 }
 
