@@ -1,6 +1,13 @@
 import { getData } from '../lib/api'
+
 export default async function Home(){
-  const [dashboard,oee,lines,ai] = await Promise.all([getData('/dashboard'),getData('/oee'),getData('/lines'),getData('/ai-recommendations')])
+  const [dashboard,oee,lines,ai] = await Promise.all([
+    getData('/dashboard'),
+    getData('/oee'),
+    getData('/lines'),
+    getData('/ai')
+  ])
+
   return <main className='wrap'>
     <h1 className='title'>FabrikaOS AI Dashboard</h1>
     <div className='grid'>
