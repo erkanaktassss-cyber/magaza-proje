@@ -50,7 +50,7 @@ def oee(db: Session = Depends(get_db)):
     quality = max(0.0, (total_actual - total_scrap) / max(total_actual,1))
     return OeeOut(availability=availability, performance=performance, quality=quality, oee=availability*performance*quality)
 
-@router.get('/ai-recommendations')
+@router.get('/ai')
 def ai_recommendations(db: Session = Depends(get_db)):
     reasons = [r[0] for r in db.query(Downtime.reason).all()]
     cnt = Counter(reasons)
@@ -58,3 +58,8 @@ def ai_recommendations(db: Session = Depends(get_db)):
     total_scrap = db.query(func.sum(Scrap.quantity)).scalar() or 0
     ratio = (total_scrap / total_actual) if total_actual else 0
     return {"recommendations": generate_recommendations(dict(cnt), ratio)}
+
+
+@router.get('/ai-recommendations')
+def ai_recommendations_legacy(db: Session = Depends(get_db)):
+    return ai_recommendations(db)

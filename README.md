@@ -9,45 +9,30 @@ FabrikaOS AI, üretim sahası için ERP + MES + OEE + bakım + kalite süreçler
 - **Realtime:** WebSocket (`/ws/production`)
 - **Container:** Docker Compose
 
-## MVP Modülleri
-- Kullanıcı & roller (Admin, Üretim şefi, Operatör, Bakım, Kalite, Yönetim)
-- Üretim hatları canlı görünüm
-- Üretim emri oluşturma API
-- Duruş kaydı API
-- Fire kaydı API
-- Dashboard (üretim, fire, duruş, en sık duruş sebebi)
-- OEE hesaplama (Availability, Performance, Quality)
-- Kurallı AI öneri sistemi
-
-## Kurulum
+## Tek Komutla Çalıştırma
 ```bash
-docker compose up -d --build
+docker compose up --build
 ```
 
-## Migration ve Seed
-```bash
-docker compose exec backend alembic upgrade head
-docker compose exec db psql -U factory -d fabrikaos -f /docker-entrypoint-initdb.d/seed.sql
-```
-> Not: Seed için hızlı yöntem olarak aşağıdaki komut da kullanılabilir:
-```bash
-docker compose cp backend/seed.sql db:/tmp/seed.sql
-docker compose exec db psql -U factory -d fabrikaos -f /tmp/seed.sql
-```
+Bu komutla:
+- PostgreSQL ayağa kalkar
+- Backend için migration (`alembic upgrade head`) otomatik çalışır
+- Frontend/Backend servisleri başlar
 
 ## Uygulama Adresleri
-- Frontend: http://localhost:3000
-- API: http://localhost:8000/docs
+- Frontend Dashboard: http://localhost:3000
+- API Dokümantasyon: http://localhost:8000/docs
 - WebSocket: ws://localhost:8000/ws/production
 
-## Demo API Örnekleri
-- `GET /api/lines`
-- `POST /api/production-orders`
-- `POST /api/downtimes`
-- `POST /api/scrap`
+## JSON Endpointleri
+Aşağıdaki endpointler frontend tarafından JSON olarak tüketilir:
 - `GET /api/dashboard`
 - `GET /api/oee`
-- `GET /api/ai-recommendations`
+- `GET /api/lines`
+- `GET /api/ai`
 
-## PLC Hazırlığı
-Backend katmanı servis + API + realtime ayrımıyla tasarlandı. Gelecekte Modbus TCP / OPC UA collector servisleri eklenerek gerçek zamanlı sinyaller WebSocket kanalına yayınlanabilir.
+Geriye dönük uyumluluk için `GET /api/ai-recommendations` de desteklenir.
+
+## Notlar
+- Backend erişilemiyorsa frontend otomatik olarak demo/mock veri ile dashboard ekranını açar.
+- Böylece hata ekranı yerine kullanıcı her zaman dashboard'u görebilir.
