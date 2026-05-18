@@ -1,0 +1,11 @@
+CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT UNIQUE, password TEXT, role TEXT);
+CREATE TABLE IF NOT EXISTS categories (id INTEGER PRIMARY KEY, name TEXT UNIQUE);
+CREATE TABLE IF NOT EXISTS products (
+ id INTEGER PRIMARY KEY, name TEXT, barcode TEXT UNIQUE, category_id INTEGER,
+ stock INTEGER DEFAULT 0, cost_price REAL DEFAULT 0, sale_price REAL DEFAULT 0, image_url TEXT,
+ FOREIGN KEY(category_id) REFERENCES categories(id)
+);
+CREATE TABLE IF NOT EXISTS customers (id INTEGER PRIMARY KEY, name TEXT, phone TEXT, balance REAL DEFAULT 0);
+CREATE TABLE IF NOT EXISTS sales (id INTEGER PRIMARY KEY, customer_id INTEGER, total REAL, payment_type TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS sale_items (id INTEGER PRIMARY KEY, sale_id INTEGER, product_id INTEGER, qty INTEGER, price REAL);
+CREATE TABLE IF NOT EXISTS stock_moves (id INTEGER PRIMARY KEY, product_id INTEGER, move_type TEXT, quantity INTEGER, warehouse TEXT, note TEXT, created_at TEXT DEFAULT CURRENT_TIMESTAMP);
