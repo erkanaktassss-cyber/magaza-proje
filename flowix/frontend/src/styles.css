@@ -1,0 +1,4 @@
+@tailwind base; @tailwind components; @tailwind utilities;
+body { @apply text-slate-100; font-family: Inter, system-ui, sans-serif; }
+.btn { @apply rounded-2xl px-5 py-4 text-lg font-semibold transition active:scale-95; }
+.card { @apply rounded-2xl bg-slate-900/80 p-4 shadow; }
