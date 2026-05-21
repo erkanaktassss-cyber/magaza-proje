@@ -2,25 +2,26 @@ services:
   db:
     image: postgres:16
     environment:
-      POSTGRES_USER: factory
-      POSTGRES_PASSWORD: factory
-      POSTGRES_DB: fabrikaos
+      POSTGRES_USER: mes
+      POSTGRES_PASSWORD: mes
+      POSTGRES_DB: mesdb
     ports: ["5432:5432"]
     volumes: ["pgdata:/var/lib/postgresql/data"]
 
-  backend:
-    build: ./backend
+  node-api:
+    build: ./node-api
     environment:
-      DATABASE_URL: postgresql+psycopg://factory:factory@db:5432/fabrikaos
+      DATABASE_URL: postgresql://mes:mes@db:5432/mesdb?schema=public
+      JWT_SECRET: super-secret
+      PORT: 4000
     depends_on: [db]
-    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
-    ports: ["8000:8000"]
+    ports: ["4000:4000"]
 
   frontend:
     build: ./frontend
     environment:
-      NEXT_PUBLIC_API_URL: http://backend:8000
-    depends_on: [backend]
+      NEXT_PUBLIC_API_URL: http://node-api:4000
+    depends_on: [node-api]
     ports: ["3000:3000"]
 
 volumes:
