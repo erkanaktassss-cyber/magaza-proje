@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role { ADMIN PRODUCTION LAB WAREHOUSE QUALITY VIEWER }
+enum ProductionOrderStatus { DRAFT READY IN_PROGRESS WAITING_LAB APPROVED_FOR_FILLING COMPLETED HOLD }
+enum LabApprovalStatus { PENDING APPROVED REJECTED ADDITIVE_REQUIRED }
+enum FillingOrderStatus { DRAFT ACTIVE COMPLETED CANCELLED }
+
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  fullName     String
+  passwordHash String
+  role         Role
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  logs         SystemLog[]
+}
+
+model Product { id String @id @default(cuid()) code String @unique name String isActive Boolean @default(true) recipes Recipe[] productionOrders ProductionOrder[] }
+model Recipe { id String @id @default(cuid()) productId String version Int instructions Json product Product @relation(fields:[productId], references:[id]) createdAt DateTime @default(now()) }
+model ProductionOrder { id String @id @default(cuid()) orderNo String @unique productId String quantity Float status ProductionOrderStatus @default(DRAFT) additiveTaskOpen Boolean @default(false) labApprovalStatus LabApprovalStatus @default(PENDING) product Product @relation(fields:[productId], references:[id]) fillingOrders FillingOrder[] createdAt DateTime @default(now()) }
+model FillingOrder { id String @id @default(cuid()) fillNo String @unique productionOrderId String status FillingOrderStatus @default(DRAFT) productionOrder ProductionOrder @relation(fields:[productionOrderId], references:[id]) createdAt DateTime @default(now()) }
+model SystemLog { id String @id @default(cuid()) userId String? action String module String payload Json? createdAt DateTime @default(now()) user User? @relation(fields:[userId], references:[id]) }
