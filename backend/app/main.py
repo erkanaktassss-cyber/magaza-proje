@@ -1,8 +1,20 @@
 from fastapi import FastAPI, WebSocket
 from app.api.routes import router
+from app.db.base import Base
+from app.db.session import engine
+from app.models import entities  # noqa: F401
 
-app = FastAPI(title="FabrikaOS AI API")
+app = FastAPI(title="Fabrika Dijital Üretim API")
+
+@app.on_event("startup")
+def startup():
+    Base.metadata.create_all(bind=engine)
+
 app.include_router(router, prefix="/api")
+
+@app.get('/health')
+def health():
+    return {"ok": True}
 
 @app.websocket('/ws/production')
 async def ws_production(ws: WebSocket):
