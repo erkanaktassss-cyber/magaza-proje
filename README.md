@@ -1,67 +1,74 @@
-# Fabrika Dijital Üretim ve Verimlilik Yönetim Sistemi (MVP)
+# Biolife Atelier - Premium E-Ticaret Altyapısı
 
-Türkçe, web tabanlı ve modüler fabrika yönetim sistemi.
+Biolife Atelier; parfüm, parfüm esansı, doğal sabun, el yapımı sabun, doğal krem, dudak balmı, aromaterapi, mum, epoksi hediyelik ürünler ve üretim ekipmanları için hazırlanmış çok kategorili premium bir Next.js e-ticaret projesidir.
 
-## Mimari
-- **Frontend:** Next.js (`/frontend`)
-- **Backend:** FastAPI (`/backend`)
-- **Database:** PostgreSQL
-- **Kimlik Doğrulama:** Kullanıcı adı/şifre + JWT + rol alanı
-- **Raporlama Hazırlığı:** API katmanı PDF/Excel export için genişletilebilir şekilde kurgulandı
+## Kurulum ve Çalıştırma
 
-## Modüller (MVP)
-1. Üretim emirleri
-2. Canlı hat ekranı
-3. Duruş takibi
-4. Lot/depo hareketleri (palet-raf)
-5. Laboratuvar onayı
-6. Bakım/arıza
-7. Enerji-su izleme
-8. Dashboard ve OEE
-
-## Kurulum
-### 1) Veritabanı
-```bash
-cd backend
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-export DATABASE_URL='postgresql+psycopg://postgres:postgres@localhost:5432/fabrika'
-```
-
-### 2) Backend
-```bash
-uvicorn app.main:app --reload --port 8000
-```
-
-### 3) Seed veri
-`backend/seed.sql` dosyasını PostgreSQL içinde çalıştırın.
-
-Örnek kullanıcılar (şifre: `demo123`):
-- `admin@fabrika.local` (Admin)
-- `operator@fabrika.local` (Operatör)
-
-### 4) Frontend
 ```bash
 cd frontend
 npm install
-API_URL=http://localhost:8000/api npm run dev
+npm run dev
 ```
 
-UI: `http://localhost:3000`
+Uygulama açıldıktan sonra tarayıcıdan `http://localhost:3000` adresine gidin.
 
-## Örnek API Endpointleri
-- `POST /api/auth/login`
-- `GET /api/dashboard`
-- `GET /api/oee`
-- `GET/POST /api/production-orders`
-- `GET/POST /api/downtimes`
-- `POST /api/scrap`
-- `GET/POST /api/lab-approvals`
-- `GET/POST /api/inventory/moves`
-- `GET/POST /api/maintenance/tickets`
-- `GET/POST /api/utilities/readings`
+## Üretim Build
 
-## Notlar
-- Lab onayı olmayan ürün için doluma izin verme kuralı backend iş kuralı olarak kolayca genişletilebilir şekilde ayrıştırılmıştır.
-- TV ekranına uygun büyük kartlar dashboard’da hazırlandı.
+```bash
+cd frontend
+npm run build
+npm run start
+```
+
+> Not: `frontend/next.config.js` içinde `output: 'standalone'` açıktır. `npm run start` komutu build sonrası standalone sunucuyu çalıştırır.
+
+## Kullanılan Teknolojiler
+
+- Next.js 14 App Router
+- TypeScript
+- Tailwind CSS
+- React client state ile demo sepet, favori ve admin yönetimi
+- SEO uyumlu metadata ve statik ürün detay sayfaları
+
+## Sayfalar
+
+- Ana sayfa: `/`
+- Ürünler, arama ve filtreleme: `/products`
+- Ürün detay: `/products/[slug]`
+- Sepet ve ödeme seçenekleri: `/cart`
+- Üyelik / misafir akışı: `/account`
+- Kargo takip: `/tracking`
+- Admin paneli: `/admin`
+
+## Özellikler
+
+- Çok kategorili premium mağaza vitrini
+- Büyük ürün görselleri için hızlı yüklenen gradient görsel alanları
+- Ürün kartlarında fiyat, indirimli fiyat, stok, favori, sepete ekle ve WhatsApp ile sor aksiyonları
+- ml, gram, renk, koku, adet ve boyut varyasyonları
+- Parfüm, doğal ürün ve üretim malzemesi türlerine özel ürün detay alanları
+- Kampanya/indirim işaretleri
+- Kapıda ödeme, havale/EFT ve online ödeme entegrasyonuna hazır checkout alanı
+- Admin dashboard, ürün/kategori/sipariş/stok/müşteri/kupon yönetimi ekranları
+
+## Demo Ürünler
+
+- Savage Erkek Parfüm 50 ml
+- Labella Kadın Parfüm 50 ml
+- Amber Oud Unisex Parfüm 50 ml
+- Doğal Zeytinyağlı Sabun 100 gr
+- Lavantalı El Yapımı Sabun
+- Hindistan Cevizi Dudak Balmı
+- Shea Butter Doğal Krem
+- Silikon Sabun Kalıbı
+- 50 ml Parfüm Şişesi
+- Epoksi Kolye Kalıbı
+
+## Gerçek Projeye Geçiş İçin Sonraki Adımlar
+
+- Ürün, kategori, sipariş ve müşteri verilerini PostgreSQL gibi kalıcı veritabanına bağlamak
+- Admin işlemlerine kimlik doğrulama ve yetkilendirme eklemek
+- Online ödeme sağlayıcısı entegrasyonunu tamamlamak
+- Kargo firması API entegrasyonunu takip ekranına bağlamak
+- WhatsApp numarasını `frontend/lib/data.ts` içindeki `whatsappNumber` değerinden güncellemek
+- Gradient demo görsel alanlarını gerçek ürün fotoğrafları ile değiştirmek
