@@ -1,74 +1,83 @@
-# Biolife Atelier - Premium E-Ticaret Altyapısı
+# BIOLIFE Demo E-Ticaret
 
-Biolife Atelier; parfüm, parfüm esansı, doğal sabun, el yapımı sabun, doğal krem, dudak balmı, aromaterapi, mum, epoksi hediyelik ürünler ve üretim ekipmanları için hazırlanmış çok kategorili premium bir Next.js e-ticaret projesidir.
+Bu proje, geliştirme ortamında **PostgreSQL kurulumu gerektirmeden** çalışan Express + EJS tabanlı demo e-ticaret uygulamasıdır. Ürün, kategori, kullanıcı, sepet, demo sipariş ve admin işlemleri varsayılan olarak yerel JSON dosyasında tutulur.
 
-## Kurulum ve Çalıştırma
+## Hızlı Başlangıç
+
+Proje kök dizininde çalıştırın:
 
 ```bash
-cd frontend
 npm install
 npm run dev
 ```
 
-Uygulama açıldıktan sonra tarayıcıdan `http://localhost:3000` adresine gidin.
+Ardından tarayıcıdan şu adrese gidin:
 
-## Üretim Build
-
-```bash
-cd frontend
-npm run build
-npm run start
+```text
+http://localhost:3000
 ```
 
-> Not: `frontend/next.config.js` içinde `output: 'standalone'` açıktır. `npm run start` komutu build sonrası standalone sunucuyu çalıştırır.
+> PostgreSQL zorunlu değildir. `npm run dev` ilk açılışta `data/store.json` dosyasını otomatik oluşturur ve demo verileri yükler.
 
-## Kullanılan Teknolojiler
+## Demo Giriş Bilgileri
 
-- Next.js 14 App Router
-- TypeScript
-- Tailwind CSS
-- React client state ile demo sepet, favori ve admin yönetimi
-- SEO uyumlu metadata ve statik ürün detay sayfaları
+### Admin Paneli
 
-## Sayfalar
+- Adres: `http://localhost:3000/admin/login`
+- E-posta: `admin@biolife.com`
+- Şifre: `Admin1234!`
 
-- Ana sayfa: `/`
-- Ürünler, arama ve filtreleme: `/products`
-- Ürün detay: `/products/[slug]`
-- Sepet ve ödeme seçenekleri: `/cart`
-- Üyelik / misafir akışı: `/account`
-- Kargo takip: `/tracking`
-- Admin paneli: `/admin`
+### Demo Müşteri
 
-## Özellikler
+- Adres: `http://localhost:3000/login`
+- E-posta: `musteri@biolife.com`
+- Şifre: `User1234!`
 
-- Çok kategorili premium mağaza vitrini
-- Büyük ürün görselleri için hızlı yüklenen gradient görsel alanları
-- Ürün kartlarında fiyat, indirimli fiyat, stok, favori, sepete ekle ve WhatsApp ile sor aksiyonları
-- ml, gram, renk, koku, adet ve boyut varyasyonları
-- Parfüm, doğal ürün ve üretim malzemesi türlerine özel ürün detay alanları
-- Kampanya/indirim işaretleri
-- Kapıda ödeme, havale/EFT ve online ödeme entegrasyonuna hazır checkout alanı
-- Admin dashboard, ürün/kategori/sipariş/stok/müşteri/kupon yönetimi ekranları
+## Çalışan Demo Özellikler
 
-## Demo Ürünler
+- Ana sayfa açılır.
+- Ürünler listelenir.
+- Ürün detay sayfaları açılır.
+- Sepete ürün ekleme ve sepetten ürün silme çalışır.
+- Kayıt ve giriş işlemleri demo olarak çalışır.
+- Checkout sırasında demo sipariş oluşturulur.
+- Admin panel açılır.
+- Admin panelden ürün ekleme, düzenleme ve silme çalışır.
+- Admin panelden kategori, sipariş durumu, müşteri, mesaj ve yorum ekranları görüntülenir.
 
-- Savage Erkek Parfüm 50 ml
-- Labella Kadın Parfüm 50 ml
-- Amber Oud Unisex Parfüm 50 ml
-- Doğal Zeytinyağlı Sabun 100 gr
-- Lavantalı El Yapımı Sabun
-- Hindistan Cevizi Dudak Balmı
-- Shea Butter Doğal Krem
-- Silikon Sabun Kalıbı
-- 50 ml Parfüm Şişesi
-- Epoksi Kolye Kalıbı
+## Yerel JSON Veri Dosyası
 
-## Gerçek Projeye Geçiş İçin Sonraki Adımlar
+Varsayılan veri dosyası:
 
-- Ürün, kategori, sipariş ve müşteri verilerini PostgreSQL gibi kalıcı veritabanına bağlamak
-- Admin işlemlerine kimlik doğrulama ve yetkilendirme eklemek
-- Online ödeme sağlayıcısı entegrasyonunu tamamlamak
-- Kargo firması API entegrasyonunu takip ekranına bağlamak
-- WhatsApp numarasını `frontend/lib/data.ts` içindeki `whatsappNumber` değerinden güncellemek
-- Gradient demo görsel alanlarını gerçek ürün fotoğrafları ile değiştirmek
+```text
+data/store.json
+```
+
+Dosya yoksa uygulama otomatik olarak demo veriyle tekrar oluşturur. Demo veriyi sıfırlamak için:
+
+```bash
+npm run db:init
+```
+
+`DATA_FILE` ortam değişkeniyle farklı bir JSON dosyası kullanılabilir:
+
+```bash
+DATA_FILE=/tmp/biolife-demo.json npm run dev
+```
+
+## Komutlar
+
+```bash
+npm install       # bağımlılıkları kurar
+npm run dev      # geliştirme sunucusunu başlatır
+npm start        # uygulamayı başlatır
+npm run check    # server dosyasında sözdizimi kontrolü yapar
+npm run db:init  # JSON demo verisini sıfırlar/yeniden oluşturur
+```
+
+## Notlar
+
+- Sepet verisi oturumda tutulur.
+- Admin ve müşteri kayıtları demo amaçlıdır.
+- Siparişlerde gerçek ödeme entegrasyonu yoktur; `sandbox` durumları kullanılır.
+- PostgreSQL bağımlılıkları kaldırılmıştır; geliştirme için veritabanı servisi başlatmanız gerekmez.
