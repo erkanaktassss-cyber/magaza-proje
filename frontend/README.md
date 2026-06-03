@@ -1,84 +1,47 @@
-# Biolife Atelier - Premium E-Ticaret Altyapısı
+# Elite Production AI
 
-Biolife Atelier; parfüm, parfüm esansı, doğal sabun, el yapımı sabun, doğal krem, dudak balmı, aromaterapi, mum, epoksi hediyelik ürünler ve üretim ekipmanları için hazırlanmış çok kategorili premium bir Next.js e-ticaret projesidir.
+Next.js + TypeScript tabanlı üretim verimlilik sistemi. Mevcut demo HTML görünümü componentlere ayrıldı ve PostgreSQL/Prisma/JWT altyapısıyla çalışan bir uygulama iskeletine dönüştürüldü.
 
-## Teknoloji
+## Component ayrımı
 
-- Next.js 14 App Router
-- TypeScript
-- Tailwind CSS
-- React client state ile demo sepet, favori ve admin işlemleri
-- SEO uyumlu metadata ve ürün detay sayfaları
-
-## Öne Çıkan Modüller
-
-- Premium ana sayfa: hero, kategori vitrinleri, çok satanlar, yeni gelenler, parfüm koleksiyonu, doğal bakım, üretim malzemeleri, kampanyalar, marka hikayesi ve WhatsApp hızlı sipariş alanı
-- Ürün listeleme: arama, kategori filtresi, stok filtresi ve fiyat sıralama
-- Ürün kartları: görsel alan, kategori, fiyat, indirimli fiyat, stok, sepete ekle, WhatsApp ile sor ve favori
-- Ürün detay: varyasyonlar ve kategoriye özel teknik alanlar
-  - Parfüm: koku ailesi, üst/orta/alt nota, cinsiyet, kalıcılık, kullanım zamanı, benzer koku tipi
-  - Sabun/doğal ürün: içerik, cilt tipi, gramaj, kullanım şekli, uyarılar
-  - Kalıp/ambalaj: malzeme türü, ölçü, uyumlu ürünler, paket içeriği
-- Sepet: kapıda ödeme, havale/EFT ve online ödeme entegrasyonuna hazır ödeme seçimi
-- Üyelik ve misafir siparişi için hazır ekranlar
-- Kargo takip ekranı
-- Admin paneli: dashboard, toplam satış, bekleyen siparişler, stok azalan ürünler, en çok satan ürünler, ürün ekleme, kategori ekleme, ürün silme, stok düşürme, sipariş durumu değiştirme, müşteri listesi ve kupon oluşturma
-
-## Demo Ürünler
-
-Projede aşağıdaki demo ürünler hazır gelir:
-
-1. Savage Erkek Parfüm 50 ml
-2. Labella Kadın Parfüm 50 ml
-3. Amber Oud Unisex Parfüm 50 ml
-4. Doğal Zeytinyağlı Sabun 100 gr
-5. Lavantalı El Yapımı Sabun
-6. Hindistan Cevizi Dudak Balmı
-7. Shea Butter Doğal Krem
-8. Silikon Sabun Kalıbı
-9. 50 ml Parfüm Şişesi
-10. Epoksi Kolye Kalıbı
+- `HeroPanel`: premium giriş, CTA ve mini KPI kartları
+- `NeuralCore`: animasyonlu şeffaf zekâ çekirdeği
+- `SummaryPanel`: yönetici özeti ve OEE KPI alanı
+- `LineCards`: canlı üretim hattı kartları
+- `WeeklyTrendChart` ve `PerformanceRadar`: SVG grafikler
+- `AIAssistant`: API destekli sohbet asistanı
+- `AlertsPanel`, `ModulesPanel`: alarm ve modül yapısı
+- `AdminTables`: üretim emri, duruş, fire, kalite ve bakım yönetimi tabloları
 
 ## Kurulum
 
-Aşağıdaki komutları proje kök dizininden çalıştırın:
-
 ```bash
-cd frontend
 npm install
+cp ../.env.example .env
+npm run prisma:generate
+npm run db:push
+npm run prisma:seed
 npm run dev
 ```
 
-Tarayıcıdan aşağıdaki adrese gidin:
-
-```text
-http://localhost:3000
-```
-
-## Üretim Build
+## Docker
 
 ```bash
-cd frontend
-npm run build
-npm run start
+docker compose up --build
 ```
 
-## Faydalı Sayfalar
+Uygulama: `http://localhost:3000`
+Admin: `http://localhost:3000/admin`
+Demo kullanıcı: `admin@eliteproduction.ai` / `Admin123!`
 
-- Ana sayfa: `http://localhost:3000`
-- Ürünler: `http://localhost:3000/products`
-- Admin paneli: `http://localhost:3000/admin`
-- Sepet: `http://localhost:3000/cart`
-- Üyelik: `http://localhost:3000/account`
-- Kargo takip: `http://localhost:3000/tracking`
+## API
 
-## Geliştirme Notları
-
-Bu sürüm profesyonel satış altyapısına hazırlanmış ön yüz ve demo yönetim deneyimi sunar. Gerçek kullanıma geçişte önerilen sonraki adımlar:
-
-- Ürün, kategori, sipariş ve müşteri verilerini PostgreSQL gibi kalıcı veritabanına bağlamak
-- Admin işlemlerini API route veya ayrı backend üzerinden yetkilendirmek
-- Online ödeme sağlayıcısı entegrasyonu eklemek
-- WhatsApp numarasını `frontend/lib/data.ts` içindeki `whatsappNumber` değerinden güncellemek
-- Görsel alanlarını gerçek ürün fotoğraflarıyla değiştirmek
-- Kargo firması API entegrasyonunu takip sayfasına bağlamak
+- `POST /api/auth/login`
+- `GET /api/auth/me`
+- `GET /api/dashboard`
+- `GET /api/production-orders`
+- `GET /api/stops`
+- `GET /api/scrap`
+- `GET /api/quality`
+- `GET /api/maintenance`
+- `POST /api/ai/chat`

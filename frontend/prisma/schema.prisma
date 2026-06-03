@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  OPERATOR
+}
+
+enum OrderStatus {
+  PLANNED
+  RUNNING
+  WARNING
+  COMPLETED
+  CANCELLED
+}
+
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  role         Role     @default(OPERATOR)
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model ProductionLine {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  status    String
+  speed     Int      @default(0)
+  createdAt DateTime @default(now())
+  orders    ProductionOrder[]
+  stops     StopEvent[]
+  scraps    ScrapRecord[]
+}
+
+model ProductionOrder {
+  id        String      @id
+  product   String
+  planned   Int
+  produced  Int         @default(0)
+  good      Int         @default(0)
+  scrap     Int         @default(0)
+  status    OrderStatus @default(PLANNED)
+  dueDate   DateTime
+  createdAt DateTime    @default(now())
+  lineId    String
+  line      ProductionLine @relation(fields: [lineId], references: [id])
+  qualityChecks QualityCheck[]
+}
+
+model StopEvent {
+  id        String   @id
+  reason    String
+  minutes   Int
+  severity  Severity
+  shift     String
+  startedAt DateTime
+  createdAt DateTime @default(now())
+  lineId    String
+  line      ProductionLine @relation(fields: [lineId], references: [id])
+}
+
+model ScrapRecord {
+  id        String   @id
+  category  String
+  quantity  Int
+  rate      Float
+  action    String
+  createdAt DateTime @default(now())
+  lineId    String
+  line      ProductionLine @relation(fields: [lineId], references: [id])
+}
+
+model QualityCheck {
+  id        String   @id
+  metric    String
+  result    String
+  cpk       Float
+  owner     String
+  createdAt DateTime @default(now())
+  orderId   String
+  order     ProductionOrder @relation(fields: [orderId], references: [id])
+}
+
+model MaintenanceTask {
+  id         String   @id
+  asset      String
+  type       String
+  dueAt      DateTime
+  risk       String
+  mtbf       String
+  mttr       String
+  createdAt  DateTime @default(now())
+}
