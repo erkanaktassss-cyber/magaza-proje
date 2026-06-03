@@ -1,14 +1,16 @@
-export type CategoryType = 'perfume' | 'essence' | 'soap' | 'care' | 'aromatherapy' | 'candle' | 'epoxy' | 'supplies';
-export type VariationType = 'ml' | 'gram' | 'renk' | 'koku' | 'adet' | 'boyut';
-export type Gender = 'Kadın' | 'Erkek' | 'Unisex';
+export type CategoryId = 'parfum' | 'esans' | 'dogal-sabun' | 'dogal-krem' | 'aromaterapi' | 'mum' | 'kalip-ambalaj';
+export type VariationType = 'ml' | 'gram' | 'adet' | 'koku' | 'boyut' | 'renk' | 'set';
 
 export interface Category {
-  id: string;
+  id: CategoryId;
+  slug: string;
   name: string;
-  type: CategoryType;
   description: string;
-  imageTone: string;
-  featured: boolean;
+  heroTitle: string;
+  heroSubtitle: string;
+  image: string;
+  accent: string;
+  featured?: boolean;
 }
 
 export interface ProductVariation {
@@ -18,58 +20,30 @@ export interface ProductVariation {
   stock: number;
 }
 
-export interface PerfumeDetails {
-  fragranceFamily: string;
-  topNotes: string;
-  heartNotes: string;
-  baseNotes: string;
-  gender: Gender;
-  longevity: string;
-  usageTime: string;
-  similarScentType: string;
-}
-
-export interface NaturalDetails {
-  ingredients: string;
-  skinType: string;
-  weight: string;
-  usage: string;
-  warnings: string;
-}
-
-export interface SupplyDetails {
-  materialType: string;
-  dimensions: string;
-  compatibleProducts: string;
-  packageContent: string;
-}
-
 export interface Product {
   id: string;
   slug: string;
   name: string;
-  categoryId: string;
+  categoryId: CategoryId;
   categoryName: string;
   price: number;
   discountedPrice?: number;
   stock: number;
-  imageTone: string;
+  image: string;
+  gallery: string[];
   badge?: string;
   isBestSeller?: boolean;
   isNew?: boolean;
   isCampaign?: boolean;
   description: string;
+  longDescription: string;
+  notes: string[];
+  ritual: string;
   variants: ProductVariation[];
-  perfumeDetails?: PerfumeDetails;
-  naturalDetails?: NaturalDetails;
-  supplyDetails?: SupplyDetails;
 }
 
-export interface Order {
-  id: string;
-  customer: string;
-  total: number;
-  status: 'Beklemede' | 'Hazırlanıyor' | 'Kargoda' | 'Teslim Edildi';
-  payment: 'Kapıda ödeme' | 'Havale / EFT' | 'Online ödeme hazırlığı';
-  trackingCode?: string;
+export interface StoreLine {
+  product: Product;
+  quantity: number;
+  variant?: string;
 }
