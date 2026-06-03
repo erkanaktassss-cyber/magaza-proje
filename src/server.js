@@ -1,10 +1,9 @@
 const path = require('path');
 const express = require('express');
 const session = require('express-session');
-const pgSession = require('connect-pg-simple')(session);
 const bcrypt = require('bcryptjs');
 const methodOverride = require('method-override');
-const pool = require('./db');
+const store = require('./db');
 require('dotenv').config();
 
 const app = express();
@@ -19,7 +18,6 @@ app.use(methodOverride('_method'));
 
 app.use(
   session({
-    store: new pgSession({ pool, tableName: 'session' }),
     secret: process.env.SESSION_SECRET || 'dev-secret',
     resave: false,
     saveUninitialized: false,
@@ -29,13 +27,9 @@ app.use(
   })
 );
 
-app.use(async (req, res, next) => {
-  res.locals.currentUser = null;
+app.use((req, res, next) => {
+  res.locals.currentUser = req.session.userId ? store.getUserById(req.session.userId) : null;
   res.locals.cart = req.session.cart || [];
-  if (req.session.userId) {
-    const user = await pool.query('SELECT id, full_name, email, role FROM users WHERE id = $1', [req.session.userId]);
-    res.locals.currentUser = user.rows[0] || null;
-  }
   next();
 });
 
@@ -44,79 +38,62 @@ const auth = (req, res, next) => {
   return next();
 };
 
-const adminOnly = async (req, res, next) => {
+const adminOnly = (req, res, next) => {
   if (!req.session.userId) return res.redirect('/admin/login');
-  const user = await pool.query('SELECT role FROM users WHERE id = $1', [req.session.userId]);
-  if (!user.rows[0] || user.rows[0].role !== 'admin') return res.redirect('/admin/login');
+  const user = store.getUserById(req.session.userId);
+  if (!user || user.role !== 'admin') return res.redirect('/admin/login');
   return next();
 };
 
-const withLayoutData = async () => {
-  const categories = await pool.query('SELECT id, name, slug FROM categories ORDER BY name ASC');
-  return { categories: categories.rows };
-};
+const withLayoutData = () => ({ categories: store.getCategories() });
+const cartTotal = (cart) => cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-app.get('/', async (req, res) => {
-  const [products, reviews, layout] = await Promise.all([
-    pool.query('SELECT * FROM products WHERE is_active = true ORDER BY created_at DESC LIMIT 6'),
-    pool.query("SELECT r.*, p.name as product_name FROM reviews r JOIN products p ON p.id=r.product_id WHERE r.status='approved' ORDER BY r.created_at DESC LIMIT 4"),
-    withLayoutData()
-  ]);
-  res.render('home', { products: products.rows, reviews: reviews.rows, ...layout });
+app.get('/', (req, res) => {
+  res.render('home', {
+    products: store.getHomeProducts(),
+    reviews: store.getApprovedReviews().slice(0, 4),
+    ...withLayoutData()
+  });
 });
 
-app.get('/products', async (req, res) => {
+app.get('/products', (req, res) => {
   const { category } = req.query;
-  let query = 'SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON c.id = p.category_id WHERE p.is_active = true';
-  const params = [];
-  if (category) {
-    params.push(category);
-    query += ` AND c.slug = $${params.length}`;
-  }
-  query += ' ORDER BY p.created_at DESC';
-
-  const [products, layout] = await Promise.all([pool.query(query, params), withLayoutData()]);
-  res.render('products', { products: products.rows, ...layout, activeCategory: category || null });
+  res.render('products', {
+    products: store.getProducts({ categorySlug: category || null }),
+    ...withLayoutData(),
+    activeCategory: category || null
+  });
 });
 
-app.get('/products/:slug', async (req, res) => {
-  const slug = req.params.slug;
-  const [product, reviews, layout] = await Promise.all([
-    pool.query('SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON c.id=p.category_id WHERE p.slug=$1', [slug]),
-    pool.query("SELECT * FROM reviews WHERE product_id=(SELECT id FROM products WHERE slug=$1) AND status='approved' ORDER BY created_at DESC", [slug]),
-    withLayoutData()
-  ]);
-
-  if (!product.rows[0]) return res.status(404).send('Ürün bulunamadı');
-  return res.render('product-detail', { product: product.rows[0], reviews: reviews.rows, ...layout });
+app.get('/products/:slug', (req, res) => {
+  const product = store.getProductBySlug(req.params.slug);
+  if (!product) return res.status(404).send('Ürün bulunamadı');
+  return res.render('product-detail', {
+    product,
+    reviews: store.getApprovedReviews(req.params.slug),
+    ...withLayoutData()
+  });
 });
 
-app.post('/products/:id/reviews', async (req, res) => {
+app.post('/products/:id/reviews', (req, res) => {
   const { id } = req.params;
   const { name, rating, comment } = req.body;
-  const userId = req.session.userId || null;
-  await pool.query(
-    'INSERT INTO reviews (product_id, user_id, name, rating, comment, status) VALUES ($1, $2, $3, $4, $5, $6)',
-    [id, userId, name, Number(rating), comment, 'pending']
-  );
+  store.createReview({ productId: id, userId: req.session.userId || null, name, rating, comment });
   res.redirect('back');
 });
 
-app.get('/cart', async (req, res) => {
+app.get('/cart', (req, res) => {
   const cart = req.session.cart || [];
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const layout = await withLayoutData();
-  res.render('cart', { cart, total, ...layout });
+  res.render('cart', { cart, total: cartTotal(cart), ...withLayoutData() });
 });
 
-app.post('/cart/add', async (req, res) => {
+app.post('/cart/add', (req, res) => {
   const { productId, quantity } = req.body;
-  const product = await pool.query('SELECT id, name, slug, price, stock, image_url FROM products WHERE id=$1 AND is_active=true', [productId]);
-  const item = product.rows[0];
+  const item = store.getProductForCart(productId);
   if (!item) return res.redirect('/products');
 
   req.session.cart = req.session.cart || [];
-  const existing = req.session.cart.find((p) => p.id === item.id);
+  const existing = req.session.cart.find((product) => product.id === item.id);
   const qty = Number(quantity || 1);
   if (existing) {
     existing.quantity = Math.min(existing.quantity + qty, item.stock);
@@ -132,87 +109,51 @@ app.post('/cart/remove', (req, res) => {
   res.redirect('/cart');
 });
 
-app.get('/checkout', auth, async (req, res) => {
+app.get('/checkout', auth, (req, res) => {
   const cart = req.session.cart || [];
   if (!cart.length) return res.redirect('/cart');
-  const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const layout = await withLayoutData();
-  res.render('checkout', { cart, total, ...layout });
+  res.render('checkout', { cart, total: cartTotal(cart), ...withLayoutData() });
 });
 
-app.post('/checkout', auth, async (req, res) => {
+app.post('/checkout', auth, (req, res) => {
   const cart = req.session.cart || [];
   if (!cart.length) return res.redirect('/cart');
 
   const { customerName, customerEmail, customerPhone, shippingAddress } = req.body;
-  const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const client = await pool.connect();
-
-  try {
-    await client.query('BEGIN');
-    const orderNumber = `BL-${Date.now()}`;
-    const orderResult = await client.query(
-      `INSERT INTO orders
-      (user_id, order_number, customer_name, customer_email, customer_phone, shipping_address, total_amount, payment_method, payment_status, status)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,'sandbox','sandbox_paid','processing') RETURNING id`,
-      [req.session.userId, orderNumber, customerName, customerEmail, customerPhone, shippingAddress, total]
-    );
-
-    for (const item of cart) {
-      await client.query(
-        `INSERT INTO order_items (order_id, product_id, product_name, quantity, unit_price, line_total)
-         VALUES ($1,$2,$3,$4,$5,$6)`,
-        [orderResult.rows[0].id, item.id, item.name, item.quantity, item.price, item.price * item.quantity]
-      );
-      await client.query('UPDATE products SET stock = GREATEST(stock - $1, 0), updated_at = NOW() WHERE id = $2', [item.quantity, item.id]);
-    }
-
-    await client.query('COMMIT');
-    req.session.cart = [];
-    return res.render('checkout-success', { orderNumber });
-  } catch (error) {
-    await client.query('ROLLBACK');
-    return res.status(500).send(`Sipariş oluşturulamadı: ${error.message}`);
-  } finally {
-    client.release();
-  }
+  const total = cartTotal(cart);
+  const order = store.createOrder({ userId: req.session.userId, cart, customerName, customerEmail, customerPhone, shippingAddress, total });
+  req.session.cart = [];
+  return res.render('checkout-success', { orderNumber: order.order_number });
 });
 
-app.get('/about', async (req, res) => {
-  const layout = await withLayoutData();
-  res.render('about', layout);
+app.get('/about', (req, res) => {
+  res.render('about', withLayoutData());
 });
 
-app.get('/contact', async (req, res) => {
-  const layout = await withLayoutData();
-  res.render('contact', { success: req.query.success, ...layout });
+app.get('/contact', (req, res) => {
+  res.render('contact', { success: req.query.success, ...withLayoutData() });
 });
 
-app.post('/contact', async (req, res) => {
+app.post('/contact', (req, res) => {
   const { fullName, email, phone, message } = req.body;
-  await pool.query('INSERT INTO contact_messages (full_name, email, phone, message) VALUES ($1,$2,$3,$4)', [fullName, email, phone, message]);
+  store.createContactMessage({ fullName, email, phone, message });
   res.redirect('/contact?success=1');
 });
 
-app.get('/login', async (req, res) => {
-  const layout = await withLayoutData();
-  res.render('login', { ...layout, mode: 'login' });
+app.get('/login', (req, res) => {
+  res.render('login', { ...withLayoutData(), mode: 'login' });
 });
 
-app.get('/register', async (req, res) => {
-  const layout = await withLayoutData();
-  res.render('login', { ...layout, mode: 'register' });
+app.get('/register', (req, res) => {
+  res.render('login', { ...withLayoutData(), mode: 'register' });
 });
 
 app.post('/register', async (req, res) => {
   const { fullName, email, password, phone } = req.body;
   const passwordHash = await bcrypt.hash(password, 10);
   try {
-    const result = await pool.query(
-      'INSERT INTO users (full_name, email, password_hash, phone, role) VALUES ($1,$2,$3,$4,$5) RETURNING id',
-      [fullName, email, passwordHash, phone, 'customer']
-    );
-    req.session.userId = result.rows[0].id;
+    const user = store.createUser({ fullName, email, passwordHash, phone });
+    req.session.userId = user.id;
     return res.redirect('/');
   } catch {
     return res.redirect('/register');
@@ -221,14 +162,14 @@ app.post('/register', async (req, res) => {
 
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
-  const user = await pool.query('SELECT * FROM users WHERE email=$1', [email]);
-  if (!user.rows[0]) return res.redirect('/login');
+  const user = store.getUserByEmail(email);
+  if (!user) return res.redirect('/login');
 
-  const ok = await bcrypt.compare(password, user.rows[0].password_hash);
+  const ok = await bcrypt.compare(password, user.password_hash);
   if (!ok) return res.redirect('/login');
 
-  req.session.userId = user.rows[0].id;
-  return res.redirect(user.rows[0].role === 'admin' ? '/admin' : '/');
+  req.session.userId = user.id;
+  return res.redirect(user.role === 'admin' ? '/admin' : '/');
 });
 
 app.post('/logout', (req, res) => {
@@ -241,119 +182,88 @@ app.get('/admin/login', (req, res) => {
 
 app.post('/admin/login', async (req, res) => {
   const { email, password } = req.body;
-  const user = await pool.query("SELECT * FROM users WHERE email=$1 AND role='admin'", [email]);
-  if (!user.rows[0]) return res.redirect('/admin/login');
+  const user = store.getUserByEmail(email, 'admin');
+  if (!user) return res.redirect('/admin/login');
 
-  const ok = await bcrypt.compare(password, user.rows[0].password_hash);
+  const ok = await bcrypt.compare(password, user.password_hash);
   if (!ok) return res.redirect('/admin/login');
 
-  req.session.userId = user.rows[0].id;
+  req.session.userId = user.id;
   return res.redirect('/admin');
 });
 
-app.get('/admin', adminOnly, async (req, res) => {
-  const [products, orders, users, messages] = await Promise.all([
-    pool.query('SELECT COUNT(*)::int AS count FROM products'),
-    pool.query('SELECT COUNT(*)::int AS count FROM orders'),
-    pool.query("SELECT COUNT(*)::int AS count FROM users WHERE role='customer'"),
-    pool.query('SELECT COUNT(*)::int AS count FROM contact_messages')
-  ]);
-
-  res.render('admin-dashboard', {
-    stats: {
-      products: products.rows[0].count,
-      orders: orders.rows[0].count,
-      customers: users.rows[0].count,
-      messages: messages.rows[0].count
-    }
-  });
+app.get('/admin', adminOnly, (req, res) => {
+  res.render('admin-dashboard', { stats: store.getStats() });
 });
 
-app.get('/admin/products', adminOnly, async (req, res) => {
-  const [products, categories] = await Promise.all([
-    pool.query('SELECT p.*, c.name AS category_name FROM products p LEFT JOIN categories c ON c.id=p.category_id ORDER BY p.created_at DESC'),
-    pool.query('SELECT * FROM categories ORDER BY name ASC')
-  ]);
-  res.render('admin-products', { products: products.rows, categories: categories.rows });
+app.get('/admin/products', adminOnly, (req, res) => {
+  res.render('admin-products', { products: store.getProducts({ activeOnly: false }), categories: store.getCategories() });
 });
 
-app.post('/admin/products', adminOnly, async (req, res) => {
+app.post('/admin/products', adminOnly, (req, res) => {
   const { categoryId, name, slug, description, price, stock, imageUrl, isActive } = req.body;
-  await pool.query(
-    `INSERT INTO products (category_id, name, slug, description, price, stock, image_url, is_active)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
-    [categoryId || null, name, slug, description, Number(price), Number(stock), imageUrl, isActive === 'on']
-  );
+  store.createProduct({ categoryId, name, slug, description, price, stock, imageUrl, isActive: isActive === 'on' });
   res.redirect('/admin/products');
 });
 
-app.post('/admin/products/:id/update', adminOnly, async (req, res) => {
-  const { id } = req.params;
+app.post('/admin/products/:id/update', adminOnly, (req, res) => {
   const { categoryId, name, slug, description, price, stock, imageUrl, isActive } = req.body;
-  await pool.query(
-    `UPDATE products SET category_id=$1, name=$2, slug=$3, description=$4, price=$5, stock=$6, image_url=$7, is_active=$8, updated_at=NOW() WHERE id=$9`,
-    [categoryId || null, name, slug, description, Number(price), Number(stock), imageUrl, isActive === 'on', id]
-  );
+  store.updateProduct(req.params.id, { categoryId, name, slug, description, price, stock, imageUrl, isActive: isActive === 'on' });
   res.redirect('/admin/products');
 });
 
-app.post('/admin/products/:id/delete', adminOnly, async (req, res) => {
-  await pool.query('DELETE FROM products WHERE id=$1', [req.params.id]);
+app.post('/admin/products/:id/delete', adminOnly, (req, res) => {
+  store.deleteProduct(req.params.id);
   res.redirect('/admin/products');
 });
 
-app.get('/admin/categories', adminOnly, async (req, res) => {
-  const categories = await pool.query('SELECT * FROM categories ORDER BY created_at DESC');
-  res.render('admin-categories', { categories: categories.rows });
+app.get('/admin/categories', adminOnly, (req, res) => {
+  res.render('admin-categories', { categories: store.getAdminCategories() });
 });
 
-app.post('/admin/categories', adminOnly, async (req, res) => {
+app.post('/admin/categories', adminOnly, (req, res) => {
   const { name, slug, description } = req.body;
-  await pool.query('INSERT INTO categories (name, slug, description) VALUES ($1,$2,$3)', [name, slug, description]);
+  store.createCategory({ name, slug, description });
   res.redirect('/admin/categories');
 });
 
-app.post('/admin/categories/:id/delete', adminOnly, async (req, res) => {
-  await pool.query('DELETE FROM categories WHERE id=$1', [req.params.id]);
+app.post('/admin/categories/:id/delete', adminOnly, (req, res) => {
+  store.deleteCategory(req.params.id);
   res.redirect('/admin/categories');
 });
 
-app.get('/admin/orders', adminOnly, async (req, res) => {
-  const orders = await pool.query('SELECT * FROM orders ORDER BY created_at DESC');
-  res.render('admin-orders', { orders: orders.rows });
+app.get('/admin/orders', adminOnly, (req, res) => {
+  res.render('admin-orders', { orders: store.getOrders() });
 });
 
-app.post('/admin/orders/:id/status', adminOnly, async (req, res) => {
-  const { status } = req.body;
-  await pool.query('UPDATE orders SET status=$1, updated_at=NOW() WHERE id=$2', [status, req.params.id]);
+app.post('/admin/orders/:id/status', adminOnly, (req, res) => {
+  store.updateOrderStatus(req.params.id, req.body.status);
   res.redirect('/admin/orders');
 });
 
-app.get('/admin/customers', adminOnly, async (req, res) => {
-  const customers = await pool.query("SELECT id, full_name, email, phone, created_at FROM users WHERE role='customer' ORDER BY created_at DESC");
-  res.render('admin-customers', { customers: customers.rows });
+app.get('/admin/customers', adminOnly, (req, res) => {
+  res.render('admin-customers', { customers: store.getCustomers() });
 });
 
-app.get('/admin/messages', adminOnly, async (req, res) => {
-  const messages = await pool.query('SELECT * FROM contact_messages ORDER BY created_at DESC');
-  res.render('admin-messages', { messages: messages.rows });
+app.get('/admin/messages', adminOnly, (req, res) => {
+  res.render('admin-messages', { messages: store.getContactMessages() });
 });
 
-app.get('/admin/reviews', adminOnly, async (req, res) => {
-  const reviews = await pool.query('SELECT r.*, p.name AS product_name FROM reviews r JOIN products p ON p.id=r.product_id ORDER BY r.created_at DESC');
-  res.render('admin-reviews', { reviews: reviews.rows });
+app.get('/admin/reviews', adminOnly, (req, res) => {
+  res.render('admin-reviews', { reviews: store.getAdminReviews() });
 });
 
-app.post('/admin/reviews/:id/approve', adminOnly, async (req, res) => {
-  await pool.query("UPDATE reviews SET status='approved' WHERE id=$1", [req.params.id]);
+app.post('/admin/reviews/:id/approve', adminOnly, (req, res) => {
+  store.approveReview(req.params.id);
   res.redirect('/admin/reviews');
 });
 
-app.post('/admin/reviews/:id/delete', adminOnly, async (req, res) => {
-  await pool.query('DELETE FROM reviews WHERE id=$1', [req.params.id]);
+app.post('/admin/reviews/:id/delete', adminOnly, (req, res) => {
+  store.deleteReview(req.params.id);
   res.redirect('/admin/reviews');
 });
 
 app.listen(PORT, () => {
   console.log(`BIOLIFE running at http://localhost:${PORT}`);
+  console.log(`Demo data file: ${process.env.DATA_FILE || path.join(__dirname, '..', 'data', 'store.json')}`);
 });

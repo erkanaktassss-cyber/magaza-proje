@@ -24,10 +24,8 @@
     <textarea name="description"><%= p.description %></textarea>
     <select name="categoryId"><option value="">Kategori Seç</option><% categories.forEach(c=> { %><option value="<%= c.id %>" <%= p.category_id===c.id?'selected':'' %>><%= c.name %></option><% }) %></select>
     <label><input type="checkbox" name="isActive" <%= p.is_active ? 'checked' : '' %>> Aktif</label>
-    <div class="row">
-      <button>Kaydet</button>
+    <button>Kaydet</button>
   </form>
-      <form action="/admin/products/<%= p.id %>/delete" method="post"><button>Sil</button></form>
-    </div>
+  <form action="/admin/products/<%= p.id %>/delete" method="post" class="card"><button>Sil</button></form>
 <% }) %>
 </main></body></html>
