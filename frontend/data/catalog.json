@@ -1,0 +1,1461 @@
+{
+  "whatsappNumber": "905551112233",
+  "categories": [
+    {
+      "id": "parfum",
+      "slug": "parfum",
+      "name": "Parfüm",
+      "description": "İmza hissi veren, kalıcı ve modern parfüm seçkisi.",
+      "heroTitle": "Kişisel imzanız için zamansız parfümler",
+      "heroSubtitle": "Amber, çiçeksi, misk ve odunsu notalarla lüks parfümeri atmosferi.",
+      "image": "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=1400&q=85",
+      "accent": "from-neutral-950 via-stone-800 to-amber-700",
+      "featured": true
+    },
+    {
+      "id": "esans",
+      "slug": "esans",
+      "name": "Esans",
+      "description": "Atölye üretimi ve kişisel karışımlar için yoğun parfüm esansları.",
+      "heroTitle": "Kokunun saf ve konsantre hali",
+      "heroSubtitle": "Küçük dozda güçlü karakter; üretim ve layering için rafine esanslar.",
+      "image": "https://images.unsplash.com/photo-1600612253971-422e7f7faeb6?auto=format&fit=crop&w=1400&q=85",
+      "accent": "from-zinc-950 via-amber-900 to-yellow-600",
+      "featured": true
+    },
+    {
+      "id": "dogal-sabun",
+      "slug": "dogal-sabun",
+      "name": "Doğal Sabun",
+      "description": "Bitkisel yağlar ve nazik formüllerle günlük temizlik ritüeli.",
+      "heroTitle": "Dokusu güzel, içeriği temiz sabunlar",
+      "heroSubtitle": "Banyo rafınıza krem, beyaz ve doğal bir spa hissi taşıyın.",
+      "image": "https://images.unsplash.com/photo-1607006483224-3d55c01f3c2d?auto=format&fit=crop&w=1400&q=85",
+      "accent": "from-stone-900 via-lime-800 to-emerald-500",
+      "featured": true
+    },
+    {
+      "id": "dogal-krem",
+      "slug": "dogal-krem",
+      "name": "Doğal Krem",
+      "description": "Shea, badem, kakao ve bitkisel yağ bazlı bakım ürünleri.",
+      "heroTitle": "Cilt konforu için zengin bakım dokuları",
+      "heroSubtitle": "Minimal içerik, yüksek nem hissi ve premium banyo estetiği.",
+      "image": "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=1400&q=85",
+      "accent": "from-neutral-950 via-orange-900 to-stone-400",
+      "featured": true
+    },
+    {
+      "id": "aromaterapi",
+      "slug": "aromaterapi",
+      "name": "Aromaterapi",
+      "description": "Difüzör, uçucu yağ ve oda ritüelleri için sakinleştirici koleksiyon.",
+      "heroTitle": "Ev atmosferini sessiz bir ritüele dönüştürün",
+      "heroSubtitle": "Lavanta, bergamot, sedir ve narenciye ile dengeli duyusal deneyim.",
+      "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=1400&q=85",
+      "accent": "from-stone-950 via-teal-900 to-emerald-400",
+      "featured": true
+    },
+    {
+      "id": "mum",
+      "slug": "mum",
+      "name": "Mum",
+      "description": "Soya bazlı, zarif kaplarda premium koku yayan dekoratif mumlar.",
+      "heroTitle": "Işığı, kokuyu ve mekân hissini tasarlayın",
+      "heroSubtitle": "Akşam sofraları, banyolar ve özel köşeler için sofistike mumlar.",
+      "image": "https://images.unsplash.com/photo-1602874801007-bd458bb1b8b6?auto=format&fit=crop&w=1400&q=85",
+      "accent": "from-black via-stone-800 to-amber-500",
+      "featured": true
+    },
+    {
+      "id": "kalip-ambalaj",
+      "slug": "kalip-ambalaj",
+      "name": "Kalıp ve Ambalaj",
+      "description": "Butik üreticiler için şişe, kapak, kutu, etiket ve silikon kalıplar.",
+      "heroTitle": "Ürününüzü premium gösteren üretim detayları",
+      "heroSubtitle": "Profesyonel sunum için kalıp, şişe ve ambalaj malzemeleri.",
+      "image": "https://images.unsplash.com/photo-1607344645866-009c320b63e0?auto=format&fit=crop&w=1400&q=85",
+      "accent": "from-zinc-950 via-neutral-700 to-stone-300",
+      "featured": true
+    }
+  ],
+  "products": [
+
+    {
+        "id": "ff-001",
+        "slug": "noir-rose-eau-de-parfum",
+        "name": "Noir Rose Eau de Parfum",
+        "categoryId": "parfum",
+        "categoryName": "Parfüm",
+        "price": 1290,
+        "discountedPrice": 1190,
+        "stock": 42,
+        "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1595425964071-2c1ec8a4a071?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Atelier",
+        "isBestSeller": false,
+        "isNew": false,
+        "isCampaign": true,
+        "description": "Koyu gül, siyah çay ve misk ile şehirli bir imza.",
+        "longDescription": "Noir Rose Eau de Parfum, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "ml",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-002",
+        "slug": "amber-silk-signature",
+        "name": "Amber Silk Signature",
+        "categoryId": "parfum",
+        "categoryName": "Parfüm",
+        "price": 1490,
+        "stock": 9,
+        "image": "https://images.unsplash.com/photo-1595425964071-2c1ec8a4a071?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1595425964071-2c1ec8a4a071?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1584035910387-fea47794261f?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Atelier",
+        "isBestSeller": false,
+        "isNew": false,
+        "isCampaign": false,
+        "description": "Amber, vanilya ve sandalın sıcak ve ipeksi dengesi.",
+        "longDescription": "Amber Silk Signature, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "ml",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-003",
+        "slug": "cedar-bloom-cologne-intense",
+        "name": "Cedar Bloom Cologne Intense",
+        "categoryId": "parfum",
+        "categoryName": "Parfüm",
+        "price": 990,
+        "stock": 64,
+        "image": "https://images.unsplash.com/photo-1584035910387-fea47794261f?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1584035910387-fea47794261f?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1619994403073-2cec844b8e63?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Çok Satan",
+        "isBestSeller": true,
+        "isNew": false,
+        "isCampaign": false,
+        "description": "Sedir ağacı üzerinde beyaz çiçeklerin net ve ferah dokusu.",
+        "longDescription": "Cedar Bloom Cologne Intense, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "ml",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-004",
+        "slug": "velvet-oud-extrait",
+        "name": "Velvet Oud Extrait",
+        "categoryId": "parfum",
+        "categoryName": "Parfüm",
+        "price": 1890,
+        "discountedPrice": 1690,
+        "stock": 27,
+        "image": "https://images.unsplash.com/photo-1619994403073-2cec844b8e63?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1619994403073-2cec844b8e63?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1590736704728-f4730bb30770?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Atelier",
+        "isBestSeller": false,
+        "isNew": false,
+        "isCampaign": true,
+        "description": "Oud, safran ve deri akorlarıyla akşam kullanımı için güçlü kompozisyon.",
+        "longDescription": "Velvet Oud Extrait, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "ml",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-005",
+        "slug": "pear--white-musk",
+        "name": "Pear & White Musk",
+        "categoryId": "parfum",
+        "categoryName": "Parfüm",
+        "price": 890,
+        "stock": 55,
+        "image": "https://images.unsplash.com/photo-1590736704728-f4730bb30770?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1590736704728-f4730bb30770?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Yeni",
+        "isBestSeller": false,
+        "isNew": true,
+        "isCampaign": false,
+        "description": "Armut, frezya ve beyaz misk ile temiz premium günlük koku.",
+        "longDescription": "Pear & White Musk, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "ml",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-006",
+        "slug": "amber-oud-esansi",
+        "name": "Amber Oud Esansı",
+        "categoryId": "esans",
+        "categoryName": "Esans",
+        "price": 360,
+        "stock": 13,
+        "image": "https://images.unsplash.com/photo-1611078489935-0cb964de46d6?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1611078489935-0cb964de46d6?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Çok Satan",
+        "isBestSeller": true,
+        "isNew": false,
+        "isCampaign": false,
+        "description": "Parfüm üretimi için yoğun amber ve oud konsantresi.",
+        "longDescription": "Amber Oud Esansı, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "ml",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-007",
+        "slug": "beyaz-cicek-esansi",
+        "name": "Beyaz Çiçek Esansı",
+        "categoryId": "esans",
+        "categoryName": "Esans",
+        "price": 320,
+        "discountedPrice": 289,
+        "stock": 18,
+        "image": "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Atelier",
+        "isBestSeller": false,
+        "isNew": false,
+        "isCampaign": true,
+        "description": "Sabun, mum ve parfüm karışımları için zarif beyaz çiçek profili.",
+        "longDescription": "Beyaz Çiçek Esansı, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "ml",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-008",
+        "slug": "vanilya-tonka-esansi",
+        "name": "Vanilya Tonka Esansı",
+        "categoryId": "esans",
+        "categoryName": "Esans",
+        "price": 340,
+        "stock": 42,
+        "image": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1600612253971-422e7f7faeb6?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Atelier",
+        "isBestSeller": false,
+        "isNew": false,
+        "isCampaign": false,
+        "description": "Tatlı ama rafine vanilya tonka sıcaklığı.",
+        "longDescription": "Vanilya Tonka Esansı, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "ml",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-009",
+        "slug": "narenciye-bergamot-esansi",
+        "name": "Narenciye Bergamot Esansı",
+        "categoryId": "esans",
+        "categoryName": "Esans",
+        "price": 290,
+        "stock": 9,
+        "image": "https://images.unsplash.com/photo-1600612253971-422e7f7faeb6?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1600612253971-422e7f7faeb6?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1611078489935-0cb964de46d6?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Çok Satan",
+        "isBestSeller": true,
+        "isNew": false,
+        "isCampaign": false,
+        "description": "Bergamot, limon kabuğu ve yeşil narenciye hissi.",
+        "longDescription": "Narenciye Bergamot Esansı, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "ml",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-010",
+        "slug": "misk-pudra-esansi",
+        "name": "Misk Pudra Esansı",
+        "categoryId": "esans",
+        "categoryName": "Esans",
+        "price": 310,
+        "stock": 64,
+        "image": "https://images.unsplash.com/photo-1611078489935-0cb964de46d6?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1611078489935-0cb964de46d6?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Yeni",
+        "isBestSeller": false,
+        "isNew": true,
+        "isCampaign": false,
+        "description": "Temiz çamaşır ve pudralı misk karakteri.",
+        "longDescription": "Misk Pudra Esansı, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "ml",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-011",
+        "slug": "zeytinyagli-atelier-sabun",
+        "name": "Zeytinyağlı Atelier Sabun",
+        "categoryId": "dogal-sabun",
+        "categoryName": "Doğal Sabun",
+        "price": 165,
+        "stock": 27,
+        "image": "https://images.unsplash.com/photo-1614806687007-2215a3c973de?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1614806687007-2215a3c973de?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1604187351574-c75ca79f5807?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Atelier",
+        "isBestSeller": false,
+        "isNew": false,
+        "isCampaign": false,
+        "description": "Soğuk proses zeytinyağı dokusuyla nazik temizlik.",
+        "longDescription": "Zeytinyağlı Atelier Sabun, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "gram",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-012",
+        "slug": "lavanta-bahcesi-sabun",
+        "name": "Lavanta Bahçesi Sabun",
+        "categoryId": "dogal-sabun",
+        "categoryName": "Doğal Sabun",
+        "price": 190,
+        "discountedPrice": 159,
+        "stock": 55,
+        "image": "https://images.unsplash.com/photo-1604187351574-c75ca79f5807?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1604187351574-c75ca79f5807?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1607006483224-3d55c01f3c2d?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Çok Satan",
+        "isBestSeller": true,
+        "isNew": false,
+        "isCampaign": true,
+        "description": "Lavanta tarlası hissi veren mor tonlu el yapımı sabun.",
+        "longDescription": "Lavanta Bahçesi Sabun, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "gram",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-013",
+        "slug": "keci-sutlu-krem-sabun",
+        "name": "Keçi Sütlü Krem Sabun",
+        "categoryId": "dogal-sabun",
+        "categoryName": "Doğal Sabun",
+        "price": 210,
+        "stock": 13,
+        "image": "https://images.unsplash.com/photo-1607006483224-3d55c01f3c2d?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1607006483224-3d55c01f3c2d?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1600857544200-b2f468e9a2fc?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Atelier",
+        "isBestSeller": false,
+        "isNew": false,
+        "isCampaign": false,
+        "description": "Kremsi köpük ve yumuşak dokulu premium bakım sabunu.",
+        "longDescription": "Keçi Sütlü Krem Sabun, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "gram",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-014",
+        "slug": "aktif-karbon-detoks-sabun",
+        "name": "Aktif Karbon Detoks Sabun",
+        "categoryId": "dogal-sabun",
+        "categoryName": "Doğal Sabun",
+        "price": 185,
+        "stock": 18,
+        "image": "https://images.unsplash.com/photo-1600857544200-b2f468e9a2fc?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1600857544200-b2f468e9a2fc?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1614806687007-2215a3c973de?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Atelier",
+        "isBestSeller": false,
+        "isNew": false,
+        "isCampaign": false,
+        "description": "Arındırıcı aktif karbon ve ferah odunsu koku.",
+        "longDescription": "Aktif Karbon Detoks Sabun, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "gram",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-015",
+        "slug": "gul-yaprakli-sabun-seti",
+        "name": "Gül Yapraklı Sabun Seti",
+        "categoryId": "dogal-sabun",
+        "categoryName": "Doğal Sabun",
+        "price": 420,
+        "discountedPrice": 379,
+        "stock": 42,
+        "image": "https://images.unsplash.com/photo-1614806687007-2215a3c973de?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1614806687007-2215a3c973de?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1604187351574-c75ca79f5807?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Yeni",
+        "isBestSeller": true,
+        "isNew": true,
+        "isCampaign": true,
+        "description": "Hediyelik kutuda üçlü doğal sabun ritüeli.",
+        "longDescription": "Gül Yapraklı Sabun Seti, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "gram",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-016",
+        "slug": "shea-butter-yogun-krem",
+        "name": "Shea Butter Yoğun Krem",
+        "categoryId": "dogal-krem",
+        "categoryName": "Doğal Krem",
+        "price": 320,
+        "discountedPrice": 279,
+        "stock": 9,
+        "image": "https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Atelier",
+        "isBestSeller": false,
+        "isNew": false,
+        "isCampaign": true,
+        "description": "Kuru bölgeler için yoğun nem hissi ve kadifemsi bitiş.",
+        "longDescription": "Shea Butter Yoğun Krem, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "gram",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-017",
+        "slug": "badem-sutu-el-kremi",
+        "name": "Badem Sütü El Kremi",
+        "categoryId": "dogal-krem",
+        "categoryName": "Doğal Krem",
+        "price": 260,
+        "stock": 64,
+        "image": "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Atelier",
+        "isBestSeller": false,
+        "isNew": false,
+        "isCampaign": false,
+        "description": "Hızlı emilen badem sütü dokusu ve temiz koku.",
+        "longDescription": "Badem Sütü El Kremi, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "gram",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-018",
+        "slug": "kakao-body-butter",
+        "name": "Kakao Body Butter",
+        "categoryId": "dogal-krem",
+        "categoryName": "Doğal Krem",
+        "price": 390,
+        "stock": 27,
+        "image": "https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Çok Satan",
+        "isBestSeller": true,
+        "isNew": false,
+        "isCampaign": false,
+        "description": "Kakao ve shea ile zengin vücut bakım ritüeli.",
+        "longDescription": "Kakao Body Butter, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "gram",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-019",
+        "slug": "calendula-onarici-balm",
+        "name": "Calendula Onarıcı Balm",
+        "categoryId": "dogal-krem",
+        "categoryName": "Doğal Krem",
+        "price": 280,
+        "stock": 55,
+        "image": "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Atelier",
+        "isBestSeller": false,
+        "isNew": false,
+        "isCampaign": false,
+        "description": "Hassas bölgeler için calendula bazlı minimal bakım balmı.",
+        "longDescription": "Calendula Onarıcı Balm, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "gram",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-020",
+        "slug": "hindistan-cevizi-dudak-balmi",
+        "name": "Hindistan Cevizi Dudak Balmı",
+        "categoryId": "dogal-krem",
+        "categoryName": "Doğal Krem",
+        "price": 145,
+        "stock": 13,
+        "image": "https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Yeni",
+        "isBestSeller": false,
+        "isNew": true,
+        "isCampaign": false,
+        "description": "Dudaklara parlak, besleyici ve doğal bakım hissi.",
+        "longDescription": "Hindistan Cevizi Dudak Balmı, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "gram",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-021",
+        "slug": "lavanta-ucucu-yag",
+        "name": "Lavanta Uçucu Yağ",
+        "categoryId": "aromaterapi",
+        "categoryName": "Aromaterapi",
+        "price": 240,
+        "stock": 18,
+        "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1608571423539-e951b9b3871f?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Çok Satan",
+        "isBestSeller": true,
+        "isNew": false,
+        "isCampaign": false,
+        "description": "Sakin akşam ritüelleri için klasik lavanta yağı.",
+        "longDescription": "Lavanta Uçucu Yağ, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "ml",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-022",
+        "slug": "bergamot-ucucu-yag",
+        "name": "Bergamot Uçucu Yağ",
+        "categoryId": "aromaterapi",
+        "categoryName": "Aromaterapi",
+        "price": 260,
+        "stock": 42,
+        "image": "https://images.unsplash.com/photo-1608571423539-e951b9b3871f?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1608571423539-e951b9b3871f?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Atelier",
+        "isBestSeller": false,
+        "isNew": false,
+        "isCampaign": false,
+        "description": "Canlandırıcı narenciye profiliyle sabah enerjisi.",
+        "longDescription": "Bergamot Uçucu Yağ, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "ml",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-023",
+        "slug": "sedir-agaci-ucucu-yag",
+        "name": "Sedir Ağacı Uçucu Yağ",
+        "categoryId": "aromaterapi",
+        "categoryName": "Aromaterapi",
+        "price": 280,
+        "stock": 9,
+        "image": "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1528750717929-32abb73d3bd9?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Atelier",
+        "isBestSeller": false,
+        "isNew": false,
+        "isCampaign": false,
+        "description": "Topraklayıcı, kuru ve odunsu aromaterapi notası.",
+        "longDescription": "Sedir Ağacı Uçucu Yağ, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "ml",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-024",
+        "slug": "seramik-difuzor-seti",
+        "name": "Seramik Difüzör Seti",
+        "categoryId": "aromaterapi",
+        "categoryName": "Aromaterapi",
+        "price": 690,
+        "discountedPrice": 620,
+        "stock": 64,
+        "image": "https://images.unsplash.com/photo-1528750717929-32abb73d3bd9?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1528750717929-32abb73d3bd9?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Çok Satan",
+        "isBestSeller": true,
+        "isNew": false,
+        "isCampaign": true,
+        "description": "Minimal seramik difüzör ve başlangıç yağı seti.",
+        "longDescription": "Seramik Difüzör Seti, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "ml",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-025",
+        "slug": "uyku-ritueli-spreyi",
+        "name": "Uyku Ritüeli Spreyi",
+        "categoryId": "aromaterapi",
+        "categoryName": "Aromaterapi",
+        "price": 330,
+        "stock": 27,
+        "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1608571423539-e951b9b3871f?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Yeni",
+        "isBestSeller": false,
+        "isNew": true,
+        "isCampaign": false,
+        "description": "Yastık ve oda için lavanta, misk ve sandal dengesi.",
+        "longDescription": "Uyku Ritüeli Spreyi, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "ml",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-026",
+        "slug": "amber-soya-mum",
+        "name": "Amber Soya Mum",
+        "categoryId": "mum",
+        "categoryName": "Mum",
+        "price": 520,
+        "stock": 55,
+        "image": "https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1608181831718-c9ffd0e04352?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Atelier",
+        "isBestSeller": false,
+        "isNew": false,
+        "isCampaign": false,
+        "description": "Amber ve tonka ile sıcak, loş ve davetkâr atmosfer.",
+        "longDescription": "Amber Soya Mum, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "gram",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-027",
+        "slug": "fig-leaf-candle",
+        "name": "Fig Leaf Candle",
+        "categoryId": "mum",
+        "categoryName": "Mum",
+        "price": 490,
+        "stock": 13,
+        "image": "https://images.unsplash.com/photo-1608181831718-c9ffd0e04352?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1608181831718-c9ffd0e04352?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1602524206684-5ca8d5fdd622?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Çok Satan",
+        "isBestSeller": true,
+        "isNew": false,
+        "isCampaign": false,
+        "description": "İncir yaprağı ve yeşil notalarla Akdeniz ferahlığı.",
+        "longDescription": "Fig Leaf Candle, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "gram",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-028",
+        "slug": "black-tea--woods-mum",
+        "name": "Black Tea & Woods Mum",
+        "categoryId": "mum",
+        "categoryName": "Mum",
+        "price": 560,
+        "discountedPrice": 499,
+        "stock": 18,
+        "image": "https://images.unsplash.com/photo-1602524206684-5ca8d5fdd622?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1602524206684-5ca8d5fdd622?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1602874801007-bd458bb1b8b6?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Atelier",
+        "isBestSeller": false,
+        "isNew": false,
+        "isCampaign": true,
+        "description": "Siyah çay, sedir ve tütsü ile sofistike salon kokusu.",
+        "longDescription": "Black Tea & Woods Mum, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "gram",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-029",
+        "slug": "vanilla-linen-mini-mum-seti",
+        "name": "Vanilla Linen Mini Mum Seti",
+        "categoryId": "mum",
+        "categoryName": "Mum",
+        "price": 440,
+        "stock": 42,
+        "image": "https://images.unsplash.com/photo-1602874801007-bd458bb1b8b6?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1602874801007-bd458bb1b8b6?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Atelier",
+        "isBestSeller": false,
+        "isNew": false,
+        "isCampaign": false,
+        "description": "Üç mini mumla temiz keten ve vanilya ritüeli.",
+        "longDescription": "Vanilla Linen Mini Mum Seti, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "gram",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-030",
+        "slug": "rose-marble-mum",
+        "name": "Rose Marble Mum",
+        "categoryId": "mum",
+        "categoryName": "Mum",
+        "price": 610,
+        "stock": 9,
+        "image": "https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1608181831718-c9ffd0e04352?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Yeni",
+        "isBestSeller": true,
+        "isNew": true,
+        "isCampaign": false,
+        "description": "Mermer kapta gül, misk ve pudra hissi.",
+        "longDescription": "Rose Marble Mum, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "gram",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-031",
+        "slug": "50-ml-premium-parfum-sisesi",
+        "name": "50 ml Premium Parfüm Şişesi",
+        "categoryId": "kalip-ambalaj",
+        "categoryName": "Kalıp ve Ambalaj",
+        "price": 38,
+        "discountedPrice": 32,
+        "stock": 64,
+        "image": "https://images.unsplash.com/photo-1612969308146-066d55f37ccb?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1612969308146-066d55f37ccb?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1595079676339-1534801ad6cf?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Atelier",
+        "isBestSeller": false,
+        "isNew": false,
+        "isCampaign": true,
+        "description": "Siyah kapaklı cam parfüm şişesi; seri üretime hazır.",
+        "longDescription": "50 ml Premium Parfüm Şişesi, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "adet",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-032",
+        "slug": "mat-krem-hediye-kutusu",
+        "name": "Mat Krem Hediye Kutusu",
+        "categoryId": "kalip-ambalaj",
+        "categoryName": "Kalıp ve Ambalaj",
+        "price": 54,
+        "stock": 27,
+        "image": "https://images.unsplash.com/photo-1595079676339-1534801ad6cf?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1595079676339-1534801ad6cf?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1607344645866-009c320b63e0?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Atelier",
+        "isBestSeller": false,
+        "isNew": false,
+        "isCampaign": false,
+        "description": "Minimal krem kutu; parfüm, sabun ve mum sunumu için.",
+        "longDescription": "Mat Krem Hediye Kutusu, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "adet",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-033",
+        "slug": "silikon-sabun-kalibi",
+        "name": "Silikon Sabun Kalıbı",
+        "categoryId": "kalip-ambalaj",
+        "categoryName": "Kalıp ve Ambalaj",
+        "price": 240,
+        "stock": 55,
+        "image": "https://images.unsplash.com/photo-1607344645866-009c320b63e0?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1607344645866-009c320b63e0?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1585578910211-7d177d21c2a4?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Çok Satan",
+        "isBestSeller": true,
+        "isNew": false,
+        "isCampaign": false,
+        "description": "Altı gözlü esnek silikon kalıp, butik üretime uygun.",
+        "longDescription": "Silikon Sabun Kalıbı, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "adet",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-034",
+        "slug": "amber-cam-damlalikli-sise",
+        "name": "Amber Cam Damlalıklı Şişe",
+        "categoryId": "kalip-ambalaj",
+        "categoryName": "Kalıp ve Ambalaj",
+        "price": 42,
+        "stock": 13,
+        "image": "https://images.unsplash.com/photo-1585578910211-7d177d21c2a4?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1585578910211-7d177d21c2a4?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1612969308146-066d55f37ccb?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Atelier",
+        "isBestSeller": false,
+        "isNew": false,
+        "isCampaign": false,
+        "description": "Esans ve yağlar için amber cam damlalıklı şişe.",
+        "longDescription": "Amber Cam Damlalıklı Şişe, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "adet",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    },
+    {
+        "id": "ff-035",
+        "slug": "premium-etiket-seti",
+        "name": "Premium Etiket Seti",
+        "categoryId": "kalip-ambalaj",
+        "categoryName": "Kalıp ve Ambalaj",
+        "price": 180,
+        "stock": 18,
+        "image": "https://images.unsplash.com/photo-1612969308146-066d55f37ccb?auto=format&fit=crop&w=1000&q=85",
+        "gallery": [
+            "https://images.unsplash.com/photo-1612969308146-066d55f37ccb?auto=format&fit=crop&w=1000&q=85",
+            "https://images.unsplash.com/photo-1595079676339-1534801ad6cf?auto=format&fit=crop&w=1000&q=85"
+        ],
+        "badge": "Yeni",
+        "isBestSeller": false,
+        "isNew": true,
+        "isCampaign": false,
+        "description": "Siyah-krem-gold çizgide 50 adet etiket seti.",
+        "longDescription": "Premium Etiket Seti, Felicita Fragrances, Rituals, Jo Malone ve L'Occitane çizgisinden ilham alan sakin, rafine ve premium bir mağaza deneyimi için seçildi. Beyaz-krem-siyah palete yakışan ürün sunumu, yatırımcı demosunda güçlü ilk izlenim oluşturur.",
+        "notes": [
+            "Üst nota: bergamot / temiz açılış",
+            "Kalp: çiçeksi veya aromatik karakter",
+            "Dip: amber, misk veya yumuşak odunsu bitiş"
+        ],
+        "ritual": "Az miktarı seçilen ritüele dahil edin; sade ambalaj, temiz yüzey ve loş ışıkla premium sunum etkisi artar.",
+        "variants": [
+            {
+                "type": "adet",
+                "label": "Standart",
+                "stock": 30
+            },
+            {
+                "type": "set",
+                "label": "Hediye seti",
+                "priceDelta": 180,
+                "stock": 12
+            }
+        ]
+    }
+
+
+  ]
+}

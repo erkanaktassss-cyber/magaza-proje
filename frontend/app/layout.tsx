@@ -2,53 +2,56 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import './globals.css';
 import { StoreProvider } from '../components/store-provider';
+import { categories } from '../lib/data';
+import { CartLink } from './ui/cart-link';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Biolife Atelier | Premium Doğal Ürünler ve Atölye Mağazası',
-    template: '%s | Biolife Atelier'
+    default: 'Felicita Fragrances | Premium Ritual Storefront',
+    template: '%s | Felicita Fragrances'
   },
-  description: 'Parfüm, parfüm esansı, doğal sabun, bakım ürünleri, aromaterapi, mum, epoksi hediyelik ve üretim ekipmanları için premium e-ticaret mağazası.',
-  keywords: ['Biolife Atelier', 'parfüm', 'doğal sabun', 'parfüm esansı', 'aromaterapi', 'epoksi kalıp', 'üretim malzemeleri'],
+  description: 'Parfüm, esans, doğal sabun, doğal krem, aromaterapi, mum, kalıp ve ambalaj kategorileri için premium Next.js demo mağaza.',
   openGraph: {
-    title: 'Biolife Atelier',
-    description: 'Doğal, kalıcı ve özel ürünler için çok kategorili premium mağaza.',
+    title: 'Felicita Fragrances',
+    description: 'Yatırımcı ve müşteri demosu için lüks, mobil uyumlu frontend mağaza deneyimi.',
     locale: 'tr_TR',
     type: 'website'
   }
 };
-
-const navItems = [
-  { href: '/#categories', label: 'Kategoriler' },
-  { href: '/products', label: 'Ürünler' },
-  { href: '/#story', label: 'Hikaye' },
-  { href: '/tracking', label: 'Kargo Takip' },
-  { href: '/admin', label: 'Admin' }
-];
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="tr">
       <body>
         <StoreProvider>
-          <header className="sticky top-0 z-50 border-b border-amber-950/10 bg-ivory/90 backdrop-blur-xl">
-            <div className="luxe-container flex h-20 items-center justify-between gap-6">
-              <Link href="/" className="font-display text-2xl font-semibold tracking-[0.16em] text-ink">Biolife Atelier</Link>
-              <nav className="hidden items-center gap-7 text-sm font-medium text-ink/70 lg:flex">
-                {navItems.map((item) => <Link key={item.href} href={item.href} className="transition hover:text-gold">{item.label}</Link>)}
+          <header className="sticky top-0 z-50 border-b border-black/10 bg-ivory/90 backdrop-blur-2xl">
+            <div className="luxe-container flex h-20 items-center justify-between gap-5">
+              <Link href="/" className="font-display text-2xl text-ink md:text-3xl">Felicita</Link>
+              <nav className="hidden items-center gap-7 text-xs font-semibold uppercase tracking-[.22em] text-ink/60 xl:flex">
+                {categories.slice(0, 5).map((category) => <Link key={category.id} href={`/category/${category.slug}`} className="transition hover:text-gold">{category.name}</Link>)}
               </nav>
               <div className="flex items-center gap-3">
-                <Link href="/account" className="hidden rounded-full border border-ink/10 px-4 py-2 text-sm font-semibold text-ink/70 transition hover:border-gold hover:text-ink sm:inline-flex">Üyelik</Link>
-                <Link href="/cart" className="gold-button px-4 py-2">Sepet</Link>
+                <Link href="/products" className="hidden rounded-full border border-black/10 px-4 py-2 text-xs font-semibold uppercase tracking-[.2em] transition hover:border-gold hover:text-gold sm:inline-flex">Katalog</Link>
+                <CartLink />
               </div>
             </div>
           </header>
           {children}
-          <footer className="border-t border-amber-950/10 bg-obsidian py-12 text-ivory">
-            <div className="luxe-container grid gap-8 md:grid-cols-[1.2fr_.8fr_.8fr]">
-              <div><p className="font-display text-3xl">Biolife Atelier</p><p className="mt-3 max-w-md text-sm leading-7 text-ivory/65">Premium parfüm, doğal bakım ve üretim malzemeleri için ölçeklenebilir e-ticaret altyapısı.</p></div>
-              <div><p className="font-semibold">Ödeme</p><p className="mt-3 text-sm text-ivory/65">Kapıda ödeme, havale/EFT ve online ödeme entegrasyonuna hazır modüler yapı.</p></div>
-              <div><p className="font-semibold">Hızlı Sipariş</p><a className="mt-3 inline-flex text-sm text-gold" href="https://wa.me/905551112233">WhatsApp ile iletişime geç</a></div>
+          <footer className="overflow-hidden bg-obsidian py-14 text-ivory">
+            <div className="mb-10 flex whitespace-nowrap text-6xl text-white/10 md:text-8xl"><div className="marquee font-display">Felicita Fragrances · Ritual Storefront · Premium Care · Luxury Demo · Felicita Fragrances · Ritual Storefront · Premium Care · Luxury Demo · </div></div>
+            <div className="luxe-container grid gap-10 md:grid-cols-[1.3fr_.7fr_.7fr]">
+              <div>
+                <p className="font-display text-4xl">Felicita Fragrances</p>
+                <p className="mt-4 max-w-md text-sm leading-7 text-ivory/60">Backend öncesi yatırımcı demosu için tasarlanmış, JSON katalogla çalışan premium Next.js 15 frontend.</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[.26em] text-gold">Kategoriler</p>
+                <div className="mt-4 grid gap-2 text-sm text-ivory/65">{categories.slice(0, 4).map((category) => <Link key={category.id} href={`/category/${category.slug}`}>{category.name}</Link>)}</div>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[.26em] text-gold">Demo</p>
+                <p className="mt-4 text-sm leading-7 text-ivory/65">Veritabanı yok. Sepet istemci tarafında çalışır. Ürün görselleri Unsplash kaynaklıdır.</p>
+              </div>
             </div>
           </footer>
         </StoreProvider>
