@@ -11,7 +11,7 @@ export default function CartPage() {
 
   return (
     <main>
-      <section className="bg-cream py-16">
+      <section className="bg-cream pb-16 pt-36">
         <div className="luxe-container">
           <p className="section-eyebrow">Sepet sayfası</p>
           <h1 className="mt-4 font-display text-6xl text-ink md:text-7xl">Premium checkout vitrini.</h1>

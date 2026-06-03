@@ -21,7 +21,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
   return (
     <main>
-      <section className="relative overflow-hidden bg-black py-20 text-white">
+      <section className="relative overflow-hidden bg-black pb-20 pt-40 text-white">
         <img src={category.image} alt={category.name} className="absolute inset-0 h-full w-full object-cover opacity-40" />
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/65 to-black/10" />
         <div className="luxe-container relative z-10 py-12">

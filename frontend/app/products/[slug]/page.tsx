@@ -52,7 +52,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
         </div>
       </section>
 
-      <section className="bg-cream py-16">
+      <section className="bg-cream pb-16 pt-36">
         <div className="luxe-container grid gap-8 lg:grid-cols-[.8fr_1.2fr]">
           <div><p className="section-eyebrow">Ürün ritüeli</p><h2 className="mt-3 font-display text-5xl text-ink">Detaylı deneyim</h2></div>
           <div className="grid gap-5 md:grid-cols-2">
