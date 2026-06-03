@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: 'Katalog', description: 'Felicita Fra
 export default function ProductsPage() {
   return (
     <main>
-      <section className="bg-cream py-16">
+      <section className="bg-cream pb-16 pt-36">
         <div className="luxe-container">
           <p className="section-eyebrow">Kategori sayfası</p>
           <h1 className="mt-4 max-w-4xl font-display text-6xl leading-none text-ink md:text-7xl">Tüm kategorilerde premium katalog deneyimi.</h1>

@@ -1,75 +1,109 @@
 import Link from 'next/link';
-import { categories, featuredProducts, products } from '../lib/data';
-import { ProductCard } from '../components/product-card';
+import { CategoryEditorial } from '../components/CategoryEditorial';
+import { Hero } from '../components/Hero';
+import { ProductShowcase } from '../components/ProductShowcase';
+import { categories, products, whatsappNumber } from '../lib/data';
 
-const stats = [
-  ['35+', 'Demo ürün'],
-  ['7', 'Premium kategori'],
-  ['0', 'Veritabanı bağımlılığı']
-];
+const byCategory = (categoryId: string) => products.filter((product) => product.categoryId === categoryId);
+const bestSellers = products.filter((product) => product.isBestSeller).slice(0, 5);
+const perfumeProducts = byCategory('parfum').slice(0, 5);
+const naturalCareProducts = products.filter((product) => ['dogal-krem', 'dogal-sabun'].includes(product.categoryId)).slice(0, 5);
+const soapAromaProducts = products.filter((product) => ['dogal-sabun', 'aromaterapi', 'mum'].includes(product.categoryId)).slice(0, 5);
+const packagingProducts = byCategory('kalip-ambalaj').slice(0, 5);
+
+const whatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent('Merhaba, Felicita premium katalogdan sipariş vermek istiyorum.')}`;
 
 export default function HomePage() {
   return (
     <main>
-      <section className="hero-grid overflow-hidden bg-ivory">
-        <div className="luxe-container grid min-h-[calc(100vh-5rem)] items-center gap-12 py-16 lg:grid-cols-[1.02fr_.98fr]">
-          <div className="reveal">
-            <p className="section-eyebrow">Premium ritual commerce</p>
-            <h1 className="mt-5 max-w-4xl font-display text-6xl leading-[.9] text-ink md:text-8xl">Sessiz lüks, güçlü koku ve kusursuz mağaza hissi.</h1>
-            <p className="mt-7 max-w-2xl text-lg leading-8 text-ink/65">Felicita Fragrances; parfüm, esans, doğal bakım, aromaterapi, mum ve üretim ambalajlarını Jo Malone, Rituals ve L'Occitane hissinde tek bir premium vitrinde buluşturur.</p>
-            <div className="mt-9 flex flex-wrap gap-3">
-              <Link href="/products" className="rounded-full bg-black px-8 py-4 text-xs font-semibold uppercase tracking-[.24em] text-white transition hover:bg-gold">Kataloğu keşfet</Link>
-              <Link href="/category/parfum" className="rounded-full border border-black/15 px-8 py-4 text-xs font-semibold uppercase tracking-[.24em] transition hover:border-gold hover:text-gold">Parfüm koleksiyonu</Link>
-            </div>
-            <div className="mt-12 grid max-w-xl grid-cols-3 gap-4">
-              {stats.map(([value, label]) => <div key={label} className="border-l border-black/15 pl-4"><p className="font-display text-4xl">{value}</p><p className="mt-1 text-xs uppercase tracking-[.2em] text-ink/45">{label}</p></div>)}
-            </div>
-          </div>
-          <div className="relative reveal">
-            <div className="absolute -left-8 top-12 z-10 hidden rounded-full bg-white/80 px-5 py-3 text-xs font-semibold uppercase tracking-[.24em] shadow-luxe backdrop-blur md:block">Investor-ready UI</div>
-            <div className="luxe-ring float-slow overflow-hidden rounded-[3rem] bg-black p-3 shadow-[0_40px_120px_rgba(0,0,0,.25)]">
-              <img src="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=1400&q=90" alt="Premium parfüm şişeleri" className="h-[640px] w-full rounded-[2.4rem] object-cover" />
-            </div>
-          </div>
-        </div>
-      </section>
+      <Hero />
 
       <section className="bg-obsidian py-5 text-ivory">
-        <div className="luxe-container flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-xs font-semibold uppercase tracking-[.28em] text-ivory/65">
-          <span>Beyaz</span><span>Krem</span><span>Siyah</span><span>Premium kartlar</span><span>Mobil uyumlu</span><span>Animasyonlu</span>
+        <div className="luxe-container flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-[11px] font-semibold uppercase tracking-[.3em] text-ivory/60">
+          <span>White cream palette</span><span>Black typography</span><span>Gold details</span><span>Editorial commerce</span><span>Mobile luxury</span>
         </div>
       </section>
 
-      <section className="luxe-container py-20" id="categories">
-        <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-          <div><p className="section-eyebrow">Kategoriler</p><h2 className="mt-3 font-display text-5xl text-ink md:text-6xl">Ritüel odaklı koleksiyonlar</h2></div>
-          <Link href="/products" className="rounded-full border border-black/15 px-6 py-3 text-xs font-semibold uppercase tracking-[.22em] transition hover:border-gold hover:text-gold">Tüm ürünler</Link>
-        </div>
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {categories.map((category, index) => (
-            <Link href={`/category/${category.slug}`} key={category.id} className={`group relative min-h-80 overflow-hidden rounded-[2.25rem] bg-gradient-to-br ${category.accent} p-6 text-white shadow-luxe`}>
-              <img src={category.image} alt={category.name} className="absolute inset-0 h-full w-full object-cover opacity-35 transition duration-700 group-hover:scale-110 group-hover:opacity-45" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
-              <div className="relative z-10 flex h-full flex-col justify-between">
-                <span className="w-fit rounded-full border border-white/25 px-3 py-1 text-[10px] uppercase tracking-[.26em] text-white/70">0{index + 1}</span>
-                <div><h3 className="font-display text-4xl">{category.name}</h3><p className="mt-3 text-sm leading-6 text-white/72">{category.description}</p></div>
-              </div>
-            </Link>
-          ))}
+      <CategoryEditorial categories={categories} />
+
+      <ProductShowcase
+        id="perfume"
+        eyebrow="Parfüm koleksiyonu"
+        title="Şişede güçlü, sayfada sessiz bir imza."
+        description="Klasik kart düzeni yerine büyük ürün fotoğrafı, zarif boşluk ve nota odaklı editorial akışla parfüm seçkisi premium bir vitrine dönüşür."
+        products={perfumeProducts}
+      />
+
+      <ProductShowcase
+        id="natural-care"
+        eyebrow="Doğal bakım ürünleri"
+        title="Banyo rafı için krem tonlu bakım ritüelleri."
+        description="Shea, bitkisel yağ, balm ve doğal sabun dokuları; L’Occitane ve Rituals hissine yakın yumuşak bir spa estetiğiyle sunulur."
+        products={naturalCareProducts}
+        dark
+      />
+
+      <ProductShowcase
+        id="soap-aroma"
+        eyebrow="Sabun ve aromaterapi"
+        title="Koku, ışık ve temizlik aynı sahnede."
+        description="Sabun, mum ve aromaterapi ürünleri ev atmosferini tamamlayan büyük görsellerle, kategori kutusu gibi değil marka kampanyası gibi görünür."
+        products={soapAromaProducts}
+      />
+
+      <ProductShowcase
+        id="packaging"
+        eyebrow="Üretim kalıpları ve ambalaj"
+        title="Butik üretime premium raf değeri kazandıran detaylar."
+        description="Şişe, kalıp, kutu ve ambalaj ürünleri de aynı lüks katalog dilinde ele alınır; üretici malzemesi görünümünden çıkıp marka vitrininin parçası olur."
+        products={packagingProducts}
+        dark
+      />
+
+      <ProductShowcase
+        id="best-sellers"
+        eyebrow="Çok satanlar"
+        title="En çok seçilen ritüeller, sakin bir kürasyonla."
+        description="Çok satanlar alanı fiyat ve stok baskısı yerine ürünün formunu, dokusunu ve kullanım hissini öne çıkaran premium bir editör seçkisi olarak tasarlandı."
+        products={bestSellers}
+      />
+
+      <section className="bg-[#efe3cf] py-20 text-ink md:py-28">
+        <div className="luxe-container grid gap-10 lg:grid-cols-[.9fr_1.1fr] lg:items-center">
+          <div className="relative min-h-[560px] overflow-hidden rounded-[3rem] shadow-luxe">
+            <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1600&q=90" alt="Doğal bakım ve parfüm marka hikayesi" className="absolute inset-0 h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent" />
+            <p className="absolute bottom-8 left-8 right-8 font-display text-5xl leading-none text-white md:text-6xl">Atelier sessizliği, raf etkisi ve dokunsal lüks.</p>
+          </div>
+          <div>
+            <p className="section-eyebrow">Marka hikayesi</p>
+            <h2 className="mt-4 font-display text-6xl leading-[.9] md:text-8xl">Felicita bir ürün listesi değil, ritüel hissi satar.</h2>
+            <p className="mt-8 text-lg leading-9 text-ink/62">Bu ana sayfa, backend karmaşasına girmeden markanın ilk izlenimini yükseltmek için yeniden kurgulandı. Büyük serif başlıklar, rafine sans-serif açıklamalar, beyaz/krem zemin, siyah metin ve altın mikro detaylar premium kozmetik ve parfümeri markalarının sakin dilini hedefler.</p>
+            <div className="mt-10 grid gap-4 sm:grid-cols-3">
+              {['JSON katalog', 'Admin yok', 'Veritabanı yok'].map((item) => (
+                <div key={item} className="border-l border-gold pl-4">
+                  <p className="text-xs font-semibold uppercase tracking-[.24em] text-ink/50">Frontend</p>
+                  <p className="mt-2 font-display text-3xl">{item}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="luxe-container pb-20">
-        <div className="mb-10"><p className="section-eyebrow">Editör seçimi</p><h2 className="mt-3 font-display text-5xl text-ink md:text-6xl">Profesyonel ürün kartları</h2></div>
-        <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
-          {featuredProducts.slice(0, 8).map((product, index) => <ProductCard key={product.id} product={product} priority={index < 4} />)}
-        </div>
-      </section>
-
-      <section className="luxe-container pb-24">
-        <div className="grid overflow-hidden rounded-[3rem] bg-obsidian text-ivory shadow-luxe lg:grid-cols-[.95fr_1.05fr]">
-          <div className="p-9 md:p-14"><p className="section-eyebrow">Brand presentation</p><h2 className="mt-4 font-display text-5xl leading-none md:text-6xl">Mimari sonra. İlk izlenim şimdi.</h2><p className="mt-6 text-base leading-8 text-ivory/65">Bu aşama backend karmaşası olmadan çalışan, yatırımcıya gösterilebilir lüks frontend vitrini üretir. Katalog JSON'dan gelir, ürün detayları statik oluşturulur, sepet istemci tarafında çalışır.</p></div>
-          <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1400&q=85" alt="Premium bakım vitrini" className="h-full min-h-[420px] w-full object-cover" />
+      <section id="whatsapp" className="relative overflow-hidden bg-ivory py-20 text-ink md:py-28">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
+        <div className="luxe-container grid overflow-hidden rounded-[3rem] bg-obsidian text-ivory shadow-luxe lg:grid-cols-[1fr_.8fr]">
+          <div className="p-8 md:p-14">
+            <p className="section-eyebrow">WhatsApp sipariş çağrısı</p>
+            <h2 className="mt-4 max-w-3xl font-display text-6xl leading-[.9] md:text-8xl">Katalogdan seç, ritüelini WhatsApp’ta tamamla.</h2>
+            <p className="mt-6 max-w-xl text-base leading-8 text-ivory/62">Demo aşamasında öncelik tasarım olduğu için sipariş çağrısı sade tutuldu. Kullanıcı premium vitrinden etkilenir, sonra WhatsApp üzerinden hızlı iletişime geçer.</p>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <a href={whatsappHref} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-full bg-gold px-8 py-4 text-xs font-semibold uppercase tracking-[.26em] text-obsidian transition hover:bg-ivory">WhatsApp ile sipariş</a>
+              <Link href="/products" className="inline-flex items-center justify-center rounded-full border border-white/15 px-8 py-4 text-xs font-semibold uppercase tracking-[.26em] text-ivory transition hover:border-gold hover:text-gold">Tüm kataloğu gör</Link>
+            </div>
+          </div>
+          <img src="https://images.unsplash.com/photo-1590736704728-f4730bb30770?auto=format&fit=crop&w=1400&q=90" alt="Premium ürün sipariş çağrısı" className="h-full min-h-[430px] w-full object-cover opacity-88" />
         </div>
       </section>
     </main>
